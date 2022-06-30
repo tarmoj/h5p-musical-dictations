@@ -1,4 +1,4 @@
-import "../styles/h5p-hello-world.css";
+import "../styles/h5p-musical-dictations.css";
 import MusicalDictations from "../scripts/h5p-musical-dictations";
 
 // Load library
