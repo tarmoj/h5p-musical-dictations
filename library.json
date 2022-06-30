@@ -1,0 +1,24 @@
+{
+  "title": "Musical Dictations",
+  "description": "Library for H5P Musical Dictations",
+  "majorVersion": 0,
+  "minorVersion": 1,
+  "patchVersion": 0,
+  "runnable": 1,
+  "author": "Tarmo Johannes",
+  "license": "MIT",
+  "machineName": "H5P.MusicalDictations",
+  "embedTypes": [
+    "iframe"
+  ],
+  "preloadedJs": [
+    {
+      "path": "dist/h5p-musical-dictations.js"
+    }
+  ],
+  "preloadedCss": [
+    {
+      "path": "dist/h5p-musical-dictations.css"
+    }
+  ]
+}

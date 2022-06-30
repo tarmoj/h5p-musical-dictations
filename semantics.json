@@ -1,0 +1,12 @@
+[
+
+  {
+    "label": "Notation",
+    "name": "lyNotation",
+    "type": "text",
+    "widget": "textarea",
+    "placeholder": "\\time 3/4 \\key F \\major f'8 a' c''4 c'' | d''8 b' c'4 c' ",
+    "default": "Hello %username",
+    "description": "Says hello to someone"
+  }
+]
