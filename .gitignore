@@ -37,7 +37,7 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
-.eslintrc.json
+#.eslintrc.json
 
 .idea
 
