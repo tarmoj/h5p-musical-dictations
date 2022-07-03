@@ -10,7 +10,7 @@ H5P.MusicalDictations = class extends H5P.ContentType(true) {
         super();
         this.musicalDictations = new MusicalDictations(params, contentId, extras);
 
-
+        console.log("Message from entry");
         /**
          * Attach library to DOM.
          * @param wrapper Content's container.

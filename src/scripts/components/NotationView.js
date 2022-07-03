@@ -1,63 +1,17 @@
 import React, {useRef, useEffect, useState} from 'react'
-import VexFlow, {Dot} from 'vexflow';
+import VexFlow from 'vexflow';
+import {defaultNotationInfo} from './notationUtils';
 
 const VF = VexFlow.Flow;
 const { Renderer } = VF;
 
 
-const defaultNotationInfo = {
-    options: "", // scale, width, space etc, if needed
-    staves: [
-        {
-            clef:"treble",
-            key:"D",
-            time: "4/4",
-            measures : [ {
-                number : 1, // optional
-                startBar: "", // optional can be: |  ||  |. etc (lilypond style)  :|.
-                endBar: "|",
-                // also possible to define new key or clef here
-                // in the code -  if measure.hasOwnProperty.clef etc
-                notes: [ { clef: "treble", //how to use staveClef of the paren here?
-                    keys: ["d/4"], duration: "8", auto_stem: "true"
-                },
-                    { clef: "treble", //how to use staveClef of the paren here?
-                        keys: ["c#/5"], duration: "8", auto_stem: "true"
-                    },
-                    { clef: "treble", //how to use staveClef of the paren here?
-                        keys: ["a/4"], duration: "4", auto_stem: "true"
-                    },
-                    { clef: "treble", //how to use staveClef of the paren here?
-                        keys: ["b/4"], duration: "2", auto_stem: "true"
-                    } ]
-            },
-                {
-                    number: 2, // optional
-                    startBar: "", // optional can be: |  ||  |. etc (lilypond style)  :|.
-                    endBar: "|.",
-                    // also possible to define new key or clef here
-                    // in the code -  if measure.hasOwnProperty.clef etc
-                    notes: [
-                        {
-                            clef: "treble", //how to use staveClef of the paren here?
-                            keys: ["a/4"], duration: "1", auto_stem: "true"
-                        }
-                    ]
-                }
-            ],
-
-
-        }
-    ],
-};
-
-
 export function NotationView({
-                           notationInfo = defaultNotationInfo,
-                           width = 900,
-                           height = 400,
-                           staffHeight = 100
-                       }) {
+                                 notationInfo = defaultNotationInfo,
+                                 width = 900, // should this be the width of total stave or the visible div?
+                                 height = 140,
+                                 staffHeight = 100
+                             }) {
     const container = useRef()
     const rendererRef = useRef()
 
@@ -155,10 +109,12 @@ export function NotationView({
     };
 
     const draw = (notationInfo, context) => {
-        //TODO: we need some structure to hold the VexFlow Score. similar to System.
         let allNotes = [[], []]; // ready for two staves
         const vfStaves = [[], []]; //  NB! think of better name! this is vexflow staves actually. do we need to store them at all? -  later: define by stave count [ Array(notationIfo.staves.length ]
-        const measureWidth = 200;
+        const defaultWidth = 200;
+        //How can I pre-calculate the width of a voice?
+        //
+        // You can call Formatter.getMinTotalWidth() to return the minimum amount of horizontal space required to render a voice.
 
         let startY = 0;
         let startX = 10;
@@ -168,10 +124,13 @@ export function NotationView({
         // vertical alignment: https://github.com/0xfe/vexflow/wiki/The-VexFlow-FAQ
 
         for (let measureIndex = 0; measureIndex < notationInfo.staves[0].measures.length; measureIndex++) { // should we check if there is equal amount of measures?
-            let width = measureWidth;
+            let measureWidth = defaultWidth;
             let staffBeams = [];
             let ties = [];
 
+            // if (measureIndex === 0) { // OR: hasOwnProperty("clef" etc
+            //   measureWidth += clefAndKeySpace;
+            // }
 
             const voices = [];
             let necessaryWidth = 160 ; // for formatter.preCalculateMinTotalWidth
@@ -182,7 +141,7 @@ export function NotationView({
 
                 const notationMeasure = staff.measures[measureIndex];
 
-                const newMeasure = new VF.Stave(startX, startY + staffIndex * staffHeight, width); // TODO: width by signs in the key signature via VF.Music?
+                const newMeasure = new VF.Stave(startX, startY + staffIndex * staffHeight, measureWidth);
 
                 if (measureIndex === 0) { // OR: hasOwnProperty("clef" etc
                     newMeasure.addClef(staff.clef).addKeySignature(staff.key).addTimeSignature(staff.time);
@@ -205,16 +164,23 @@ export function NotationView({
                     type = VF.Barline.type.END;
                 }
                 newMeasure.setEndBarType(type);
+                //newMeasure.setContext(context).draw(); // maybe must be drewn after creating notes to know
+                //
+                // the width
 
-                vfStaves[staffIndex].push(newMeasure);
+
+                vfStaves[staffIndex].push(newMeasure); // or proably push is better // do we need it at all, actually?
                 let staveNotes = [];
 
                 for (let note of notationMeasure.notes) {
                     const staveNote = new VF.StaveNote(note);
+                    if (note.hasOwnProperty("color")) {
+                        staveNote.setStyle({fillStyle: note.color, strokeStyle: note.color});
+                    }
                     // double dot not implemented yet
                     if (note.duration.substr(-1) === "d") { //if dotted, add modifier
                         console.log("Dotted note!")
-                        Dot.buildAndAttach([staveNote], {all: true});
+                        VF.Dot.buildAndAttach([staveNote], {all: true});
                     }
                     staveNotes.push(staveNote);
                     console.log("Added to bar: ", note.keys);
@@ -242,25 +208,39 @@ export function NotationView({
                 allNotes[staffIndex].push(...staveNotes); //push as values (similar to concat)
                 formatter.joinVoices([voice]);
                 voices[staffIndex] = voice;
+                // kind of works but needs more work - clefAndKeySpace -  find out by the key (how many accidentals, use minimum bar width (measureWidth)
+                // find out width that is used also for formatter.format.
+                // NB! Test with two-staff notation!
 
+                // setting width not correct
+
+
+                // does not work, since there is more and more notes in the voice and necessaryWidth gets bigger, something wrong here..
+
+                //necessaryWidth = formatter.preCalculateMinTotalWidth([voice]) * 1.5;
                 necessaryWidth = notationMeasure.notes.length * 40 ; // just calculate the space by number of notes...
-
                 if (measureIndex === 0) {
-                    width = newMeasure.getNoteStartX() + necessaryWidth + 20; // 20 a bit of extra space
+                    measureWidth = newMeasure.getNoteStartX() + necessaryWidth + 20; // 20 a bit of extra space
                 } else {
-                    width = necessaryWidth + 40;
+                    measureWidth = necessaryWidth + 40;
                 }
-                ;
-                //console.log("width: ", necessaryWidth, width, newMeasure.getNoteStartX());
-
-                newMeasure.setWidth( width);
+                //if (measureIndex === 0) measureWidth += clefAndKeySpace;
+                console.log("measureWidth: ", necessaryWidth, measureWidth, newMeasure.getNoteStartX());
+                // if (testWidth>100) {
+                //   measureWidth += testWidth;
+                // }
+                //
+                newMeasure.setWidth( measureWidth);
                 newMeasure.setContext(context).draw();
 
             }
 
+            //formatter.format(voices); // was
 
-            //console.log("necessary w. befor formattter.format", necessaryWidth);
+            console.log("necessary w. befor formattter.format", necessaryWidth);
             formatter.format(voices, necessaryWidth);
+            // let testWidth = formatter.getMinTotalWidth();
+            // console.log("minTotalWidth: ", testWidth);
 
             voices.forEach((v) => v.setContext(context).draw());
             staffBeams.forEach((beam) => beam.setContext(context).draw());
@@ -280,12 +260,16 @@ export function NotationView({
                     connector.setContext(context).draw();
                 }
             }
-            startX += width;
-
+            startX += measureWidth;
+            if (startX>width) {
+                console.log("the width grew too big!", startX);
+                rendererRef.current.resize(startX+40, height);
+            }
         }
+
 
         setAllNotes(allNotes); // does not seem to work . maybe it is even better
     }
 
-    return <div ref={container} />
+    return <div className={"notationDiv"}> <div ref={container} /> </div>
 }

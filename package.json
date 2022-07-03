@@ -1,13 +1,13 @@
 {
   "name": "h5p-musical-dictations",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "H5P library for creating musical dictations",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cross-env NODE_ENV=production webpack",
     "watch": "webpack --watch",
-    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint ./src --ext .js"
   },
   "repository": {
     "type": "git",
