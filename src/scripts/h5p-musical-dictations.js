@@ -45,6 +45,8 @@ export default class MusicalDictations {
          */
         this.attach = function ($wrapper) {
             $wrapper.addClass('h5p-musical-dictations');
+            $wrapper.append('<button onclick="console.log(window);  window.dispatchEvent(new Event(\'resize\'))">Resize</button');
+
             $wrapper.append(this.root);
 
             // We render an initial state of the content type here. It will be updated
@@ -52,13 +54,13 @@ export default class MusicalDictations {
             // this.root is the container for React content
             ReactDOM.render(
                 <div>
-                    <h1>React dictation test 01</h1>
+                    <h1>React dictation test 05</h1>
                     <Main correctDictation={this.correctLyDictation}/>
                 </div>,
                 this.root,
                 () => {
                     console.log("Loaded");
-                    window.dispatchEvent(new Event('resize'));
+                    window.dispatchEvent(new Event('resize')); // does not work
                 }
             );
 

@@ -14,7 +14,7 @@ export default function Main( {correctDictation} ) {
     const [feedBack, setFeedBack] = useState("");
 
     useEffect( () => { console.log('showCorrectNotation changed');
-        window.dispatchEvent(new Event('resize')); // not sure if it works here
+         setTimeout( () => window.dispatchEvent(new Event('resize')), 500 ); // does not work.. maybe because it hase not rendered yet...
     }, [showCorrectNotation] );
 
     const lyRef = useRef();

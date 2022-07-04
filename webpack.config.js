@@ -5,6 +5,8 @@ const TerserPlugin = require("terser-webpack-plugin");
 const nodeEnv = process.env.NODE_ENV || "development";
 const isProd = nodeEnv === "production";
 
+// original was drop_console: true -  and now messages to console. Not for now.,
+
 module.exports = {
   mode: nodeEnv,
   optimization: {

@@ -37,6 +37,9 @@ export function NotationView({
 
         draw(notationInfo, context); // should we also pass renderer? or context?
 
+        // try: does not work...
+        //    window.dispatchEvent(new Event('resize')); // for any case
+
 
     }, [notationInfo, width, height]); // allNotes maybe wrong here -  the handleClick should be updated...
 
