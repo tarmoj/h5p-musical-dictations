@@ -4,7 +4,7 @@ import {defaultNotationInfo, parseLilypondDictation} from "./notationUtils";
 
 
 
-export default function Main( {correctDictation} ) {
+export default function Main( {correctDictation, resizeFunction= () => console.log("empty resize")} ) {
 
 
 
@@ -13,9 +13,6 @@ export default function Main( {correctDictation} ) {
     const [showCorrectNotation, setShowCorrectNotation] = useState(false);
     const [feedBack, setFeedBack] = useState("");
 
-    useEffect( () => { console.log('showCorrectNotation changed');
-         setTimeout( () => window.dispatchEvent(new Event('resize')), 500 ); // does not work.. maybe because it hase not rendered yet...
-    }, [showCorrectNotation] );
 
     const lyRef = useRef();
 
@@ -75,12 +72,13 @@ export default function Main( {correctDictation} ) {
         }
         setResponseNotationInfo(responseNotation);
         setShowCorrectNotation(true);
+        resizeFunction();
         setFeedBack( correct ? "Correct!" : "Wrong");
     }
 
     return (
         <div style={{marginLeft:10}}>
-            <h1>VexFlow test</h1>
+            <div>Enter the dictation in Lilypond notation  (absolute pitches, german nomenclature)</div>
             <p>
                 Lilypond input:
                 <textarea rows="10" cols="50"ref={lyRef}
@@ -93,7 +91,7 @@ export default function Main( {correctDictation} ) {
             <button onClick={ () => checkResponse() }>Check</button>
             <button onClick={ () => {
                 setShowCorrectNotation(!showCorrectNotation);
-                window.dispatchEvent(new Event('resize'));
+                resizeFunction();
             } }>Show/hide correct</button>
             <div>{feedBack}</div>
             { showCorrectNotation &&

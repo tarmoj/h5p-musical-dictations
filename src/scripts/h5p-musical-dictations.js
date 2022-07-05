@@ -2,7 +2,7 @@ import React from "react";
 import * as ReactDOM from "react-dom";
 import Main from "./components/Main";
 
-export default class MusicalDictations {
+export default class MusicalDictations extends H5P.ContentType(true) {
     /**
      * @constructor
      *
@@ -11,12 +11,13 @@ export default class MusicalDictations {
      * @param {object} [extras] Saved state, metadata, etc.
      */
     constructor(params, contentId, extras = {}) {
+        super();
         console.log("params: ", params);
 
         // Create render root
         this.root = document.createElement("div");
 
-        // one problem is, that params come in as encoded html
+        // params come in as encoded html, need to decode
         const  decodeHtml = (text) => {
             return text
                 .replace(/&amp;/g, '&')
@@ -38,6 +39,8 @@ export default class MusicalDictations {
 
         console.log("correctLy:", this.correctLyDictation);
 
+        const resize = () => { console.log("resize function called", this); this.trigger("resize"); }
+
         /**
          * Attach library to wrapper.
          *
@@ -45,7 +48,6 @@ export default class MusicalDictations {
          */
         this.attach = function ($wrapper) {
             $wrapper.addClass('h5p-musical-dictations');
-            $wrapper.append('<button onclick="console.log(window);  window.dispatchEvent(new Event(\'resize\'))">Resize</button');
 
             $wrapper.append(this.root);
 
@@ -54,8 +56,8 @@ export default class MusicalDictations {
             // this.root is the container for React content
             ReactDOM.render(
                 <div>
-                    <h1>React dictation test 05</h1>
-                    <Main correctDictation={this.correctLyDictation}/>
+                    <h1>React dictation test 08</h1>
+                    <Main correctDictation={this.correctLyDictation} resizeFunction={resize}/>
                 </div>,
                 this.root,
                 () => {
