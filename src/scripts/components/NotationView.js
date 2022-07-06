@@ -2,13 +2,14 @@ import React, {useRef, useEffect, useState} from 'react'
 import VexFlow from 'vexflow';
 import {defaultNotationInfo} from './notationUtils';
 
+
 const VF = VexFlow.Flow;
 const { Renderer } = VF;
 
 
 export function NotationView({
                                  notationInfo = defaultNotationInfo,
-                                 width = 900, // should this be the width of total stave or the visible div?
+                                 width = 500, // this will be expanded when notation will grow longer
                                  height = 140,
                                  staffHeight = 100
                              }) {
@@ -274,5 +275,5 @@ export function NotationView({
         setAllNotes(allNotes); // does not seem to work . maybe it is even better
     }
 
-    return <div className={"notationDiv"}> <div ref={container} /> </div>
+    return <div className={"h5p-musical-dictations-notationDiv"}> <div ref={container} /> </div>
 }

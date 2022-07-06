@@ -2,6 +2,8 @@ import React from "react";
 import * as ReactDOM from "react-dom";
 import Main from "./components/Main";
 
+const $ = H5P.jQuery;
+
 export default class MusicalDictations extends H5P.ContentType(true) {
     /**
      * @constructor
@@ -29,17 +31,24 @@ export default class MusicalDictations extends H5P.ContentType(true) {
 
 
         this.correctLyDictation = decodeHtml(params.lyNotation) || `
-          \\clef "treble" \\key c \\major \\time 2/4  
+    \\clef "treble" \\key c \\major \\time 2/4  
     c'4 c'8 d'8 | 
     e'4 e'8 f'8 | 
     g'8 a'8 g'8 f'8 | 
-    g'4 g'4 \\bar "|."     
-                   
+    g'4 g'4 \\bar "|."             
         `;
 
-        console.log("correctLy:", this.correctLyDictation);
+        this.showFromDiction = decodeHtml(params.show);
 
-        const resize = () => { console.log("resize function called", this); this.trigger("resize"); }
+        this.audioFile = params.audioFile;
+        this.id = contentId;
+
+        //temporary, later think about translation (H5P or independent):
+        this.l10n = {"euSupportText" : "The project is supported by EU social Fund"};
+
+        console.log("correctLy, audio:", this.correctLyDictation, this.audioFile);
+
+        const resize = () => { console.log("resize function called", this); this.trigger("resize"); } // to be forwarded to React components
 
         /**
          * Attach library to wrapper.
@@ -49,21 +58,45 @@ export default class MusicalDictations extends H5P.ContentType(true) {
         this.attach = function ($wrapper) {
             $wrapper.addClass('h5p-musical-dictations');
 
-            $wrapper.append(this.root);
+            $wrapper.append($('<div>'), {id:'explanation'}).html('Listen to the musical excerpt, write down the notation. <br />');
 
-            // We render an initial state of the content type here. It will be updated
-            // later when the data from the server has arrived.
+            //audio
+            const audioFile = this.audioFile;
+            const relativeAudioFilePath = audioFile[0].path;
+            const absolutePath = H5P.getPath(relativeAudioFilePath, this.id);
+            console.log("Create audio for: ", absolutePath);
+            $wrapper.append( $('<audio>', {
+                id: "audioPlayer",
+                class: "shadow",
+                src: absolutePath,
+                controls: true
+            }) );
+
+            $wrapper.append(this.root);  // for Rect components
+
+            const euLogoPath = H5P.getLibraryPath(this.libraryInfo.versionedNameNoSpaces) + "/eu.jpg";
+            console.log("logo path:", euLogoPath);
+
+            const $euDiv = $('<div>', {id:"euDiv"}).html("<br /><p><small>" + this.l10n.euSupportText +  "</small></p>");
+            $euDiv.append(
+                $('<img>', {
+                    id: "euLogo",
+                    alt: this.l10n.euSupportText,
+                    width: "200px",
+                    align: "left",
+                    src: euLogoPath,
+                    load: () => this.trigger("resize")
+                })
+            );
+
+            $wrapper.append($euDiv);
+
             // this.root is the container for React content
             ReactDOM.render(
                 <div>
-                    <h1>React dictation test 08</h1>
-                    <Main correctDictation={this.correctLyDictation} resizeFunction={resize}/>
+                    <Main correctDictation={this.correctLyDictation} showFromDictation={ this.showFromDiction} resizeFunction={resize}/>
                 </div>,
-                this.root,
-                () => {
-                    console.log("Loaded");
-                    window.dispatchEvent(new Event('resize')); // does not work
-                }
+                this.root
             );
 
         };

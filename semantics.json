@@ -5,8 +5,22 @@
     "name": "lyNotation",
     "type": "text",
     "widget": "textarea",
-    "placeholder": "\\time 3/4 \\key F \\major f'8 a' c''4 c'' | d''8 b' c'4 c' ",
     "default": "\\time 3/4 \\key F \\major f'8 a' c''4 c'' | d''8 b' c'4 c' ",
-    "description": "Define the notation in Lilypond syntax"
+    "description": "Define the notation in Lilypond syntax (absolute pitch marking for octaves)"
+  } ,
+
+  {
+    "label": "Show from notation",
+    "name": "show",
+    "type": "text",
+    "widget": "textarea",
+    "default": "\\time 3/4 \\key F \\major f'8 ",
+    "description": "What you want to show to the student. Usually key, time and the first note"
+  },
+
+  {
+    "name": "audioFile",
+    "type": "audio",
+    "label": "Audio file"
   }
 ]

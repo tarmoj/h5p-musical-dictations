@@ -1,6 +1,15 @@
 .h5p-musical-dictations {
-  color: darkmagenta;
+
 }
+
+
+.h5p-musical-dictations-notationDiv {
+  max-width: 900px;
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
 
 /*.h5p-musical-dictations * {*/
 /*  margin: 2px;*/

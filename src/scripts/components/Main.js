@@ -4,11 +4,11 @@ import {defaultNotationInfo, parseLilypondDictation} from "./notationUtils";
 
 
 
-export default function Main( {correctDictation, resizeFunction= () => console.log("empty resize")} ) {
+export default function Main( {correctDictation, showFromDictation = "", resizeFunction= () => console.log("empty resize")} ) {
 
 
 
-    const [responseNotationInfo, setResponseNotationInfo] = useState(defaultNotationInfo);
+    const [responseNotationInfo, setResponseNotationInfo] = useState( showFromDictation ? parseLilypondDictation(showFromDictation) : defaultNotationInfo);
     const [correctNotationInfo, setCorrectNotationInfo] = useState(parseLilypondDictation(correctDictation));  // could have used a constant but that gets reevaluated each render tine
     const [showCorrectNotation, setShowCorrectNotation] = useState(false);
     const [feedBack, setFeedBack] = useState("");
@@ -77,15 +77,14 @@ export default function Main( {correctDictation, resizeFunction= () => console.l
     }
 
     return (
-        <div style={{marginLeft:10}}>
+        <div>
             <div>Enter the dictation in Lilypond notation  (absolute pitches, german nomenclature)</div>
-            <p>
-                Lilypond input:
+            <div>Lilypond input:</div>
+
                 <textarea rows="10" cols="50"ref={lyRef}
-                          defaultValue = {`\\clef treble \\time 4/4 \\key d \\major d'8 e' fis' g' a'4 a'`}
+                          defaultValue = { showFromDictation ? showFromDictation :  `\\clef treble \\time 4/4 \\key d \\major d'8 e' fis' g' a'4 a'`}
                 />
-                <button onClick={doParse}>Show</button>
-            </p>
+            <div><button onClick={doParse}>Show</button></div>
             <div id={"score1"} ></div>
             <NotationView id="userNotation" div={"score"} notationInfo={responseNotationInfo} />
             <button onClick={ () => checkResponse() }>Check</button>
