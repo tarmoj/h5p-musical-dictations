@@ -1,5 +1,5 @@
 import React, {useRef, useEffect, useState} from 'react'
-import {Button, FormControl, Grid, InputLabel, MenuItem, Select} from "@mui/material";
+import {Button, FormControl, Grid, InputLabel, MenuItem, Select, ToggleButton, ToggleButtonGroup} from "@mui/material";
 import {Piano} from "react-piano";
 import 'react-piano/dist/styles.css';
 import classNames from 'classnames';
@@ -17,6 +17,7 @@ export function NotationUI( {setNotationInfo}) {
     const [lyInput, setLyInput] = useState("");
     const [localNotationInfo, setLocalNotationInfo] = useState(defaultNotationInfo);
     const [currentKey, setCurrentKey] = useState("C");
+    const [currentDuration, setCurrentDuration] = useState("4");
 
     const handleKeySelect = (event) => {
         const key = event.target.value;
@@ -152,24 +153,65 @@ export function NotationUI( {setNotationInfo}) {
         )
     }
 
-    const handleLyChange = (event) => {
-        const text = event.target.value;
-        setLyInput( text );
-        //console.log("handle Lychange", text, event.target);
-        // const notation = parseLilypondDictation( text );
-        // console.log("Generated notation: ", notation);
-        // if (notation && setNotationInfo) {
-        //     setNotationInfo(notation);
-        // }
+    // TODO: separate togglegroup, that is not exclusive for ., tie and triplet
+    const createDurationsRow = () => {
+        const dot = ""; // need a condition here
+        return (
+            <Grid container direction={"column"} spacing={1}>
+                <Grid item>
+                    <ToggleButtonGroup
+                        value={currentDuration}
+                        exclusive
+                        onChange={ event =>  setCurrentDuration(event.target.value + dot)}
+                        aria-label="duration selection"
+                    >
+                        <ToggleButton value="1" aria-label="whole note">
+                            1
+                        </ToggleButton>
+                        <ToggleButton value="2" aria-label="half note">
+                            2
+                        </ToggleButton>
+                        <ToggleButton value="4" aria-label="quarter note">
+                            4
+                        </ToggleButton>
+                        <ToggleButton value="8" aria-label="eighth note">
+                            8
+                        </ToggleButton>
+                        <ToggleButton value="8" aria-label="sixteenth note">
+                            16
+                        </ToggleButton>
+                        <ToggleButton value="32" aria-label="thirtysecond note">
+                            32
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+                </Grid>
+            </Grid>
+        );
+    }
+
+    const handleNotation = () => {
+        const notation = parseLilypondDictation(lyInput);
+        if (notation && setNotationInfo) {
+            setNotationInfo(notation);
+        } else {
+            console.log("Notation error or setter not set");
+        }
+
     }
 
     // TODO: key input needed only in in two parts -  key, radio buttons major/minor
     return <div className={"h5p-musical-dictations-uiDiv"}>
         <Grid container direction={"column"} spacing={1}>
-            <Grid item>
-                Lilypond notation:
-                <textarea rows="10" cols="50" value={lyInput} onChange={handleLyChange}/>
+            <Grid container item direction={"column"} spacing={1}>
+                <Grid item>Lilypond notation:</Grid>
+                <Grid item>
+                    <textarea rows="10" cols="50" value={lyInput} onChange={ event => setLyInput( event.target.value )}/>
+                </Grid>
+                <Grid item>
+                    <Button onClick={ handleNotation }>Show</Button>
+                </Grid>
             </Grid>
+
             {createHeaderRow()}
             {createPianoRow()}
         </Grid>
