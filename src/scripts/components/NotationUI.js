@@ -3,6 +3,7 @@ import {Button, FormControl, Grid, InputLabel, MenuItem, Select} from "@mui/mate
 import {Piano} from "react-piano";
 import 'react-piano/dist/styles.css';
 import classNames from 'classnames';
+import {defaultNotationInfo, getLyNoteByMidiNoteInKey, parseLilypondDictation} from "./notationUtils";
 
 
 // TODO: how to do translation? est.json? https://react.i18next.com/ ?
@@ -10,16 +11,18 @@ import classNames from 'classnames';
 
 
 
-export function NotationUI() {
+export function NotationUI( {setNotationInfo}) {
 
-    const [selectedKey, setSelectedKey] = useState("c \major");
     const [keyboardStartingOctave, setKeyboardStartingOctave ] = useState(3);
+    const [lyInput, setLyInput] = useState("");
+    const [localNotationInfo, setLocalNotationInfo] = useState(defaultNotationInfo);
+    const [currentKey, setCurrentKey] = useState("C");
 
     const handleKeySelect = (event) => {
         const key = event.target.value;
         console.log("selected key: ", key);
         // put it to lilypond string -> notationInfo
-        setSelectedKey(key); // do we need it?
+        setCurrentKey(key); // inf form C, D etc -  think!
     }
 
     const createHeaderRow = () => { // time tempo etc
@@ -86,13 +89,16 @@ export function NotationUI() {
     }
 
     const handlePlayNote = midiNote => {
-        //console.log ("We are in key: ",  currentKey);
-        // const key = currentKey ? currentKey : "C"
-        // const vtNote = getVtNoteByMidiNoteInKey(midiNote, key); // suggests correct enharmonic note for black key depening on the tonality
+        console.log ("We are in key: ",  currentKey);
+        const key = currentKey ? currentKey : "C";
+        const lyNote = getLyNoteByMidiNoteInKey(midiNote, key); // suggests correct enharmonic note for black key depening on the tonality
         // if (vtNote && !chordPopupOpen) {
         //     dispatch(insertVtNote(vtNote));
         // }
-        console.log("midiNote", midiNote);
+        // insert to text in right position, check spaces, add if necessary
+        console.log("lyNote", lyNote);
+        setLyInput(lyInput + " " + lyNote)
+
     }
 
     // extended from: https://github.com/kevinsqi/react-piano/blob/a8fac9f1ab0aab8fd21658714f1ad9f14568feee/src/ControlledPiano.js#L29
@@ -128,7 +134,6 @@ export function NotationUI() {
         return (
             <Grid item container direction={"row"}>
                 <Grid item><Button onClick={()=>changeStartingOctave(-1)}>{"<"}</Button></Grid>
-
                 <Grid item>
                     <div >  {/*make it scrollable like notation, if does not fit  oli: className={"vtDiv center"} */}
                         <Piano
@@ -147,9 +152,24 @@ export function NotationUI() {
         )
     }
 
+    const handleLyChange = (event) => {
+        const text = event.target.value;
+        setLyInput( text );
+        //console.log("handle Lychange", text, event.target);
+        // const notation = parseLilypondDictation( text );
+        // console.log("Generated notation: ", notation);
+        // if (notation && setNotationInfo) {
+        //     setNotationInfo(notation);
+        // }
+    }
+
     // TODO: key input needed only in in two parts -  key, radio buttons major/minor
     return <div className={"h5p-musical-dictations-uiDiv"}>
         <Grid container direction={"column"} spacing={1}>
+            <Grid item>
+                Lilypond notation:
+                <textarea rows="10" cols="50" value={lyInput} onChange={handleLyChange}/>
+            </Grid>
             {createHeaderRow()}
             {createPianoRow()}
         </Grid>

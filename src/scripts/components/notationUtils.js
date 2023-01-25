@@ -233,3 +233,39 @@ const parseLilypondString = (lyString) => {
 
     return stave;
 };
+
+
+// TODO: rework key (include arrays) !
+export const getLyNoteByMidiNoteInKey = (midiNote, key="C") => { // key as tonality like C major, given as 'A' for A major, 'Am' for minor
+    const pitchClass = midiNote%12;
+    const octave = Math.floor(midiNote/12) - 1;
+    let lyNote = "";
+    switch (pitchClass) {
+        case 0: lyNote = "c"; break;
+        case 1: lyNote =  [ "F", "Bb", "Eb", "Cm", "Ab", "Fm", "Db", "Bbm", "Gb", "Ebm", "Cb", "Abm"].includes(key) ? "des" : "cis" ; break;
+        case 2: lyNote = "d"; break;
+        case 3: lyNote =  [ "C", "F", "Bb", "Gm", "Eb", "Cm", "Ab", "Fm", "Db", "Bbm", "Gb", "Ebm", "Cb", "Abm"].includes(key) ? "es" : "dis" ; break;
+        case 4: lyNote = "e"; break;
+        case 5: lyNote = "f"; break;
+        case 6: lyNote = [ "F", "Bb", "Eb", "Ab", "Fm", "Db", "Bbm", "Gb", "Ebm", "Cb", "Abm"].includes(key) ? "gis" : "fis";  break;
+        case 7: lyNote = "g"; break;
+        case 8: lyNote = [ "F", "Bb", "Gm", "Eb", "Cm", "Ab", "Fm", "Db", "Bbm", "Gb", "Ebm", "Cb", "Abm"].includes(key) ? "as" : "gis";  break;
+        case 9: lyNote = "a"; break;
+        case 10: lyNote = [ "G", "D", "F", "Dm", "Bb", "Gm", "Eb", "Cm", "Ab", "Fm", "Db", "Bbm", "Gb", "Ebm", "Cb", "Abm"].includes(key) ? "b" : "ais";  break;
+        case 11: lyNote = "h"; break;
+        default: lyNote = "";
+    }
+    if (!lyNote) {
+        return "";
+    }  else {
+        switch (octave) {
+            case 2: lyNote += `,`; break;
+            case 4: lyNote += `'`; break;
+            case 5: lyNote += `''`; break;
+            case 6: lyNote += `'''`; break;
+        }
+        console.log("Detected lyNote: ", lyNote, pitchClass, octave, key);
+        return lyNote;
+    }
+
+}
