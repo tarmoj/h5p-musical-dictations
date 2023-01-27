@@ -11,11 +11,10 @@ import {defaultNotationInfo, getLyNoteByMidiNoteInKey, parseLilypondDictation} f
 
 
 
-export function NotationUI( {setNotationInfo}) {
+export function NotationUI( {lyStart, setNotationInfo}) {
 
     const [keyboardStartingOctave, setKeyboardStartingOctave ] = useState(3);
-    const [lyInput, setLyInput] = useState("");
-    const [localNotationInfo, setLocalNotationInfo] = useState(defaultNotationInfo);
+    const [lyInput, setLyInput] = useState(lyStart);
     const [currentKey, setCurrentKey] = useState("C");
     const [currentDuration, setCurrentDuration] = useState("4");
 
@@ -203,9 +202,9 @@ export function NotationUI( {setNotationInfo}) {
     return <div className={"h5p-musical-dictations-uiDiv"}>
         <Grid container direction={"column"} spacing={1}>
             <Grid container item direction={"column"} spacing={1}>
-                <Grid item>Lilypond notation:</Grid>
+                <Grid item>Lilypond notation UI:</Grid>
                 <Grid item>
-                    <textarea rows="10" cols="50" value={lyInput} onChange={ event => setLyInput( event.target.value )}/>
+                    <textarea rows="5" cols="50" value={lyInput} onChange={ event => setLyInput( event.target.value )}/>
                 </Grid>
                 <Grid item>
                     <Button onClick={ handleNotation }>Show</Button>
@@ -213,6 +212,7 @@ export function NotationUI( {setNotationInfo}) {
             </Grid>
 
             {createHeaderRow()}
+            {createDurationsRow()}
             {createPianoRow()}
         </Grid>
     </div>

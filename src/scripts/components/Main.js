@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {NotationView} from "./NotationView"
+import {NotationUI} from "./NotationUI";
 import {defaultNotationInfo, parseLilypondDictation} from "./notationUtils";
 
 
@@ -79,14 +80,15 @@ export default function Main( {correctDictation, showFromDictation = "", resizeF
     return (
         <div>
             <div>Enter the dictation in Lilypond notation  (absolute pitches, german nomenclature)</div>
-            <div>Lilypond input:</div>
+            {/*<div>Lilypond input:</div>*/}
 
-                <textarea rows="10" cols="50"ref={lyRef}
-                          defaultValue = { showFromDictation ? showFromDictation :  `\\clef treble \\time 4/4 \\key d \\major d'8 e' fis' g' a'4 a'`}
-                />
-            <div><button onClick={doParse}>Show</button></div>
+            {/*    <textarea rows="10" cols="50"ref={lyRef}*/}
+            {/*              defaultValue = { showFromDictation ? showFromDictation :  `\\clef treble \\time 4/4 \\key d \\major d'8 e' fis' g' a'4 a'`}*/}
+            {/*    />*/}
+            {/*<div><button onClick={doParse}>Show</button></div>*/}
             <div id={"score1"} ></div>
             <NotationView id="userNotation" div={"score"} notationInfo={responseNotationInfo} />
+            <NotationUI  lyStart={showFromDictation ? showFromDictation :  `\\clef treble \\time 4/4 \\key d \\major d'8 e' fis' g' a'4 a`} setNotationInfo={setResponseNotationInfo}/>
             <button onClick={ () => checkResponse() }>Check</button>
             <button onClick={ () => {
                 setShowCorrectNotation(!showCorrectNotation);
