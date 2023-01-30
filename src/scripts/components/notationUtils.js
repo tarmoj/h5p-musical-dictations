@@ -98,12 +98,12 @@ const parseLilypondString = (lyString) => {
         chunks[i] = chunks[i].trim();
         if (chunks[i] === "\\key" && chunks.length >= i+1 ) { // must be like "\key a \major\minor
             console.log("key: ", chunks[i+1], chunks[i+2]);
-            let vtKey = noteNames.get(chunks[i+1].toLowerCase());
-            if (vtKey) {
+            let vfKey = noteNames.get(chunks[i+1].toLowerCase());
+            if (vfKey) {
                 if (chunks[i+2]==="\\minor") {
-                    vtKey += "m"
+                    vfKey += "m"
                 }
-                stave.key = vtKey;
+                stave.key = vfKey;
             } else {
                 console.log("Could not find notename for: ", chunks[i+1])
             }
@@ -269,3 +269,75 @@ export const getLyNoteByMidiNoteInKey = (midiNote, key="C") => { // key as tonal
     }
 
 }
+
+const vfNoteToLyNote = (vfNote) => {
+    const [note, octave] = vfNote.split("/");
+    console.log("Split vfNote:", note, octave);
+    let lyNote = "";
+    noteNames.forEach( value, key => {
+        if (value===note) {
+            lyNote=  key; // this is the lilynote
+        }
+    });
+
+    if (!lyNote) {
+        return "";
+    }  else {
+        switch (octave) {
+            case 2: lyNote += `,`; break;
+            case 4: lyNote += `'`; break;
+            case 5: lyNote += `''`; break;
+            case 6: lyNote += `'''`; break;
+        }
+        console.log("Detected lyNote: ", lyNote, pitchClass, octave, key);
+        return lyNote;
+    }
+}
+
+
+export const notationInfoToLyString = notationInfo => {
+    let lyString = ""; 
+    // TODO: handle several staves somehow 
+    // TODO: vexfow keys -  are thery only majors?
+    for (let stave of notationInfo.staves) {
+        const keyString = stave.key + ( stave.key.endsWith("m") ? "\\minor" : "\\major" ) ; // TODO: key eginning need probably conversions
+        lyString += `\\clef ${stave.clef} \\key ${keyString} \\major time=${stave.time} \n`;
+        for (let measure of stave.measures) {
+            if (measure.notes.length>0) {
+                for (let note of  measure.notes) {
+                    // test if chord or single note. Several keys ->  ( . .  ) notation
+
+                    if (note.keys.length>0) {
+                        let noteString = "";
+
+                        if (note.keys.length>1) {
+                            console.log("Chords not supported yet");
+                            //noteString = `( ${note.keys.join(",")} )`;
+                        } else if (note.keys.length === 1) {
+                            noteString = vfNoteToLyNote(note.keys[0]);
+                        }
+                        if (note.keys[0]==="|" || note.keys[0].startsWith("=")) { // not the case any more. Handel barlines differently
+                            //lyString += ` ${note.keys[0]} `; <- old barline handling
+                        } else {
+                            lyString += ` ${noteString}${note.duration} `;  // here are probably more conditions (triplets etc)
+                        }
+                        if (note.hasOwnProperty("text")) {
+                            // let positionString = ".top.";
+                            // if (note.hasOwnProperty("textPosition")) {
+                            //     if (note.textPosition === "bottom") {
+                            //         positionString = ".bottom.";
+                            //     }
+                            // }
+                            // lyString += ` \$${positionString}${note.text}\$ `;
+                            //console.log("Added text to lyString: ", lyString);
+                        }
+                    }
+                }
+                lyString += measure.endBar;
+                lyString += "\n";
+            }
+        }
+    }
+    console.log("converted to ly: ", lyString)
+    return lyString;
+};

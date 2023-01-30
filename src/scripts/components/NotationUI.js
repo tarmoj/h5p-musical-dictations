@@ -3,7 +3,12 @@ import {Button, FormControl, Grid, InputLabel, MenuItem, Select, ToggleButton, T
 import {Piano} from "react-piano";
 import 'react-piano/dist/styles.css';
 import classNames from 'classnames';
-import {defaultNotationInfo, getLyNoteByMidiNoteInKey, parseLilypondDictation} from "./notationUtils";
+import {
+    defaultNotationInfo,
+    getLyNoteByMidiNoteInKey,
+    notationInfoToLyString,
+    parseLilypondDictation
+} from "./notationUtils";
 
 
 // TODO: how to do translation? est.json? https://react.i18next.com/ ?
@@ -97,7 +102,7 @@ export function NotationUI( {lyStart, setNotationInfo}) {
         // }
         // insert to text in right position, check spaces, add if necessary
         console.log("lyNote", lyNote);
-        setLyInput(lyInput + " " + lyNote)
+        setLyInput(lyInput + " " + lyNote) // later this would enter a vfnote to notationInfo in correct place....
 
     }
 
@@ -195,6 +200,8 @@ export function NotationUI( {lyStart, setNotationInfo}) {
         } else {
             console.log("Notation error or setter not set");
         }
+
+        const testLy = notationInfoToLyString(notation);
 
     }
 
