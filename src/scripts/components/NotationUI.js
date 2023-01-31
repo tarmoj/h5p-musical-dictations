@@ -5,7 +5,7 @@ import 'react-piano/dist/styles.css';
 import classNames from 'classnames';
 import {
     defaultNotationInfo,
-    getLyNoteByMidiNoteInKey,
+    getLyNoteByMidiNoteInKey, getVfNoteByMidiNoteInKey,
     notationInfoToLyString,
     parseLilypondDictation
 } from "./notationUtils";
@@ -90,13 +90,21 @@ export function NotationUI( {lyStart, setNotationInfo}) {
     // see https://github.com/kevinsqi/react-piano/blob/master/src/KeyboardShortcuts.js for redfining
     const octaveData = {
         maxOctave: 6,
-        minOctave: 1
+        minOctave: 2
     }
+
 
     const handlePlayNote = midiNote => {
         console.log ("We are in key: ",  currentKey);
         const key = currentKey ? currentKey : "C";
+
+        const vfNote = getVfNoteByMidiNoteInKey(midiNote, key);
+        console.log("vfnote: ", vfNote);
+        // TODO: insert it to the correct spot in notationInfo -  probably we need measureIndex and noteIndex
+        // newNptationInfo.staves[currentStave].measures[currentMesaure].notes[currentMesaure]. keys, duration
+
         const lyNote = getLyNoteByMidiNoteInKey(midiNote, key); // suggests correct enharmonic note for black key depening on the tonality
+
         // if (vtNote && !chordPopupOpen) {
         //     dispatch(insertVtNote(vtNote));
         // }

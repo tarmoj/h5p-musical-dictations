@@ -270,15 +270,49 @@ export const getLyNoteByMidiNoteInKey = (midiNote, key="C") => { // key as tonal
 
 }
 
+export const getVfNoteByMidiNoteInKey = (midiNote, key="C") => { // key as tonality like C major, given as 'A' for A major, 'Am' for minor
+    const pitchClass = midiNote%12;
+    const octave = Math.floor(midiNote/12) - 1;
+    let vfNote = "";
+    switch (pitchClass) {
+        case 0: vfNote = "C"; break;
+        case 1: vfNote =  [ "F", "Bb", "Eb", "Cm", "Ab", "Fm", "Db", "Bbm", "Gb", "Ebm", "Cb", "Abm"].includes(key) ? "Db" : "C#" ; break;
+        case 2: vfNote = "D"; break;
+        case 3: vfNote =  [ "C", "F", "Bb", "Gm", "Eb", "Cm", "Ab", "Fm", "Db", "Bbm", "Gb", "Ebm", "Cb", "Abm"].includes(key) ? "Eb" : "D#" ; break;
+        case 4: vfNote = "E"; break;
+        case 5: vfNote = "F"; break;
+        case 6: vfNote = [ "F", "Bb", "Eb", "Ab", "Fm", "Db", "Bbm", "Gb", "Ebm", "Cb", "Abm"].includes(key) ? "Gb" : "F#";  break;
+        case 7: vfNote = "G"; break;
+        case 8: vfNote = [ "F", "Bb", "Gm", "Eb", "Cm", "Ab", "Fm", "Db", "Bbm", "Gb", "Ebm", "Cb", "Abm"].includes(key) ? "Ab" : "G#";  break;
+        case 9: vfNote = "A"; break;
+        case 10: vfNote = [ "G", "D", "F", "Dm", "Bb", "Gm", "Eb", "Cm", "Ab", "Fm", "Db", "Bbm", "Gb", "Ebm", "Cb", "Abm"].includes(key) ? "Bb" : "A#";  break;
+        case 11: vfNote = "B"; break;
+        default: vfNote = "";
+    }
+    if (!vfNote) {
+        return "";
+    }  else {
+        vfNote += "/" + octave;
+        console.log("Detected vfNote: ", vfNote, pitchClass, octave, key);
+        return vfNote;
+    }
+
+}
+
+
+const getLyNoteName = (vfName) => {
+    noteNames.forEach( value, key => {
+        if (value===vfName) {
+            return  key; // this is the lilynote
+        }
+    });
+    return "";
+}
+
 const vfNoteToLyNote = (vfNote) => {
     const [note, octave] = vfNote.split("/");
     console.log("Split vfNote:", note, octave);
-    let lyNote = "";
-    noteNames.forEach( value, key => {
-        if (value===note) {
-            lyNote=  key; // this is the lilynote
-        }
-    });
+    let lyNote = getLyNoteName(note);
 
     if (!lyNote) {
         return "";
@@ -289,7 +323,7 @@ const vfNoteToLyNote = (vfNote) => {
             case 5: lyNote += `''`; break;
             case 6: lyNote += `'''`; break;
         }
-        console.log("Detected lyNote: ", lyNote, pitchClass, octave, key);
+        console.log("Detected lyNote: ", lyNote);
         return lyNote;
     }
 }
@@ -298,10 +332,14 @@ const vfNoteToLyNote = (vfNote) => {
 export const notationInfoToLyString = notationInfo => {
     let lyString = ""; 
     // TODO: handle several staves somehow 
-    // TODO: vexfow keys -  are thery only majors?
     for (let stave of notationInfo.staves) {
-        const keyString = stave.key + ( stave.key.endsWith("m") ? "\\minor" : "\\major" ) ; // TODO: key eginning need probably conversions
-        lyString += `\\clef ${stave.clef} \\key ${keyString} \\major time=${stave.time} \n`;
+        let keyString = "";
+        if (stave.key.endsWith("m")) { // minor
+            keyString =  stave.key.slice(-1,1).toLowerCase() + " \\minor"
+        } else {
+            keyString = stave.key.toLowerCase() + "\\major"
+        }
+        lyString += `\\clef ${stave.clef} \\key ${keyString} \\time ${stave.time} \n`;
         for (let measure of stave.measures) {
             if (measure.notes.length>0) {
                 for (let note of  measure.notes) {
