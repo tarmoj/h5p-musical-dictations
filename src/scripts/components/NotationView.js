@@ -52,15 +52,24 @@ export function NotationView({
     );
 
     const scale = 1;
-    const handleClick = (event) => {
+    const handleClick = (event) => {  // maybe - require click on notehead??
+        console.log("Click on: ", event.target.parentElement.className);
+        if (event.target.parentElement.className === "vf-notehead") {
+            console.log("This is notehead");
+        }
+        // just tryout not certain if valid:
+        console.log("Target: ", event.target, event.target.getBoundingClientRect().x );
+        const offsetX = rendererRef.current.getContext().svg.getBoundingClientRect().y  + window.scrollY ;;//event.target.getBoundingClientRect().x;
+        const offsetY = 0; //event.target.getBoundingClientRect().y;
+        console.log("OffsetX: ", offsetX);
 
-        let x = event.layerX  / scale;
+        let x = (event.layerX - offsetX)  / scale;
         let y = event.layerY / scale;
         console.log("Clicked: ", x,y, event);
-        console.log("Target: ", event.target.getBoundingClientRect() );
+
 
         // target is not always the svg...
-        //console.log("Renderer, Context:", rendererRef.current.getContext().svg.getBBox() );
+        console.log("Renderer, Context:", rendererRef.current.getContext().svg.getBBox() );
 
         // y is different when scrolled!! try to get Y from stave
         const svgY = rendererRef.current.getContext().svg.getBoundingClientRect().y  + window.scrollY ;
@@ -72,7 +81,7 @@ export function NotationView({
         const index =  findClosestNoteByX(x, clickedStaff);
         if (index >= 0) {
             const staveNote = allNotes[clickedStaff][index];
-            console.log("staveNote: ", staveNote.style);
+            //console.log("staveNote: ", staveNote.style);
             let color = "black";
             if (! staveNote.style) { // if not defined, default is black, make it red
                 color = "red"
@@ -92,7 +101,7 @@ export function NotationView({
 
     const findClosestNoteByX = (x, staffIndex=0) => {
         let indexOfClosest = -1, minDistance = 999999, i = 0;
-        console.log("Allnotes in function:", allNotes[staffIndex]);
+        //console.log("Allnotes in function:", allNotes[staffIndex]);
 
         if (allNotes[staffIndex].length<=0) {
             console.log("No notes", allNotes[staffIndex]);
@@ -100,7 +109,7 @@ export function NotationView({
         }
 
         for (let note of allNotes[staffIndex] ) { // NB! maybe a function needed getAllNotes(staff)
-            //console.log("Note x: ", note.getAbsoluteX(),note.getY());
+            console.log("Note x: ", note.getAbsoluteX());
             let distance = Math.abs(x - note.getAbsoluteX());
             if (distance < minDistance) {
                 indexOfClosest = i;
