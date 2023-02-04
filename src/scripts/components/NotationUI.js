@@ -16,7 +16,7 @@ import {
 
 
 
-export function NotationUI( {lyStart, setNotationInfo}) {
+export function NotationUI( {lyStart, setNotationInfo, notation}) {
 
     const [keyboardStartingOctave, setKeyboardStartingOctave ] = useState(3);
     const [lyInput, setLyInput] = useState(lyStart);
@@ -97,13 +97,16 @@ export function NotationUI( {lyStart, setNotationInfo}) {
         minOctave: 2
     }
 
-
     const handlePlayNote = midiNote => {
         console.log ("We are in key: ",  currentKey);
         const key = currentKey ? currentKey : "C";
 
-        //const vfNote = getVfNoteByMidiNoteInKey(midiNote, key);
-        //console.log("vfnote: ", vfNote);
+        const vfNote = getVfNoteByMidiNoteInKey(midiNote, key);
+        console.log("vfnote: ", vfNote);
+        console.log("Notation at this point: ", notation);
+        notation.callMe();
+        //notation.addNote(["C/4"], currentDuration);
+
         // TODO: insert it to the correct spot in notationInfo -  probably we need measureIndex and noteIndex
         // newNptationInfo.staves[currentStave].measures[currentMesaure].notes[currentMesaure]. keys, duration
 

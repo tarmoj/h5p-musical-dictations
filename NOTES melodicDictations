@@ -1,8 +1,10 @@
 
 
-Had problems with intallin mui5, what helped:
+Had problems with intalli mui5, what helped:
 https://stackoverflow.com/questions/71835697/create-react-app-dependency-version-issues-with-react-18
 
     delete both node_modules and package-lock.json
     run npm i web-vitals --save-dev
     run npm install
+
+TODO: rename notationUtils -> notation.js NotationUI -> NotationInput

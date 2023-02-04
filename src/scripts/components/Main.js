@@ -88,7 +88,10 @@ export default function Main( {correctDictation, showFromDictation = "", resizeF
             {/*<div><button onClick={doParse}>Show</button></div>*/}
             <div id={"score1"} ></div>
             <NotationView id="userNotation" div={"score"} notationInfo={responseNotationInfo} />
-            <NotationUI  lyStart={showFromDictation ? showFromDictation :  `\\clef treble \\time 4/4 \\key d \\major d'8 e' fis' g' a'4 a`} setNotationInfo={setResponseNotationInfo}/>
+            <NotationUI  lyStart={showFromDictation ? showFromDictation :  `\\clef treble \\time 4/4 \\key d \\major d'8 e' fis' g' a'4 a`}
+                         setNotationInfo={setResponseNotationInfo}
+                         notation = {responseNotationInfo}
+            />
             <button onClick={ () => checkResponse() }>Check</button>
             <button onClick={ () => {
                 setShowCorrectNotation(!showCorrectNotation);
