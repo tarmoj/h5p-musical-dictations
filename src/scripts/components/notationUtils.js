@@ -259,10 +259,10 @@ export const getLyNoteByMidiNoteInKey = (midiNote, key="C") => { // key as tonal
         return "";
     }  else {
         switch (octave) {
-            case "2": lyNote += `,`; break;
-            case "4": lyNote += `\'`; break;
-            case "5": lyNote += `\'\'`; break;
-            case "6": lyNote += `\'\'\'`; break;
+            case 2: lyNote += `,`; break;
+            case 4: lyNote += `'`; break;
+            case 5: lyNote += `''`; break;
+            case 6: lyNote += `'''`; break;
         }
         console.log("Detected lyNote: ", lyNote, pitchClass, octave, key);
         return lyNote;

@@ -102,8 +102,8 @@ export function NotationUI( {lyStart, setNotationInfo}) {
         console.log ("We are in key: ",  currentKey);
         const key = currentKey ? currentKey : "C";
 
-        const vfNote = getVfNoteByMidiNoteInKey(midiNote, key);
-        console.log("vfnote: ", vfNote);
+        //const vfNote = getVfNoteByMidiNoteInKey(midiNote, key);
+        //console.log("vfnote: ", vfNote);
         // TODO: insert it to the correct spot in notationInfo -  probably we need measureIndex and noteIndex
         // newNptationInfo.staves[currentStave].measures[currentMesaure].notes[currentMesaure]. keys, duration
 
@@ -113,8 +113,8 @@ export function NotationUI( {lyStart, setNotationInfo}) {
         //     dispatch(insertVtNote(vtNote));
         // }
         // insert to text in right position, check spaces, add if necessary
-        console.log("lyNote", lyNote);
-        setLyInput(lyInput + " " + lyNote) // later this would enter a vfnote to notationInfo in correct place....
+        //console.log("lyNote", lyNote);
+        setLyInput(lyInput + " " + lyNote + currentDuration) // later this would enter a vfnote to notationInfo in correct place....
 
     }
 
@@ -173,7 +173,7 @@ export function NotationUI( {lyStart, setNotationInfo}) {
     const createDurationsRow = () => {
         const dot = ""; // need a condition here
         return (
-            <Grid container direction={"row"} spacing={1}>
+            <Grid container item direction={"row"} spacing={1}>
                 <Grid item>
                     <ToggleButtonGroup
                         value={currentDuration}
@@ -193,7 +193,7 @@ export function NotationUI( {lyStart, setNotationInfo}) {
                         <ToggleButton value="8" aria-label="eighth note">
                             8
                         </ToggleButton>
-                        <ToggleButton value="8" aria-label="sixteenth note">
+                        <ToggleButton value="16" aria-label="sixteenth note">
                             16
                         </ToggleButton>
                         <ToggleButton value="32" aria-label="thirtysecond note">
@@ -203,16 +203,6 @@ export function NotationUI( {lyStart, setNotationInfo}) {
                 </Grid>
                 <Grid item>
 
-                    <ToggleButtonGroup
-                        value={currentDuration}
-                        onChange={ event =>  setCurrentDuration(event.target.value + dot)}
-                        aria-label="duration selection"
-                    >
-                        <ToggleButton value="1" aria-label="whole note">
-                            1
-                        </ToggleButton>
-
-                    </ToggleButtonGroup>
 
                 </Grid>
             </Grid>
@@ -227,15 +217,15 @@ export function NotationUI( {lyStart, setNotationInfo}) {
             console.log("Notation error or setter not set");
         }
 
-        const testLy = notationInfoToLyString(notation);
-        setLyInput(testLy);
+        // const testLy = notationInfoToLyString(notation);
+        // setLyInput(testLy);
 
     }
 
     // TODO: key input needed only in in two parts -  key, radio buttons major/minor
     return <div className={"h5p-musical-dictations-uiDiv"}>
-        <Grid container direction={"column"} spacing={2}>
-            <Grid container item direction={"column"} spacing={2}>
+        <Grid container direction={"column"} spacing={1}>
+            <Grid container  direction={"column"} spacing={1}>
                 <Grid item>Lilypond notation UI:</Grid>
                 <Grid item>
                     <textarea rows="5" cols="50" value={lyInput} onChange={ event => setLyInput( event.target.value )}/>
