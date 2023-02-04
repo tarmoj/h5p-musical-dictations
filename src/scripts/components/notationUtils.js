@@ -124,11 +124,11 @@ const parseLilypondString = (lyString) => {
             stave.clef = clef;
             i += 1;
         } else if  (chunks[i] === "\\bar" && chunks.length >= i+1)  { // handle different barlines
-            barLine = chunks[i + 1].trim().replace(/["]+/g, ''); // remove quoates \"
+            barLine = chunks[i + 1].trim().replace(/["]+/g, ''); // remove quotes \"
             // lilypond barlines: | |. ||  .|: :|.   :|.|:
             i += 1;
-        } else if     (chunks[i] === "|") {
-            barLine = "|";
+        } else if     ( ["|", "|.", "||",  ".|:", ":|.",   ":|.|:"].includes( chunks[i])) {
+            barLine = chunks[i];
         }  else if (chunks[i].startsWith("-") || chunks[i].startsWith("^") ) { // ^ -  text above note, - -under note
             // TODO: find a vexflow solution see Vex.Flow.TextNote - test it in TryOut
             if (notes.length > 0) {
@@ -259,10 +259,10 @@ export const getLyNoteByMidiNoteInKey = (midiNote, key="C") => { // key as tonal
         return "";
     }  else {
         switch (octave) {
-            case 2: lyNote += `,`; break;
-            case 4: lyNote += `'`; break;
-            case 5: lyNote += `''`; break;
-            case 6: lyNote += `'''`; break;
+            case "2": lyNote += `,`; break;
+            case "4": lyNote += `\'`; break;
+            case "5": lyNote += `\'\'`; break;
+            case "6": lyNote += `\'\'\'`; break;
         }
         console.log("Detected lyNote: ", lyNote, pitchClass, octave, key);
         return lyNote;
@@ -301,29 +301,31 @@ export const getVfNoteByMidiNoteInKey = (midiNote, key="C") => { // key as tonal
 
 
 const getLyNoteName = (vfName) => {
-    noteNames.forEach( value, key => {
+    let lyNote = "";
+    noteNames.forEach( (value, key) => {
         if (value===vfName) {
-            return  key; // this is the lilynote
+            console.log("Found: ", key);
+            lyNote =key; // this is the lilynote
         }
     });
-    return "";
+    return lyNote;
 }
 
 const vfNoteToLyNote = (vfNote) => {
     const [note, octave] = vfNote.split("/");
     console.log("Split vfNote:", note, octave);
     let lyNote = getLyNoteName(note);
-
+    console.log("lyNote in vfNoteToLyNote", lyNote);
     if (!lyNote) {
         return "";
     }  else {
         switch (octave) {
-            case 2: lyNote += `,`; break;
-            case 4: lyNote += `'`; break;
-            case 5: lyNote += `''`; break;
-            case 6: lyNote += `'''`; break;
+            case "2": lyNote += `,`; break;
+            case "4": lyNote += `'`; break;
+            case "5": lyNote += `''`; break;
+            case "6": lyNote += `\'\'\'`; break;
         }
-        console.log("Detected lyNote: ", lyNote);
+        console.log("vfNote2LyNote lyNote: ", lyNote);
         return lyNote;
     }
 }
@@ -335,9 +337,9 @@ export const notationInfoToLyString = notationInfo => {
     for (let stave of notationInfo.staves) {
         let keyString = "";
         if (stave.key.endsWith("m")) { // minor
-            keyString =  stave.key.slice(-1,1).toLowerCase() + " \\minor"
+            keyString =  stave.key.slice(-1,1).toLowerCase() + " \\minor "
         } else {
-            keyString = stave.key.toLowerCase() + "\\major"
+            keyString = stave.key.toLowerCase() + " \\major "
         }
         lyString += `\\clef ${stave.clef} \\key ${keyString} \\time ${stave.time} \n`;
         for (let measure of stave.measures) {
@@ -353,6 +355,7 @@ export const notationInfoToLyString = notationInfo => {
                             //noteString = `( ${note.keys.join(",")} )`;
                         } else if (note.keys.length === 1) {
                             noteString = vfNoteToLyNote(note.keys[0]);
+                            console.log("note.keys[0], noteString now: ", note.keys[0], noteString );
                         }
                         if (note.keys[0]==="|" || note.keys[0].startsWith("=")) { // not the case any more. Handel barlines differently
                             //lyString += ` ${note.keys[0]} `; <- old barline handling

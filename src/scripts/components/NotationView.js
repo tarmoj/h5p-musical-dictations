@@ -187,7 +187,7 @@ export function NotationView({
                         VF.Dot.buildAndAttach([staveNote], {all: true});
                     }
                     staveNotes.push(staveNote);
-                    console.log("Added to bar: ", note.keys);
+                    //console.log("Added to bar: ", note.keys);
                 }
 
                 // now when stavenotes are created, look for ties

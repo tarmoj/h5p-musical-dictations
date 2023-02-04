@@ -52,7 +52,8 @@ export function NotationUI( {lyStart, setNotationInfo}) {
                 </Grid>
 
                 <Grid item>
-                    Clef:
+                    <FormControl variant="standard">
+                        <InputLabel id="clefLabel">Clef</InputLabel>
                     <Select
                         id="clefSelect"
                         // value={selectedClef}
@@ -63,20 +64,23 @@ export function NotationUI( {lyStart, setNotationInfo}) {
                         <MenuItem value={"treble"}>treble</MenuItem>
                         <MenuItem value={"bass"}>bass</MenuItem>
                     </Select>
+                    </FormControl>
                 </Grid>
 
                 <Grid item>
-                    Time:
+                    <FormControl variant="standard">
+                        <InputLabel id="timeLabel">Time</InputLabel>
                     <Select
                         id="clefSelect"
                         // value={selectedClef}
                         defaultValue={"4/4"}
-                        label="Clef"
+                        label="Muhv"
                         onChange={ (event) => console.log("clef: ", event.target.value)}
                     >
                         <MenuItem value={"3/4"}>3/4</MenuItem>
                         <MenuItem value={"4/4"}>4/4</MenuItem>
                     </Select>
+                    </FormControl>
                 </Grid>
             </Grid>
         )
@@ -169,7 +173,7 @@ export function NotationUI( {lyStart, setNotationInfo}) {
     const createDurationsRow = () => {
         const dot = ""; // need a condition here
         return (
-            <Grid container direction={"column"} spacing={1}>
+            <Grid container direction={"row"} spacing={1}>
                 <Grid item>
                     <ToggleButtonGroup
                         value={currentDuration}
@@ -197,6 +201,20 @@ export function NotationUI( {lyStart, setNotationInfo}) {
                         </ToggleButton>
                     </ToggleButtonGroup>
                 </Grid>
+                <Grid item>
+
+                    <ToggleButtonGroup
+                        value={currentDuration}
+                        onChange={ event =>  setCurrentDuration(event.target.value + dot)}
+                        aria-label="duration selection"
+                    >
+                        <ToggleButton value="1" aria-label="whole note">
+                            1
+                        </ToggleButton>
+
+                    </ToggleButtonGroup>
+
+                </Grid>
             </Grid>
         );
     }
@@ -210,13 +228,14 @@ export function NotationUI( {lyStart, setNotationInfo}) {
         }
 
         const testLy = notationInfoToLyString(notation);
+        setLyInput(testLy);
 
     }
 
     // TODO: key input needed only in in two parts -  key, radio buttons major/minor
     return <div className={"h5p-musical-dictations-uiDiv"}>
-        <Grid container direction={"column"} spacing={1}>
-            <Grid container item direction={"column"} spacing={1}>
+        <Grid container direction={"column"} spacing={2}>
+            <Grid container item direction={"column"} spacing={2}>
                 <Grid item>Lilypond notation UI:</Grid>
                 <Grid item>
                     <textarea rows="5" cols="50" value={lyInput} onChange={ event => setLyInput( event.target.value )}/>
