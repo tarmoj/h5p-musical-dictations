@@ -9,7 +9,7 @@ export default function Main( {correctDictation, showFromDictation = "", resizeF
 
 
 
-    const [responseNotationInfo, setResponseNotationInfo] = useState( showFromDictation ? parseLilypondDictation(showFromDictation) : defaultNotationInfo);
+    const [responseNotationInfo, setResponseNotationInfo] = useState(defaultNotationInfo);//useState( showFromDictation ? parseLilypondDictation(showFromDictation) : defaultNotationInfo);
     const [correctNotationInfo, setCorrectNotationInfo] = useState(parseLilypondDictation(correctDictation));  // could have used a constant but that gets reevaluated each render tine
     const [showCorrectNotation, setShowCorrectNotation] = useState(false);
     const [feedBack, setFeedBack] = useState("");
@@ -77,6 +77,7 @@ export default function Main( {correctDictation, showFromDictation = "", resizeF
         setFeedBack( correct ? "Correct!" : "Wrong");
     }
 
+
     return (
         <div>
             <div>Enter the dictation in Lilypond notation  (absolute pitches, german nomenclature)</div>
@@ -92,6 +93,11 @@ export default function Main( {correctDictation, showFromDictation = "", resizeF
                          setNotationInfo={setResponseNotationInfo}
                          notation = {responseNotationInfo}
             />
+            <button onClick={ () => {
+                    console.log("responseNotation:", responseNotationInfo)
+                    responseNotationInfo.addNote("[G/4]", 2);
+                }
+            }>Test</button>
             <button onClick={ () => checkResponse() }>Check</button>
             <button onClick={ () => {
                 setShowCorrectNotation(!showCorrectNotation);

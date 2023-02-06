@@ -4,21 +4,25 @@ export const defaultNotationInfo = {
     currentStaff: 0,
     currentMeasure: -1, // means last/end NB! indexes, not number of note!
     currentNote: -1, // last
-    callMe: () => console.log("Yes, I am there"),
-    selectNote: (measure, note, staff=0) => {
+    callMe: function () { console.log("Yes, I am there") },
+    selectNote: function (measure, note, staff=0)  {
         this.currentMeasure = measure; this.currentNote = note; this.currentStaff= staff
     },
-    addNote: (keys, duration) => {
+    addNote: function (keys, duration)  {
 
-        console.log("Add note: ", keys, duration);
+        console.log("Add note 2: ", keys, duration, this.staves[0].measures.length);
 
-        // const measureIndex = this.currentMeasure === -1 ? this.staves[this.currentStaff].measures.length : this.currentMeasure;
-        // const noteIndex = this.currentNote === -1 ? this.staves[this.currentStaff].measures[measureIndex].notes.length : this.currentNote;
-        //
-        // console.log("Add note to position ", measureIndex, noteIndex);
-        // this.staves[this.currentStaff].measures[measureIndex].notes[noteIndex] = {
-        //     clef: "treble", keys: keys, duration: duration, auto_stem: "true"
-        // }; // + other fields later
+        const measureIndex = this.currentMeasure === -1  ?
+            (this.staves[this.currentStaff].measures.length>0 ? this.staves[this.currentStaff].measures.length - 1 : 0)
+            : this.currentMeasure; // point to the last measure
+
+        const noteIndex = this.currentNote === -1 ? this.staves[this.currentStaff].measures[measureIndex].notes.length : this.currentNote; // index to the note after last one
+        //console.log("indexes: ", measureIndex, noteIndex, );
+        console.log("Add note to position ", measureIndex, noteIndex);
+        this.staves[this.currentStaff].measures[measureIndex].notes[noteIndex] = {
+            clef: "treble", keys: keys, duration: duration, auto_stem: "true"
+        }; // + other fields later
+        console.log("Notes: ", this.staves[this.currentStaff].measures[measureIndex].notes)
         // does this trigger re-render for react component?
     },
 

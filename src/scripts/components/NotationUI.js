@@ -15,7 +15,6 @@ import {
 
 
 
-
 export function NotationUI( {lyStart, setNotationInfo, notation}) {
 
     const [keyboardStartingOctave, setKeyboardStartingOctave ] = useState(3);
@@ -105,7 +104,8 @@ export function NotationUI( {lyStart, setNotationInfo, notation}) {
         console.log("vfnote: ", vfNote);
         console.log("Notation at this point: ", notation);
         notation.callMe();
-        //notation.addNote(["C/4"], currentDuration);
+        notation.addNote([vfNote], currentDuration);
+        console.log("Measure 1: ", notation.staves[0].measures[0].notes);
 
         // TODO: insert it to the correct spot in notationInfo -  probably we need measureIndex and noteIndex
         // newNptationInfo.staves[currentStave].measures[currentMesaure].notes[currentMesaure]. keys, duration
@@ -213,12 +213,13 @@ export function NotationUI( {lyStart, setNotationInfo, notation}) {
     }
 
     const handleNotation = () => {
-        const notation = parseLilypondDictation(lyInput);
-        if (notation && setNotationInfo) {
-            setNotationInfo(notation);
-        } else {
-            console.log("Notation error or setter not set");
-        }
+        console.log("commented out...");
+        // const notation = parseLilypondDictation(lyInput);
+        // if (notation && setNotationInfo) {
+        //     setNotationInfo(notation);
+        // } else {
+        //     console.log("Notation error or setter not set");
+        // }
 
         // const testLy = notationInfoToLyString(notation);
         // setLyInput(testLy);
