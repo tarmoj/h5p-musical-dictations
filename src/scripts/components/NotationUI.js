@@ -15,7 +15,8 @@ import {
 
 
 
-export function NotationUI( {lyStart, setNotationInfo, notationInfo}) {
+export function NotationUI( {lyStart, setNotationInfo, notationInfo, selectedNote,
+                                setSelectedNote }) {
 
     const [keyboardStartingOctave, setKeyboardStartingOctave ] = useState(3);
     const [lyInput, setLyInput] = useState(lyStart);
@@ -27,6 +28,8 @@ export function NotationUI( {lyStart, setNotationInfo, notationInfo}) {
     useEffect( () => {
         setLyInput(notationInfoToLyString(notationInfo));
     } , [notationInfo]);
+
+    useEffect( () => console.log("selectNote: ", selectedNote), [selectedNote] );
 
     const insertNote =  (position, keys, duration) =>  { // position { measure: , note: staff: }
 
@@ -104,7 +107,7 @@ export function NotationUI( {lyStart, setNotationInfo, notationInfo}) {
 
         const vfNote = getVfNoteByMidiNoteInKey(midiNote, key);
         console.log("vfnote: ", vfNote);
-        console.log("Notation at this point: ", notationInfo);
+        //console.log("Notation at this point: ", notationInfo);
         addNote([vfNote], currentDuration.toString() );
 
         // TODO: insert it to the correct spot in notationInfo -  probably we need measureIndex and noteIndex

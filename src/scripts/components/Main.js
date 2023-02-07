@@ -13,7 +13,9 @@ export default function Main( {correctDictation, showFromDictation = "", resizeF
     const [correctNotationInfo, setCorrectNotationInfo] = useState(parseLilypondDictation(correctDictation));  // could have used a constant but that gets reevaluated each render tine
     const [showCorrectNotation, setShowCorrectNotation] = useState(false);
     const [feedBack, setFeedBack] = useState("");
-
+    const [ selectedNote, setSelectedNote] = useState({ measure:0, note:0, staff:0 } );
+    // let selectedNote = { measure:0, note:0, staff:0 }; // try not state
+    // const setSelectedNote = (position) => selectedNote = position;
 
     const lyRef = useRef();
 
@@ -72,10 +74,11 @@ export default function Main( {correctDictation, showFromDictation = "", resizeF
         <div>
             <div>Enter the dictation in Lilypond notation  (absolute pitches, german nomenclature)</div>
             <div id={"score1"} ></div>
-            <NotationView id="userNotation" div={"score"} notationInfo={responseNotationInfo} />
+            <NotationView id="userNotation" div={"score"} notationInfo={responseNotationInfo} selectedNote={selectedNote} setSelectedNote={setSelectedNote} />
             <NotationUI  lyStart={showFromDictation ? showFromDictation :  `\\clef treble \\time 4/4 \\key d \\major d'8 e' fis' g' a'4 a`}
                          setNotationInfo={setResponseNotationInfo}
                          notationInfo = {responseNotationInfo}
+                         selectedNote={selectedNote} setSelectedNote={setSelectedNote}
             />
             <button onClick={ () => {
                     console.log("responseNotation:", responseNotationInfo)
@@ -91,7 +94,7 @@ export default function Main( {correctDictation, showFromDictation = "", resizeF
             { showCorrectNotation &&
             <div>
                 <textarea rows="10" cols="50" readOnly={true} value={correctDictation}/>
-                <NotationView id="correctNotation" div={"score2"} notationInfo={correctNotationInfo} />
+                <NotationView id="correctNotation" div={"score2"} notationInfo={correctNotationInfo}  />
             </div>
             }
         </div>

@@ -11,7 +11,8 @@ export function NotationView({
                                  notationInfo = defaultNotationInfo,
                                  width = 500, // this will be expanded when notation will grow longer
                                  height = 140,
-                                 staffHeight = 100
+                                 staffHeight = 100,
+                                 selectedNote, setSelectedNote
                              }) {
     const container = useRef()
     const rendererRef = useRef()
@@ -53,10 +54,10 @@ export function NotationView({
 
     const scale = 1;
     const handleClick = (event) => {  // maybe - require click on notehead??
-        console.log("Click on: ", event.target.parentElement.className);
-        if (event.target.parentElement.className === "vf-notehead") {
-            console.log("This is notehead");
-        }
+        // console.log("Click on: ", event.target.parentElement.className);
+        // if (event.target.parentElement.className === "vf-notehead") {
+        //     console.log("This is notehead");
+        // }
         // just tryout not certain if valid:
         console.log("Target: ", event.target, event.target.getBoundingClientRect().x );
         const offsetX = rendererRef.current.getContext().svg.getBoundingClientRect().x  + window.scrollX ;;//event.target.getBoundingClientRect().x;
@@ -76,10 +77,18 @@ export function NotationView({
         //console.log(svgY);
         const clickedStaff = (y>svgY + staffHeight+20 && defaultNotationInfo.staves.length > 1 ) ? 1 : 0; // not best condition, for tryout only...
         console.log("clickedStaff: ", clickedStaff);
-        console.log("Length of allNotes: ", allNotes.length);
 
         const index =  findClosestNoteByX(x, clickedStaff);
         if (index >= 0) {
+            // set global/context currentPosition
+            // etiher find measureindex or better organize the stavenotes by measures. or add them to notationInfo; that is stupid, since there is so much doubleing
+            if (setSelectedNote) {
+                const position = {note: index, measure: 0, staff: clickedStaff};
+                setSelectedNote(position);
+            } else {
+                console.log("SetSelected not set");
+            }
+
             const staveNote = allNotes[clickedStaff][index];
             //console.log("staveNote: ", staveNote.style);
             let color = "black";
