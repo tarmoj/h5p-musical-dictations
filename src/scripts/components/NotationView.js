@@ -59,7 +59,7 @@ export function NotationView({
         }
         // just tryout not certain if valid:
         console.log("Target: ", event.target, event.target.getBoundingClientRect().x );
-        const offsetX = rendererRef.current.getContext().svg.getBoundingClientRect().y  + window.scrollY ;;//event.target.getBoundingClientRect().x;
+        const offsetX = rendererRef.current.getContext().svg.getBoundingClientRect().x  + window.scrollX ;;//event.target.getBoundingClientRect().x;
         const offsetY = 0; //event.target.getBoundingClientRect().y;
         console.log("OffsetX: ", offsetX);
 
