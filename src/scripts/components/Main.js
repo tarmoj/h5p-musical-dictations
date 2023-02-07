@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {NotationView} from "./NotationView"
 import {NotationUI} from "./NotationUI";
-import {defaultNotationInfo, parseLilypondDictation} from "./notationUtils";
+import {defaultNotationInfo, parseLilypondDictation, deepClone} from "./notationUtils";
 
 
 
@@ -17,21 +17,10 @@ export default function Main( {correctDictation, showFromDictation = "", resizeF
 
     const lyRef = useRef();
 
-    const init = () => {
-        // clear everything needed
-    }
-
-    const doParse = () => {
-        const lyInput = lyRef.current.value;
-        console.log("lyInput", lyRef.current.value);
-        const result = parseLilypondDictation(lyInput);
-        //console.log("notation object:", result);
-        setResponseNotationInfo(result);
-    }
 
     const checkResponse = () => {
 
-        const lyInput = lyRef.current.value;
+        const lyInput = lyRef.current.value; // get it in some other way from NotationInput? // not needed any more...
         const responseNotation = parseLilypondDictation(lyInput); // for any case, if user has not pressed "show"
         let correct = true;
 
@@ -78,24 +67,19 @@ export default function Main( {correctDictation, showFromDictation = "", resizeF
     }
 
 
+
     return (
         <div>
             <div>Enter the dictation in Lilypond notation  (absolute pitches, german nomenclature)</div>
-            {/*<div>Lilypond input:</div>*/}
-
-            {/*    <textarea rows="10" cols="50"ref={lyRef}*/}
-            {/*              defaultValue = { showFromDictation ? showFromDictation :  `\\clef treble \\time 4/4 \\key d \\major d'8 e' fis' g' a'4 a'`}*/}
-            {/*    />*/}
-            {/*<div><button onClick={doParse}>Show</button></div>*/}
             <div id={"score1"} ></div>
             <NotationView id="userNotation" div={"score"} notationInfo={responseNotationInfo} />
             <NotationUI  lyStart={showFromDictation ? showFromDictation :  `\\clef treble \\time 4/4 \\key d \\major d'8 e' fis' g' a'4 a`}
                          setNotationInfo={setResponseNotationInfo}
-                         notation = {responseNotationInfo}
+                         notationInfo = {responseNotationInfo}
             />
             <button onClick={ () => {
                     console.log("responseNotation:", responseNotationInfo)
-                    responseNotationInfo.addNote("[G/4]", 2);
+                   //insertNote("[g/4]", "2");
                 }
             }>Test</button>
             <button onClick={ () => checkResponse() }>Check</button>

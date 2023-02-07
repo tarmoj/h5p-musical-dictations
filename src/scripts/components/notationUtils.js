@@ -59,6 +59,7 @@ export const defaultNotationInfo = {
 
 };
 
+
 // Deep clones an object
 export const deepClone = (obj) => { // from util/util
     return JSON.parse(JSON.stringify(obj));

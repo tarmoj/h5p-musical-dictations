@@ -4,7 +4,7 @@ import {Piano} from "react-piano";
 import 'react-piano/dist/styles.css';
 import classNames from 'classnames';
 import {
-    defaultNotationInfo,
+    deepClone,
     getLyNoteByMidiNoteInKey, getVfNoteByMidiNoteInKey,
     notationInfoToLyString,
     parseLilypondDictation
@@ -15,12 +15,148 @@ import {
 
 
 
-export function NotationUI( {lyStart, setNotationInfo, notation}) {
+export function NotationUI( {lyStart, setNotationInfo, notationInfo}) {
 
     const [keyboardStartingOctave, setKeyboardStartingOctave ] = useState(3);
     const [lyInput, setLyInput] = useState(lyStart);
     const [currentKey, setCurrentKey] = useState("C");
     const [currentDuration, setCurrentDuration] = useState("4");
+
+    // notation functions (add, insert, delete
+
+    useEffect( () => {
+        setLyInput(notationInfoToLyString(notationInfo));
+    } , [notationInfo]);
+
+    const insertNote =  (position, keys, duration) =>  { // position { measure: , note: staff: }
+
+        const notation = deepClone(notationInfo);
+
+        const measureIndex = position.measure || 0;
+        const noteIndex = position.note || 0;
+        const staff = position.staff || 0;
+
+        console.log("Add note to position ", measureIndex, noteIndex);
+        notation.staves[staff].measures[measureIndex].notes[noteIndex] = {
+            clef: "treble", keys: keys, duration: duration, auto_stem: "true"
+        }; // + other fields later
+
+        console.log("Notes: ", notation.staves[notation.currentStaff].measures[measureIndex].notes)
+        // does this trigger re-render for react component?
+        setNotationInfo(notation);
+    }
+
+    const addNote = (keys, duration) => { // add note to the end
+        const staff = 0 ; //TODO: get from currentPosition that should be global... (React Context or similar? )
+        const measureIndex = notationInfo.staves[staff].measures.length>0 ? notationInfo.staves[staff].measures.length - 1 :0 ;
+
+        const noteIndex = notationInfo.staves[staff].measures[measureIndex].notes.length; // index to the note after last one
+        console.log("indexes: ", measureIndex, noteIndex, );
+        insertNote({note:noteIndex, measure: measureIndex, staff:staff}, keys, duration);
+    }
+
+    const deleteNote =  (position) =>  { // position { measure: , note: staff: }
+
+        const notation = deepClone(notationInfo);
+
+        const measureIndex = position.measure || 0;
+        const noteIndex = position.note || 0;
+        const staff = position.staff || 0;
+
+        console.log("Delete note from position ", measureIndex, noteIndex);
+
+        notation.staves[staff].measures[measureIndex].notes.splice(noteIndex, 1);
+
+        console.log("Notes: ", notation.staves[notation.currentStaff].measures[measureIndex].notes)
+        // does this trigger re-render for react component?
+        setNotationInfo(notation);
+    }
+
+    const deleteLastNote = () => {
+        const staff = 0 ; //TODO: get from currentPosition that should be global... (React Context or similar? )
+        const measureIndex = notationInfo.staves[staff].measures.length>0 ? notationInfo.staves[staff].measures.length - 1 :0 ;
+        const noteIndex = notationInfo.staves[staff].measures[measureIndex].notes.length - 1; // index to the note after last one
+        console.log("indexes: ", measureIndex, noteIndex, );
+        if (noteIndex>=0) {
+            deleteNote({note:noteIndex, measure: measureIndex, staff:staff} );
+        } else {
+            console.log("Nothing to delete"); // this deletes notes only in one bar...
+        }
+
+    }
+
+    // addBar(), shiftNotes() vms -  et lisada vahele; arrow up/down -  change note
+
+
+    // piano keyboard - perhaps make later a separate component ?  --------------------
+    // for piano keyboard
+    const firstNote = (keyboardStartingOctave+1)*12; // default - c3
+    const lastNote = (keyboardStartingOctave+3)*12 + 4; // for now range is fixed to 2 octaves + maj. third
+    // see https://github.com/kevinsqi/react-piano/blob/master/src/KeyboardShortcuts.js for redfining
+    const octaveData = {
+        maxOctave: 6,
+        minOctave: 2
+    }
+
+    const handlePlayNote = midiNote => {
+        console.log ("We are in key: ",  currentKey);
+        const key = currentKey ? currentKey : "C";
+
+        const vfNote = getVfNoteByMidiNoteInKey(midiNote, key);
+        console.log("vfnote: ", vfNote);
+        console.log("Notation at this point: ", notationInfo);
+        addNote([vfNote], currentDuration.toString() );
+
+        // TODO: insert it to the correct spot in notationInfo -  probably we need measureIndex and noteIndex
+        // newNptationInfo.staves[currentStave].measures[currentMesaure].notes[currentMesaure]. keys, duration
+
+        const lyNote = getLyNoteByMidiNoteInKey(midiNote, key); // suggests correct enharmonic note for black key depening on the tonality
+
+        // if (vtNote && !chordPopupOpen) {
+        //     dispatch(insertVtNote(vtNote));
+        // }
+        // insert to text in right position, check spaces, add if necessary
+        //console.log("lyNote", lyNote);
+        //setLyInput(lyInput + " " + lyNote + currentDuration) // later this would enter a vfnote to notationInfo in correct place....
+
+    }
+
+
+    const handleNotation = () => {
+        console.log("commented out...");
+        // const notation = parseLilypondDictation(lyInput);
+        // if (notation && setNotationInfo) {
+        //     setNotationInfo(notation);
+        // } else {
+        //     console.log("Notation error or setter not set");
+        // }
+
+        // const testLy = notationInfoToLyString(notation);
+        // setLyInput(testLy);
+
+    }
+
+    // extended from: https://github.com/kevinsqi/react-piano/blob/a8fac9f1ab0aab8fd21658714f1ad9f14568feee/src/ControlledPiano.js#L29
+    const renderNoteLabel =  ({ keyboardShortcut, midiNumber, isActive, isAccidental }) => {
+        const isC = midiNumber%12===0
+
+        return keyboardShortcut || isC ? (
+            <div
+                className={classNames('ReactPiano__NoteLabel', {
+                    'ReactPiano__NoteLabel--active': isActive,
+                    'ReactPiano__NoteLabel--accidental': isAccidental,
+                    'ReactPiano__NoteLabel--natural': !isAccidental,
+                })}
+            >
+                {keyboardShortcut}
+                { midiNumber%12===0 &&
+                    <p style={{color:"black", fontSize:"0.5em", textAlign:"left", marginLeft:"3px" }}>C{(midiNumber/12-1)}</p>
+                } {/*C3, C4 etc on C keys*/}
+            </div>
+        ) : null;
+    }
+
+    // UI ---------------------------------------------------------
 
     const handleKeySelect = (event) => {
         const key = event.target.value;
@@ -53,92 +189,40 @@ export function NotationUI( {lyStart, setNotationInfo, notation}) {
                 <Grid item>
                     <FormControl variant="standard">
                         <InputLabel id="clefLabel">Clef</InputLabel>
-                    <Select
-                        id="clefSelect"
-                        // value={selectedClef}
-                        defaultValue={"treble"}
-                        label="Clef"
-                        onChange={ (event) => console.log("clef: ", event.target.value)}
-                    >
-                        <MenuItem value={"treble"}>treble</MenuItem>
-                        <MenuItem value={"bass"}>bass</MenuItem>
-                    </Select>
+                        <Select
+                            id="clefSelect"
+                            // value={selectedClef}
+                            defaultValue={"treble"}
+                            label="Clef"
+                            onChange={ (event) => console.log("clef: ", event.target.value)}
+                        >
+                            <MenuItem value={"treble"}>treble</MenuItem>
+                            <MenuItem value={"bass"}>bass</MenuItem>
+                        </Select>
                     </FormControl>
                 </Grid>
 
                 <Grid item>
                     <FormControl variant="standard">
                         <InputLabel id="timeLabel">Time</InputLabel>
-                    <Select
-                        id="clefSelect"
-                        // value={selectedClef}
-                        defaultValue={"4/4"}
-                        label="Muhv"
-                        onChange={ (event) => console.log("clef: ", event.target.value)}
-                    >
-                        <MenuItem value={"3/4"}>3/4</MenuItem>
-                        <MenuItem value={"4/4"}>4/4</MenuItem>
-                    </Select>
+                        <Select
+                            id="clefSelect"
+                            // value={selectedClef}
+                            defaultValue={"4/4"}
+                            label="Muhv"
+                            onChange={ (event) => console.log("clef: ", event.target.value)}
+                        >
+                            <MenuItem value={"3/4"}>3/4</MenuItem>
+                            <MenuItem value={"4/4"}>4/4</MenuItem>
+                        </Select>
                     </FormControl>
+                </Grid>
+
+                <Grid item>
+                    <Button size={"small"} onClick={()=>deleteLastNote()}>Del.</Button>
                 </Grid>
             </Grid>
         )
-
-    }
-
-    // piano keyboard - perhaps make later a separate component ?  --------------------
-    // for piano keyboard
-    const firstNote = (keyboardStartingOctave+1)*12; // default - c3
-    const lastNote = (keyboardStartingOctave+3)*12 + 4; // for now range is fixed to 2 octaves + maj. third
-    // see https://github.com/kevinsqi/react-piano/blob/master/src/KeyboardShortcuts.js for redfining
-    const octaveData = {
-        maxOctave: 6,
-        minOctave: 2
-    }
-
-    const handlePlayNote = midiNote => {
-        console.log ("We are in key: ",  currentKey);
-        const key = currentKey ? currentKey : "C";
-
-        const vfNote = getVfNoteByMidiNoteInKey(midiNote, key);
-        console.log("vfnote: ", vfNote);
-        console.log("Notation at this point: ", notation);
-        notation.callMe();
-        notation.addNote([vfNote], currentDuration);
-        console.log("Measure 1: ", notation.staves[0].measures[0].notes);
-
-        // TODO: insert it to the correct spot in notationInfo -  probably we need measureIndex and noteIndex
-        // newNptationInfo.staves[currentStave].measures[currentMesaure].notes[currentMesaure]. keys, duration
-
-        const lyNote = getLyNoteByMidiNoteInKey(midiNote, key); // suggests correct enharmonic note for black key depening on the tonality
-
-        // if (vtNote && !chordPopupOpen) {
-        //     dispatch(insertVtNote(vtNote));
-        // }
-        // insert to text in right position, check spaces, add if necessary
-        //console.log("lyNote", lyNote);
-        setLyInput(lyInput + " " + lyNote + currentDuration) // later this would enter a vfnote to notationInfo in correct place....
-
-    }
-
-    // extended from: https://github.com/kevinsqi/react-piano/blob/a8fac9f1ab0aab8fd21658714f1ad9f14568feee/src/ControlledPiano.js#L29
-    const renderNoteLabel =  ({ keyboardShortcut, midiNumber, isActive, isAccidental }) => {
-        const isC = midiNumber%12===0
-
-        return keyboardShortcut || isC ? (
-            <div
-                className={classNames('ReactPiano__NoteLabel', {
-                    'ReactPiano__NoteLabel--active': isActive,
-                    'ReactPiano__NoteLabel--accidental': isAccidental,
-                    'ReactPiano__NoteLabel--natural': !isAccidental,
-                })}
-            >
-                {keyboardShortcut}
-                { midiNumber%12===0 &&
-                    <p style={{color:"black", fontSize:"0.5em", textAlign:"left", marginLeft:"3px" }}>C{(midiNumber/12-1)}</p>
-                } {/*C3, C4 etc on C keys*/}
-            </div>
-        ) : null;
     }
 
     const changeStartingOctave = (change=0) => {
@@ -212,19 +296,9 @@ export function NotationUI( {lyStart, setNotationInfo, notation}) {
         );
     }
 
-    const handleNotation = () => {
-        console.log("commented out...");
-        // const notation = parseLilypondDictation(lyInput);
-        // if (notation && setNotationInfo) {
-        //     setNotationInfo(notation);
-        // } else {
-        //     console.log("Notation error or setter not set");
-        // }
 
-        // const testLy = notationInfoToLyString(notation);
-        // setLyInput(testLy);
 
-    }
+
 
     // TODO: key input needed only in in two parts -  key, radio buttons major/minor
     return <div className={"h5p-musical-dictations-uiDiv"}>
