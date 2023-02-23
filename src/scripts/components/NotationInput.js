@@ -15,7 +15,7 @@ import {
 
 
 
-export function NotationUI( {lyStart, setNotationInfo, notationInfo, selectedNote,
+export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedNote,
                                 setSelectedNote }) {
 
     const [keyboardStartingOctave, setKeyboardStartingOctave ] = useState(3);
@@ -101,17 +101,19 @@ export function NotationUI( {lyStart, setNotationInfo, notationInfo, selectedNot
         minOctave: 2
     }
 
-    const handlePlayNote = midiNote => {
+    const handlePlayNote = midiNote => { // called when a MIDI keyboard key is pressed
         console.log ("We are in key: ",  currentKey);
         const key = currentKey ? currentKey : "C";
 
         const vfNote = getVfNoteByMidiNoteInKey(midiNote, key);
         console.log("vfnote: ", vfNote);
         //console.log("Notation at this point: ", notationInfo);
-        addNote([vfNote], currentDuration.toString() );
+        if (selectedNote.note<0) { // signals that none selected, insert in the end
+            addNote([vfNote], currentDuration.toString() );
+        } else {
+            insertNote(selectedNote, [vfNote], currentDuration.toString() );
+        }
 
-        // TODO: insert it to the correct spot in notationInfo -  probably we need measureIndex and noteIndex
-        // newNptationInfo.staves[currentStave].measures[currentMesaure].notes[currentMesaure]. keys, duration
 
         const lyNote = getLyNoteByMidiNoteInKey(midiNote, key); // suggests correct enharmonic note for black key depening on the tonality
 

@@ -7,4 +7,4 @@ https://stackoverflow.com/questions/71835697/create-react-app-dependency-version
     run npm i web-vitals --save-dev
     run npm install
 
-TODO: rename notationUtils -> notation.js NotationUI -> NotationInput
+TODO: rename notationUtils -> notation.js NotationInput -> NotationInput

@@ -1,5 +1,5 @@
 import React, {useRef, useEffect, useState} from 'react'
-import VexFlow from 'vexflow';
+import VexFlow, {StaveNote} from 'vexflow';
 import {defaultNotationInfo} from './notationUtils';
 
 
@@ -12,12 +12,14 @@ export function NotationView({
                                  width = 500, // this will be expanded when notation will grow longer
                                  height = 140,
                                  staffHeight = 100,
-                                 selectedNote, setSelectedNote
+                                 setSelectedNote
                              }) {
     const container = useRef()
     const rendererRef = useRef()
 
     const [allNotes, setAllNotes] = useState([[],[]]);
+    const scale = 1;
+    let selectedNote = {note: 0, measure: 0, staff: 0}; // should be the last note of notationInfo though...
 
 
 
@@ -37,13 +39,9 @@ export function NotationView({
         context.clear();
         context.setFont('Arial', 10, '').setBackgroundFillStyle('#eeeedd');
 
-        draw(notationInfo, context); // should we also pass renderer? or context?
+        draw(notationInfo, context); // should we also pass renderer?
 
-        // try: does not work...
-        //    window.dispatchEvent(new Event('resize')); // for any case
-
-
-    }, [notationInfo, width, height]); // allNotes maybe wrong here -  the handleClick should be updated...
+    }, [notationInfo, width, height]);
 
 
     useEffect( () => { // this works!
@@ -52,7 +50,14 @@ export function NotationView({
         }, [allNotes]
     );
 
-    const scale = 1;
+
+    const highlightNote = (note, color = "lightblue") => { // note must be VF.StaveNote
+        if (note ) {
+            rendererRef.current.getContext().rect(note.getAbsoluteX()-10, note.getStave().getYForTopText()-10, note.getWidth()+20, note.getStave().getHeight()+10,
+                { fill: color, opacity: "0.2" } );
+        }
+    }
+
     const handleClick = (event) => {  // maybe - require click on notehead??
         // console.log("Click on: ", event.target.parentElement.className);
         // if (event.target.parentElement.className === "vf-notehead") {
@@ -80,33 +85,42 @@ export function NotationView({
 
         const index =  findClosestNoteByX(x, clickedStaff);
         if (index >= 0) {
-            // set global/context currentPosition
+            // set global/context selectedNote
             // etiher find measureindex or better organize the stavenotes by measures. or add them to notationInfo; that is stupid, since there is so much doubleing
             if (setSelectedNote) {
-                const position = {note: index, measure: 0, staff: clickedStaff};
-                setSelectedNote(position);
+                selectedNote = {note: index, measure: 0, staff: clickedStaff}; // TODO: find out measure!!
+                //selectedNote = position;
+                setSelectedNote(selectedNote); //
+                draw(notationInfo, rendererRef.current.getContext()); // does not update or something else wrong
             } else {
                 console.log("SetSelected not set");
             }
 
             const staveNote = allNotes[clickedStaff][index];
-            //console.log("staveNote: ", staveNote.style);
-            let color = "black";
-            if (! staveNote.style) { // if not defined, default is black, make it red
-                color = "red"
-            } else {
-                color = staveNote.style.fillStyle === "red" ? "black" : "red";   // otherwise switch
-            }
+            //const color = (! staveNote.style) ? "green" : (staveNote.style.fillStyle === "red" ? "black" : "green" );
+            //setColor(staveNote, color);
 
-            const style = {fillStyle: color, strokeStyle: color};
-            staveNote.setStyle(style);
-            staveNote.setStemStyle(style);
-            staveNote.setFlagStyle(style);
-            staveNote.setContext(rendererRef.current.getContext()).draw();
+            //highlightNote(staveNote, "lightblue"); // how to unselect?
+
         }
 
 
     };
+
+    const setColor = (staveNote, color) => {
+
+        // if (! staveNote.style) { // if not defined, default is black, make it red
+        //     color = "red"
+        // } else {
+        //     color = staveNote.style.fillStyle === "red" ? "black" : "red";   // otherwise switch
+        // }
+
+        const style = {fillStyle: color, strokeStyle: color};
+        staveNote.setStyle(style);
+        staveNote.setStemStyle(style);
+        staveNote.setFlagStyle(style);
+        staveNote.setContext(rendererRef.current.getContext()).draw();
+    }
 
     const findClosestNoteByX = (x, staffIndex=0) => {
         let indexOfClosest = -1, minDistance = 999999, i = 0;
@@ -130,6 +144,7 @@ export function NotationView({
         return indexOfClosest;
     };
 
+
     const draw = (notationInfo, context) => {
         let allNotes = [[], []]; // ready for two staves
         const vfStaves = [[], []]; //  NB! think of better name! this is vexflow staves actually. do we need to store them at all? -  later: define by stave count [ Array(notationIfo.staves.length ]
@@ -141,6 +156,7 @@ export function NotationView({
         let startY = 0;
         let startX = 10;
         const formatter = new VF.Formatter();
+        let noteToHighlight = null;
 
 
         // vertical alignment: https://github.com/0xfe/vexflow/wiki/The-VexFlow-FAQ
@@ -194,10 +210,17 @@ export function NotationView({
                 vfStaves[staffIndex].push(newMeasure); // or proably push is better // do we need it at all, actually?
                 let staveNotes = [];
 
+                let noteIndex = 0;
                 for (let note of notationMeasure.notes) {
                     const staveNote = new VF.StaveNote(note);
                     if (note.hasOwnProperty("color")) {
                         staveNote.setStyle({fillStyle: note.color, strokeStyle: note.color});
+                    }
+                    // if (note.hasOwnProperty("selected")) {
+                    //     noteToHighlight = staveNote; // to highlight it later
+                    // }
+                    if (noteIndex === selectedNote.note && measureIndex === selectedNote.measure && staffIndex === selectedNote.staff) {
+                        noteToHighlight = staveNote; // to highlight it later
                     }
                     // double dot not implemented yet
                     if (note.duration.substr(-1) === "d") { //if dotted, add modifier
@@ -289,7 +312,10 @@ export function NotationView({
             }
         }
 
-
+        // after drarwing, highlight the note if any:
+        if (noteToHighlight) {
+            highlightNote(noteToHighlight);
+        }
         setAllNotes(allNotes); // does not seem to work . maybe it is even better
     }
 
