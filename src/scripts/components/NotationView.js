@@ -69,12 +69,7 @@ export function NotationView({
             { fill: color, opacity: "0.2" } );
     }
 
-    const handleClick = (event) => {  // maybe - require click on notehead??
-        //console.log("Click on: ", event.target.parentElement.className.baseVal);
-        // if (event.target.parentElement.className === "vf-notehead") {
-        //     console.log("This is notehead");
-        // }
-        // just tryout not certain if valid:
+    const handleClick = (event) => {
         //console.log("Target: ", event.target, event.target.getBoundingClientRect().x );
         const offsetX = rendererRef.current.getContext().svg.getBoundingClientRect().x  + window.scrollX ;;//event.target.getBoundingClientRect().x;
         const offsetY = 0; //event.target.getBoundingClientRect().y;
@@ -94,28 +89,8 @@ export function NotationView({
         const index =  findClosestNoteByX(x, clickedStaff);
         position.note = index; // how to deal with in between?
         position.staff = clickedStaff;
+        position.measure =  allNotes[clickedStaff][parseInt(index)].getStave().getMeasure() - 1 ;  // index can be olso 1.5 or similar, if in between
 
-        // drawing the cursos should be done only in draw
-        // let cursorX = -1;
-        // if (index<0) { // not found or after the last
-        //     position.note = -1;
-        //     // draw cursor in the end after last note
-        //     cursorX = allNotes[0].at(-1).getNoteHeadEndX() + 5;
-        //     console.log("Draw cursor in the end", cursorX);
-        //     // get current stave? should this be still be put in notationInfo? I think yes...
-        // } else if (index-parseInt(index) === 0.5) { // in between
-        //     cursorX = allNotes[clickedStaff][parseInt(index)].getNoteHeadEndX()+ 5;
-        //     console.log("Draw cursor on: ", cursorX);
-        // } else  {
-        //     console.log("Indexe of the note: ", index);
-        //     cursorX = allNotes[clickedStaff][index].getNoteHeadBeginX()-5; // or clickedStaff?
-        //
-        //
-        // }
-
-        // if (cursorX>=0) {
-        //     setInputCursor(cursorX);
-        // }
 
         setLocalSelectedNote(position); // TODO: find out measure!!
 
@@ -176,6 +151,7 @@ export function NotationView({
             }
         }
         console.log("Closest: ", indexOfClosest);
+
         return indexOfClosest;
     };
 
@@ -215,6 +191,7 @@ export function NotationView({
                 const notationMeasure = staff.measures[measureIndex];
 
                 const newMeasure = new VF.Stave(startX, startY + staffIndex * staffHeight, measureWidth);
+                newMeasure.setMeasure(measureIndex+1);
 
                 if (measureIndex === 0) { // OR: hasOwnProperty("clef" etc
                     newMeasure.addClef(staff.clef).addKeySignature(staff.key).addTimeSignature(staff.time);
