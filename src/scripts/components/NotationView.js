@@ -19,8 +19,8 @@ export function NotationView({
 
     const [allNotes, setAllNotes] = useState([[],[]]);
     const scale = 1;
-    let selectedNote = {note: 0, measure: 0, staff: 0}; // should be the last note of notationInfo though...
-
+    //let selectedNote = {note: 0, measure: 0, staff: 0}; // should be the last note of notationInfo though...
+    const [selectedNote, setLocalSelectedNote] = useState(null);//useState({note: 0, measure: 0, staff: 0});
 
 
     useEffect(() => { // this is actually redraw function...
@@ -41,7 +41,7 @@ export function NotationView({
 
         draw(notationInfo, context); // should we also pass renderer?
 
-    }, [notationInfo, width, height]);
+    }, [notationInfo, width, height, selectedNote]);
 
 
     useEffect( () => { // this works!
@@ -53,6 +53,7 @@ export function NotationView({
 
     const highlightNote = (note, color = "lightblue") => { // note must be VF.StaveNote
         if (note ) {
+            console.log("Stavenote to highlight: ", note.keys, note.getAbsoluteX());
             rendererRef.current.getContext().rect(note.getAbsoluteX()-10, note.getStave().getYForTopText()-10, note.getWidth()+20, note.getStave().getHeight()+10,
                 { fill: color, opacity: "0.2" } );
         }
@@ -64,34 +65,36 @@ export function NotationView({
         //     console.log("This is notehead");
         // }
         // just tryout not certain if valid:
-        console.log("Target: ", event.target, event.target.getBoundingClientRect().x );
+        //console.log("Target: ", event.target, event.target.getBoundingClientRect().x );
         const offsetX = rendererRef.current.getContext().svg.getBoundingClientRect().x  + window.scrollX ;;//event.target.getBoundingClientRect().x;
         const offsetY = 0; //event.target.getBoundingClientRect().y;
-        console.log("OffsetX: ", offsetX);
+        //console.log("OffsetX: ", offsetX);
 
         let x = (event.layerX - offsetX)  / scale;
         let y = event.layerY / scale;
-        console.log("Clicked: ", x,y, event);
+        //console.log("Clicked: ", x,y, event);
 
 
         // target is not always the svg...
-        console.log("Renderer, Context:", rendererRef.current.getContext().svg.getBBox() );
+        //console.log("Renderer, Context:", rendererRef.current.getContext().svg.getBBox() );
 
         // y is different when scrolled!! try to get Y from stave
         const svgY = rendererRef.current.getContext().svg.getBoundingClientRect().y  + window.scrollY ;
         //console.log(svgY);
         const clickedStaff = (y>svgY + staffHeight+20 && defaultNotationInfo.staves.length > 1 ) ? 1 : 0; // not best condition, for tryout only...
-        console.log("clickedStaff: ", clickedStaff);
+        //console.log("clickedStaff: ", clickedStaff);
 
         const index =  findClosestNoteByX(x, clickedStaff);
         if (index >= 0) {
             // set global/context selectedNote
             // etiher find measureindex or better organize the stavenotes by measures. or add them to notationInfo; that is stupid, since there is so much doubleing
+           const position = {note: index, measure: 0, staff: clickedStaff};
+           setLocalSelectedNote(position); // TODO: find out measure!!
+
             if (setSelectedNote) {
-                selectedNote = {note: index, measure: 0, staff: clickedStaff}; // TODO: find out measure!!
-                //selectedNote = position;
-                setSelectedNote(selectedNote); //
-                draw(notationInfo, rendererRef.current.getContext()); // does not update or something else wrong
+                //selectedNote = position; // we should set this in state and redraw!
+                setSelectedNote(position); // this updates NotationInput or anyone else interested. OR: still, use redux???
+                //draw(notationInfo, rendererRef.current.getContext()); // does not update or something else wrong
             } else {
                 console.log("SetSelected not set");
             }
@@ -100,7 +103,7 @@ export function NotationView({
             //const color = (! staveNote.style) ? "green" : (staveNote.style.fillStyle === "red" ? "black" : "green" );
             //setColor(staveNote, color);
 
-            //highlightNote(staveNote, "lightblue"); // how to unselect?
+            //highlightNote(staveNote, "lightblue"); // draws correct one how to unselect?
 
         }
 
@@ -219,23 +222,25 @@ export function NotationView({
                     // if (note.hasOwnProperty("selected")) {
                     //     noteToHighlight = staveNote; // to highlight it later
                     // }
-                    if (noteIndex === selectedNote.note && measureIndex === selectedNote.measure && staffIndex === selectedNote.staff) {
+                    if (selectedNote && noteIndex === selectedNote.note && measureIndex === selectedNote.measure && staffIndex === selectedNote.staff) {
+                        console.log("This note should be highlighted: ", noteIndex)
                         noteToHighlight = staveNote; // to highlight it later
                     }
                     // double dot not implemented yet
                     if (note.duration.substr(-1) === "d") { //if dotted, add modifier
-                        console.log("Dotted note!")
+                        //console.log("Dotted note!")
                         VF.Dot.buildAndAttach([staveNote], {all: true});
                     }
                     staveNotes.push(staveNote);
                     //console.log("Added to bar: ", note.keys);
+                    noteIndex++;
                 }
 
                 // now when stavenotes are created, look for ties
                 for (let i=0; i<notationMeasure.notes.length-1; i++) {
                     const note = notationMeasure.notes[i];
                     if (note.hasOwnProperty("tied"))  {
-                        console.log("Found tie by index: ", i, note.tied);
+                        //console.log("Found tie by index: ", i, note.tied);
                         ties.push( new VF.StaveTie( {
                             first_note: staveNotes[i],
                             last_note: staveNotes[i+1],
@@ -270,7 +275,7 @@ export function NotationView({
                     measureWidth = necessaryWidth + 40;
                 }
                 //if (measureIndex === 0) measureWidth += clefAndKeySpace;
-                console.log("measureWidth: ", necessaryWidth, measureWidth, newMeasure.getNoteStartX());
+                //console.log("measureWidth: ", necessaryWidth, measureWidth, newMeasure.getNoteStartX());
                 // if (testWidth>100) {
                 //   measureWidth += testWidth;
                 // }
@@ -282,7 +287,7 @@ export function NotationView({
 
             //formatter.format(voices); // was
 
-            console.log("necessary w. befor formattter.format", necessaryWidth);
+            //console.log("necessary w. befor formattter.format", necessaryWidth);
             formatter.format(voices, necessaryWidth);
             // let testWidth = formatter.getMinTotalWidth();
             // console.log("minTotalWidth: ", testWidth);
@@ -307,7 +312,7 @@ export function NotationView({
             }
             startX += measureWidth;
             if (startX>width) {
-                console.log("the width grew too big!", startX);
+                //console.log("the width grew too big!", startX);
                 rendererRef.current.resize(startX+40, height);
             }
         }

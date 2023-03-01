@@ -14,7 +14,7 @@ export const defaultNotationInfo = {
                 // also possible to define new key or clef here
                 // in the code -  if measure.hasOwnProperty.clef etc
                 notes: [
-                    { clef: "treble", keys: ["f/4"], duration: "1", auto_stem: "true" ,
+                    { clef: "treble", keys: ["F/4"], duration: "1", auto_stem: "true" ,
                         //selected:true, color:"green"
                         /*optional: tied: true|false, text:"something", position:""*/ }, // cannot be empty, vf requires that the measure is filled... or perhaps there is a way to override it
                 ]
