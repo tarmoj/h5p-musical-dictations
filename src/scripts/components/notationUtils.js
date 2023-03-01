@@ -307,7 +307,7 @@ export const getVfNoteByMidiNoteInKey = (midiNote, key="C") => { // key as tonal
 const getLyNoteName = (vfName) => {
     let lyNote = "";
     noteNames.forEach( (value, key) => {
-        if (value===vfName) {
+        if (value===vfName.toUpperCase()) { // VF names in uppercase
             console.log("Found: ", key);
             lyNote =key; // this is the lilynote
         }
@@ -356,7 +356,8 @@ export const notationInfoToLyString = notationInfo => {
 
                         if (note.keys.length>1) {
                             console.log("Chords not supported yet");
-                            //noteString = `( ${note.keys.join(",")} )`;
+                            //noteString = `<< ${note.keys.join(" ")} >>`;
+                            // noteString = `<<  ${note.keys-> map -> vfNoteToLyNote(key)}  >>` or something similar
                         } else if (note.keys.length === 1) {
                             noteString = vfNoteToLyNote(note.keys[0]);
                             console.log("note.keys[0], noteString now: ", note.keys[0], noteString );
@@ -364,7 +365,9 @@ export const notationInfoToLyString = notationInfo => {
                         if (note.keys[0]==="|" || note.keys[0].startsWith("=")) { // not the case any more. Handel barlines differently
                             //lyString += ` ${note.keys[0]} `; <- old barline handling
                         } else {
+                            console.log("noteString 2", noteString)
                             lyString += ` ${noteString}${note.duration} `;  // here are probably more conditions (triplets etc)
+                            console.log("lyString", lyString)
                         }
                         if (note.hasOwnProperty("text")) {
                             // let positionString = ".top.";
