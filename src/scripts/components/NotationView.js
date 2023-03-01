@@ -21,6 +21,7 @@ export function NotationView({
     const scale = 1;
     //let selectedNote = {note: 0, measure: 0, staff: 0}; // should be the last note of notationInfo though...
     const [selectedNote, setLocalSelectedNote] = useState({note: -1, measure: 0, staff: 0});
+    const [notePositions, setNotePositions] = useState([]); // array of elements {staveNote, position: {note, measure, staff}}
 
 
     useEffect(() => { // this is actually redraw function...
@@ -85,23 +86,23 @@ export function NotationView({
         //console.log(svgY);
         const clickedStaff = (y>svgY + staffHeight+20 && defaultNotationInfo.staves.length > 1 ) ? 1 : 0; // not best condition, for tryout only...
         //console.log("clickedStaff: ", clickedStaff);
-        let position = deepClone(selectedNote);
-        const index =  findClosestNoteByX(x, clickedStaff);
-        position.note = index; // how to deal with in between?
-        position.staff = clickedStaff;
-        position.measure =  allNotes[clickedStaff][parseInt(index)].getStave().getMeasure() - 1 ;  // index can be olso 1.5 or similar, if in between
+        // let position = deepClone(selectedNote);
+        // const index =  findClosestNoteByX(x, clickedStaff);
+        const position = findClosestNoteByX(x, clickedStaff);
+        // position.note = index; // how to deal with in between?
+        // position.staff = clickedStaff;
+        // position.measure =  allNotes[clickedStaff][parseInt(index)].getStave().getMeasure() - 1 ;  // index can be olso 1.5 or similar, if in between
 
+        if (position) {
+            setLocalSelectedNote(position);
+        }
 
-        setLocalSelectedNote(position); // TODO: find out measure!!
 
         if (setSelectedNote) {
             setSelectedNote(position); // this updates NotationInput or anyone else interested. OR: still, use redux???
         } else {
             console.log("SetSelected not set");
         }
-
-
-
 
     };
 
@@ -120,46 +121,75 @@ export function NotationView({
         staveNote.setContext(rendererRef.current.getContext()).draw();
     }
 
+    const getLastNote = (staffIndex) => { // returns last staveNote on that notation staff
+        // get array of all notes where position.staff===staffIndex, return the last element
+        //return notePositions.find( info => info.position.staff===  )
+    }
+
     const findClosestNoteByX = (x, staffIndex=0) => {
         let indexOfClosest = -1, minDistance = 999999, i = 0;
         const padding = 5 ; // 10 px to left and right
         //console.log("Allnotes in function:", allNotes[staffIndex]);
 
-        if (allNotes[staffIndex].length<=0) {
-            console.log("No notes", allNotes[staffIndex]);
-            return -1;
-        }
+        // if (allNotes[staffIndex].length<=0) {
+        //     console.log("No notes", allNotes[staffIndex]);
+        //     //return -1;
+        //     return {note: -1, measure: -1, staff: staffIndex}
+        // }
+
+        // TODO: find last note in the staff
+        // TODO: getNoteByPosition
 
         if ( x> allNotes[staffIndex].at(-1).getNoteHeadEndX()+padding ) {
             console.log("click after last note");
-            return -2; // this is probably not good style...
+            //return -2; // this is probably not good style...
             // or should we set position to -1 -1 -1 here? probably yes.
+            return {note: -1, measure: -1, staff: staffIndex}
         }
-        const noteCount = allNotes[staffIndex].length;
-        //for (let note of allNotes[staffIndex] ) { // NB! maybe a function needed getAllNotes(staff)
-        for (let i=0; i<allNotes[staffIndex].length; i++) {
-            const note = allNotes[staffIndex][i];
-            const nextNote = (i<allNotes[staffIndex].length-1) ? allNotes[staffIndex][i+1] : null;
+
+        //NB! looking by index in allNotes is not correct, since you have to look by measures
+        // it seems best to have similar setup for notationInfo, perhaps make a copy of notationIndo and add staveNote to it?
+        let position = null;
+        for (let i=0; i<notePositions.length; i++) {
+            const note = notePositions[i].staveNote;
+            const nextNote = (i<notePositions.length-1) ? notePositions[i+1].staveNote : null;
             console.log("click Note x, width: ", note.getAbsoluteX(), note.getWidth(), note.getBoundingBox(), note.getNoteHeadBeginX(), note.getNoteHeadEndX());
-            // see https://0xfe.github.io/vexflow/api/classes/StaveNote.html#getAbsoluteX for staveNote metrics
             if (x>= note.getNoteHeadBeginX()-padding && x<=note.getNoteHeadEndX()+padding ) {
-                indexOfClosest = i;
+                position = notePositions[i].position;
             } else if (nextNote && x>note.getNoteHeadEndX()+padding && x<nextNote.getNoteHeadBeginX()-padding) {
                 console.log("click In between after ", i);
-                indexOfClosest = i + 0.5;
+                position = notePositions[i].position;
+                console.log("In between position first: ", position);
+                position.note += 0.5; // to mark it is in between
 
             }
         }
-        console.log("Closest: ", indexOfClosest);
 
-        return indexOfClosest;
+        // for (let i=0; i<allNotes[staffIndex].length; i++) {
+        //     const note = allNotes[staffIndex][i];
+        //     const nextNote = (i<allNotes[staffIndex].length-1) ? allNotes[staffIndex][i+1] : null;
+        //     console.log("click Note x, width: ", note.getAbsoluteX(), note.getWidth(), note.getBoundingBox(), note.getNoteHeadBeginX(), note.getNoteHeadEndX());
+        //     // see https://0xfe.github.io/vexflow/api/classes/StaveNote.html#getAbsoluteX for staveNote metrics
+        //     if (x>= note.getNoteHeadBeginX()-padding && x<=note.getNoteHeadEndX()+padding ) {
+        //         indexOfClosest = i;
+        //     } else if (nextNote && x>note.getNoteHeadEndX()+padding && x<nextNote.getNoteHeadBeginX()-padding) {
+        //         console.log("click In between after ", i);
+        //         indexOfClosest = i + 0.5;
+        //
+        //     }
+        // }
+        console.log("Closest position: ", position);
+
+        return position; //indexOfClosest;
     };
+
 
 
     const draw = (notationInfo, context) => {
         let allNotes = [[], []]; // ready for two staves
         const vfStaves = [[], []]; //  NB! think of better name! this is vexflow staves actually. do we need to store them at all? -  later: define by stave count [ Array(notationIfo.staves.length ]
         const defaultWidth = 200;
+        const currentPositionInfo = [];
         //How can I pre-calculate the width of a voice?
         //
         // You can call Formatter.getMinTotalWidth() to return the minimum amount of horizontal space required to render a voice.
@@ -225,6 +255,8 @@ export function NotationView({
                 let noteIndex = 0;
                 for (let note of notationMeasure.notes) {
                     const staveNote = new VF.StaveNote(note);
+                    currentPositionInfo.push( { staveNote : staveNote, position : {note: noteIndex, measure: measureIndex, staff: staffIndex} } )
+
                     if (note.hasOwnProperty("color")) {
                         staveNote.setStyle({fillStyle: note.color, strokeStyle: note.color});
                     }
@@ -343,6 +375,10 @@ export function NotationView({
             setInputCursor(cursorX, cursorColor);
         }
         setAllNotes(allNotes); // does not seem to work . maybe it is even better
+
+        setNotePositions(currentPositionInfo);
+
+
     }
 
     return <div className={"h5p-musical-dictations-notationDiv"}> <div ref={container} /> </div>
