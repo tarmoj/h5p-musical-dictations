@@ -54,13 +54,15 @@ export function NotationView({
     const highlightNote = (note, color = "lightblue") => { // note must be VF.StaveNote
         if (note ) {
             console.log("Stavenote to highlight: ", note.keys, note.getAbsoluteX());
-            rendererRef.current.getContext().rect(note.getAbsoluteX()-10, note.getStave().getYForTopText()-10, note.getWidth()+20, note.getStave().getHeight()+10,
+            const padding = 5;
+            const width = note.getNoteHeadEndX() - note.getNoteHeadBeginX(); // approximate notehead width
+            rendererRef.current.getContext().rect(note.getNoteHeadBeginX()-padding, note.getStave().getYForTopText()-10,width+2*padding, note.getStave().getHeight()+10,
                 { fill: color, opacity: "0.2" } );
         }
     }
 
     const handleClick = (event) => {  // maybe - require click on notehead??
-        // console.log("Click on: ", event.target.parentElement.className);
+        //console.log("Click on: ", event.target.parentElement.className.baseVal);
         // if (event.target.parentElement.className === "vf-notehead") {
         //     console.log("This is notehead");
         // }
@@ -72,11 +74,8 @@ export function NotationView({
 
         let x = (event.layerX - offsetX)  / scale;
         let y = event.layerY / scale;
-        //console.log("Clicked: ", x,y, event);
+        console.log("Clicked: ", x,y, event);
 
-
-        // target is not always the svg...
-        //console.log("Renderer, Context:", rendererRef.current.getContext().svg.getBBox() );
 
         // y is different when scrolled!! try to get Y from stave
         const svgY = rendererRef.current.getContext().svg.getBoundingClientRect().y  + window.scrollY ;
@@ -99,11 +98,7 @@ export function NotationView({
                 console.log("SetSelected not set");
             }
 
-            const staveNote = allNotes[clickedStaff][index];
-            //const color = (! staveNote.style) ? "green" : (staveNote.style.fillStyle === "red" ? "black" : "green" );
-            //setColor(staveNote, color);
-
-            //highlightNote(staveNote, "lightblue"); // draws correct one how to unselect?
+            //const staveNote = allNotes[clickedStaff][index];
 
         }
 
@@ -135,12 +130,19 @@ export function NotationView({
         }
 
         for (let note of allNotes[staffIndex] ) { // NB! maybe a function needed getAllNotes(staff)
-            console.log("Note x: ", note.getAbsoluteX());
-            let distance = Math.abs(x - note.getAbsoluteX());
-            if (distance < minDistance) {
+            console.log("click Note x, width: ", note.getAbsoluteX(), note.getWidth(), note.getBoundingBox(), note.getNoteHeadBeginX(), note.getNoteHeadEndX());
+
+            // see https://0xfe.github.io/vexflow/api/classes/StaveNote.html#getAbsoluteX for staveNote metrics
+            //let distance = Math.abs(x - note.getAbsoluteX());
+            const tolerance = 5 ; // 10 px to left and right
+            // if (distance < minDistance) {
+            //     indexOfClosest = i;
+            //     minDistance = distance;
+            // }
+            if (x>= note.getNoteHeadBeginX()-tolerance && x<=note.getNoteHeadEndX()+tolerance ) {
                 indexOfClosest = i;
-                minDistance = distance;
             }
+            // TODO: find inbetween && in the end ? nt 1.5 if in between?
             i++;
         }
         console.log("Closest: ", indexOfClosest);
