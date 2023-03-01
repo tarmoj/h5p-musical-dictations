@@ -1,6 +1,6 @@
 import React, {useRef, useEffect, useState} from 'react'
 import VexFlow, {StaveNote} from 'vexflow';
-import {defaultNotationInfo} from './notationUtils';
+import {deepClone, defaultNotationInfo} from './notationUtils';
 
 
 const VF = VexFlow.Flow;
@@ -20,7 +20,7 @@ export function NotationView({
     const [allNotes, setAllNotes] = useState([[],[]]);
     const scale = 1;
     //let selectedNote = {note: 0, measure: 0, staff: 0}; // should be the last note of notationInfo though...
-    const [selectedNote, setLocalSelectedNote] = useState(null);//useState({note: 0, measure: 0, staff: 0});
+    const [selectedNote, setLocalSelectedNote] = useState({note: -1, measure: 0, staff: 0});
 
 
     useEffect(() => { // this is actually redraw function...
@@ -53,12 +53,20 @@ export function NotationView({
 
     const highlightNote = (note, color = "lightblue") => { // note must be VF.StaveNote
         if (note ) {
-            console.log("Stavenote to highlight: ", note.keys, note.getAbsoluteX());
+            console.log("Stavenote to highlight: ", note.keys, note.getAbsoluteX(), note.getStave().getYForTopText()-10);
             const padding = 5;
             const width = note.getNoteHeadEndX() - note.getNoteHeadBeginX(); // approximate notehead width
             rendererRef.current.getContext().rect(note.getNoteHeadBeginX()-padding, note.getStave().getYForTopText()-10,width+2*padding, note.getStave().getHeight()+10,
                 { fill: color, opacity: "0.2" } );
         }
+    }
+
+    const setInputCursor = (x,color = "lightblue" ) => {
+        const width = 25; //note.getNoteHeadEndX() - note.getNoteHeadBeginX(); // approximate notehead width
+        const y = 20;//allNotes[0][0].getStave().getYForTopText()-10; // if there is the first note. How to get stave???
+        const height = 100;
+        rendererRef.current.getContext().rect(x,y ,width, height,
+            { fill: color, opacity: "0.2" } );
     }
 
     const handleClick = (event) => {  // maybe - require click on notehead??
@@ -74,7 +82,7 @@ export function NotationView({
 
         let x = (event.layerX - offsetX)  / scale;
         let y = event.layerY / scale;
-        console.log("Clicked: ", x,y, event);
+        console.log("Clicked: ", x,y);
 
 
         // y is different when scrolled!! try to get Y from stave
@@ -82,25 +90,42 @@ export function NotationView({
         //console.log(svgY);
         const clickedStaff = (y>svgY + staffHeight+20 && defaultNotationInfo.staves.length > 1 ) ? 1 : 0; // not best condition, for tryout only...
         //console.log("clickedStaff: ", clickedStaff);
-
+        let position = deepClone(selectedNote);
         const index =  findClosestNoteByX(x, clickedStaff);
-        if (index >= 0) {
-            // set global/context selectedNote
-            // etiher find measureindex or better organize the stavenotes by measures. or add them to notationInfo; that is stupid, since there is so much doubleing
-           const position = {note: index, measure: 0, staff: clickedStaff};
-           setLocalSelectedNote(position); // TODO: find out measure!!
+        position.note = index; // how to deal with in between?
+        position.staff = clickedStaff;
 
-            if (setSelectedNote) {
-                //selectedNote = position; // we should set this in state and redraw!
-                setSelectedNote(position); // this updates NotationInput or anyone else interested. OR: still, use redux???
-                //draw(notationInfo, rendererRef.current.getContext()); // does not update or something else wrong
-            } else {
-                console.log("SetSelected not set");
-            }
+        // drawing the cursos should be done only in draw
+        // let cursorX = -1;
+        // if (index<0) { // not found or after the last
+        //     position.note = -1;
+        //     // draw cursor in the end after last note
+        //     cursorX = allNotes[0].at(-1).getNoteHeadEndX() + 5;
+        //     console.log("Draw cursor in the end", cursorX);
+        //     // get current stave? should this be still be put in notationInfo? I think yes...
+        // } else if (index-parseInt(index) === 0.5) { // in between
+        //     cursorX = allNotes[clickedStaff][parseInt(index)].getNoteHeadEndX()+ 5;
+        //     console.log("Draw cursor on: ", cursorX);
+        // } else  {
+        //     console.log("Indexe of the note: ", index);
+        //     cursorX = allNotes[clickedStaff][index].getNoteHeadBeginX()-5; // or clickedStaff?
+        //
+        //
+        // }
 
-            //const staveNote = allNotes[clickedStaff][index];
+        // if (cursorX>=0) {
+        //     setInputCursor(cursorX);
+        // }
 
+        setLocalSelectedNote(position); // TODO: find out measure!!
+
+        if (setSelectedNote) {
+            setSelectedNote(position); // this updates NotationInput or anyone else interested. OR: still, use redux???
+        } else {
+            console.log("SetSelected not set");
         }
+
+
 
 
     };
@@ -122,6 +147,7 @@ export function NotationView({
 
     const findClosestNoteByX = (x, staffIndex=0) => {
         let indexOfClosest = -1, minDistance = 999999, i = 0;
+        const padding = 5 ; // 10 px to left and right
         //console.log("Allnotes in function:", allNotes[staffIndex]);
 
         if (allNotes[staffIndex].length<=0) {
@@ -129,21 +155,25 @@ export function NotationView({
             return -1;
         }
 
-        for (let note of allNotes[staffIndex] ) { // NB! maybe a function needed getAllNotes(staff)
+        if ( x> allNotes[staffIndex].at(-1).getNoteHeadEndX()+padding ) {
+            console.log("click after last note");
+            return -2; // this is probably not good style...
+            // or should we set position to -1 -1 -1 here? probably yes.
+        }
+        const noteCount = allNotes[staffIndex].length;
+        //for (let note of allNotes[staffIndex] ) { // NB! maybe a function needed getAllNotes(staff)
+        for (let i=0; i<allNotes[staffIndex].length; i++) {
+            const note = allNotes[staffIndex][i];
+            const nextNote = (i<allNotes[staffIndex].length-1) ? allNotes[staffIndex][i+1] : null;
             console.log("click Note x, width: ", note.getAbsoluteX(), note.getWidth(), note.getBoundingBox(), note.getNoteHeadBeginX(), note.getNoteHeadEndX());
-
             // see https://0xfe.github.io/vexflow/api/classes/StaveNote.html#getAbsoluteX for staveNote metrics
-            //let distance = Math.abs(x - note.getAbsoluteX());
-            const tolerance = 5 ; // 10 px to left and right
-            // if (distance < minDistance) {
-            //     indexOfClosest = i;
-            //     minDistance = distance;
-            // }
-            if (x>= note.getNoteHeadBeginX()-tolerance && x<=note.getNoteHeadEndX()+tolerance ) {
+            if (x>= note.getNoteHeadBeginX()-padding && x<=note.getNoteHeadEndX()+padding ) {
                 indexOfClosest = i;
+            } else if (nextNote && x>note.getNoteHeadEndX()+padding && x<nextNote.getNoteHeadBeginX()-padding) {
+                console.log("click In between after ", i);
+                indexOfClosest = i + 0.5;
+
             }
-            // TODO: find inbetween && in the end ? nt 1.5 if in between?
-            i++;
         }
         console.log("Closest: ", indexOfClosest);
         return indexOfClosest;
@@ -221,9 +251,7 @@ export function NotationView({
                     if (note.hasOwnProperty("color")) {
                         staveNote.setStyle({fillStyle: note.color, strokeStyle: note.color});
                     }
-                    // if (note.hasOwnProperty("selected")) {
-                    //     noteToHighlight = staveNote; // to highlight it later
-                    // }
+
                     if (selectedNote && noteIndex === selectedNote.note && measureIndex === selectedNote.measure && staffIndex === selectedNote.staff) {
                         console.log("This note should be highlighted: ", noteIndex)
                         noteToHighlight = staveNote; // to highlight it later
@@ -319,9 +347,23 @@ export function NotationView({
             }
         }
 
-        // after drarwing, highlight the note if any:
+        // draw selected note cursor/highlight the note if any:
+        let cursorX = -1, cursorColor="lightblue";
         if (noteToHighlight) {
-            highlightNote(noteToHighlight);
+            //highlightNote(noteToHighlight);
+            cursorX = noteToHighlight.getNoteHeadBeginX()-5;
+        } else {
+            if (selectedNote.note<0) { // last note
+                cursorX = allNotes[selectedNote.staff].at(-1).getNoteHeadEndX() + 10;
+            } else if  (selectedNote.note-parseInt(selectedNote.note) === 0.5) { // in between
+                cursorX = allNotes[selectedNote.staff][parseInt(selectedNote.note)].getNoteHeadEndX() + 5;
+                cursorColor = "lightgreen";
+            }
+        }
+
+        if (cursorX>=0) {
+            console.log("Draw cursor at ", cursorX);
+            setInputCursor(cursorX, cursorColor);
         }
         setAllNotes(allNotes); // does not seem to work . maybe it is even better
     }
