@@ -18,6 +18,7 @@ export function NotationView({
     const rendererRef = useRef()
 
     const [allNotes, setAllNotes] = useState([[],[]]);
+    const [staveInfo, setStaveInfo] = useState([[],[]]); // this holds vexflow objects, organised by score staves, array contanin: {vfStave, staveNotes}
     const scale = 1;
     //let selectedNote = {note: 0, measure: 0, staff: 0}; // should be the last note of notationInfo though...
     const [selectedNote, setLocalSelectedNote] = useState({note: -1, measure: 0, staff: 0});
@@ -127,57 +128,65 @@ export function NotationView({
     }
 
     const findClosestNoteByX = (x, staffIndex=0) => {
-        let indexOfClosest = -1, minDistance = 999999, i = 0;
+
+        // find which bar:
+        let measureIndex = -1;
+        for (let i=0; i<staveInfo[staffIndex].length; i++) {
+            const vfStave = staveInfo[staffIndex][i].vfStave;
+            //console.log("Stave coordinates: ", vfStave.getX(), vfStave.getNoteStartX(), vfStave.getNoteEndX(), vfStave.getWidth());
+            if (x>=vfStave.getNoteStartX() && x<=vfStave.getNoteEndX()) {
+                measureIndex = i;
+                console.log("Stave click in m. index ", measureIndex);
+                break;
+            }
+        }
+
         const padding = 5 ; // 10 px to left and right
         //console.log("Allnotes in function:", allNotes[staffIndex]);
 
-        // if (allNotes[staffIndex].length<=0) {
-        //     console.log("No notes", allNotes[staffIndex]);
-        //     //return -1;
-        //     return {note: -1, measure: -1, staff: staffIndex}
-        // }
+        if (staveInfo[staffIndex][measureIndex].staveNotes.length===0) {
+            console.log("No notes", staffIndex, measureIndex);
+            return {note: -1, measure: measureIndex, staff: staffIndex}
+        }
 
-        // TODO: find last note in the staff
-        // TODO: getNoteByPosition
 
-        if ( x> allNotes[staffIndex].at(-1).getNoteHeadEndX()+padding ) {
-            console.log("click after last note");
-            //return -2; // this is probably not good style...
-            // or should we set position to -1 -1 -1 here? probably yes.
-            return {note: -1, measure: -1, staff: staffIndex}
+        if ( x> staveInfo[staffIndex][measureIndex].staveNotes.at(-1).getNoteHeadEndX()+padding ) {
+            console.log("click after last note in bar", measureIndex);
+            return {note: -1, measure: measureIndex, staff: staffIndex}
         }
 
         //NB! looking by index in allNotes is not correct, since you have to look by measures
         // it seems best to have similar setup for notationInfo, perhaps make a copy of notationIndo and add staveNote to it?
-        let position = null;
-        for (let i=0; i<notePositions.length; i++) {
-            const note = notePositions[i].staveNote;
-            const nextNote = (i<notePositions.length-1) ? notePositions[i+1].staveNote : null;
-            console.log("click Note x, width: ", note.getAbsoluteX(), note.getWidth(), note.getBoundingBox(), note.getNoteHeadBeginX(), note.getNoteHeadEndX());
-            if (x>= note.getNoteHeadBeginX()-padding && x<=note.getNoteHeadEndX()+padding ) {
-                position = notePositions[i].position;
-            } else if (nextNote && x>note.getNoteHeadEndX()+padding && x<nextNote.getNoteHeadBeginX()-padding) {
-                console.log("click In between after ", i);
-                position = notePositions[i].position;
-                console.log("In between position first: ", position);
-                position.note += 0.5; // to mark it is in between
-
-            }
-        }
-
-        // for (let i=0; i<allNotes[staffIndex].length; i++) {
-        //     const note = allNotes[staffIndex][i];
-        //     const nextNote = (i<allNotes[staffIndex].length-1) ? allNotes[staffIndex][i+1] : null;
+        // let position = null;
+        // for (let i=0; i<notePositions.length; i++) {
+        //     const note = notePositions[i].staveNote;
+        //     const nextNote = (i<notePositions.length-1) ? notePositions[i+1].staveNote : null;
         //     console.log("click Note x, width: ", note.getAbsoluteX(), note.getWidth(), note.getBoundingBox(), note.getNoteHeadBeginX(), note.getNoteHeadEndX());
-        //     // see https://0xfe.github.io/vexflow/api/classes/StaveNote.html#getAbsoluteX for staveNote metrics
         //     if (x>= note.getNoteHeadBeginX()-padding && x<=note.getNoteHeadEndX()+padding ) {
-        //         indexOfClosest = i;
+        //         position = notePositions[i].position;
         //     } else if (nextNote && x>note.getNoteHeadEndX()+padding && x<nextNote.getNoteHeadBeginX()-padding) {
         //         console.log("click In between after ", i);
-        //         indexOfClosest = i + 0.5;
+        //         position = notePositions[i].position;
+        //         console.log("In between position first: ", position);
+        //         position.note += 0.5; // to mark it is in between
         //
         //     }
         // }
+
+        let noteIndex = -1;
+        for (let i=0; i<staveInfo[staffIndex][measureIndex].staveNotes.length; i++) {
+            const note = staveInfo[staffIndex][measureIndex].staveNotes[i];
+            const nextNote = (i<staveInfo[staffIndex][measureIndex].staveNotes.length-1) ? staveInfo[staffIndex][measureIndex].staveNotes[i+1] : null;
+            console.log("click Note x, width: ", note.getAbsoluteX(), note.getWidth(), note.getBoundingBox(), note.getNoteHeadBeginX(), note.getNoteHeadEndX());
+            if (x>= note.getNoteHeadBeginX()-padding && x<=note.getNoteHeadEndX()+padding ) {
+                noteIndex = i;
+            } else if (nextNote && x>note.getNoteHeadEndX()+padding && x<nextNote.getNoteHeadBeginX()-padding) {
+                console.log("click In between after ", i);
+                noteIndex = i + 0.5;
+
+            }
+        }
+        const position = {note: noteIndex, measure: measureIndex, staff: staffIndex};
         console.log("Closest position: ", position);
 
         return position; //indexOfClosest;
@@ -190,6 +199,7 @@ export function NotationView({
         const vfStaves = [[], []]; //  NB! think of better name! this is vexflow staves actually. do we need to store them at all? -  later: define by stave count [ Array(notationIfo.staves.length ]
         const defaultWidth = 200;
         const currentPositionInfo = [];
+        const newStaveInfo = staveInfo.slice(0);
         //How can I pre-calculate the width of a voice?
         //
         // You can call Formatter.getMinTotalWidth() to return the minimum amount of horizontal space required to render a voice.
@@ -223,6 +233,8 @@ export function NotationView({
                 const newMeasure = new VF.Stave(startX, startY + staffIndex * staffHeight, measureWidth);
                 newMeasure.setMeasure(measureIndex+1);
 
+
+
                 if (measureIndex === 0) { // OR: hasOwnProperty("clef" etc
                     newMeasure.addClef(staff.clef).addKeySignature(staff.key).addTimeSignature(staff.time);
                 }
@@ -249,7 +261,9 @@ export function NotationView({
                 // the width
 
 
-                vfStaves[staffIndex].push(newMeasure); // or proably push is better // do we need it at all, actually?
+                vfStaves[staffIndex].push(newMeasure); //NB! this is doubled by (later remove the first one) :
+                newStaveInfo[staffIndex][measureIndex] = {vfStave: newMeasure, staveNotes:[]};
+
                 let staveNotes = [];
 
                 let noteIndex = 0;
@@ -274,6 +288,8 @@ export function NotationView({
                     //console.log("Added to bar: ", note.keys);
                     noteIndex++;
                 }
+
+                newStaveInfo[staffIndex][measureIndex].staveNotes = staveNotes;
 
                 // now when stavenotes are created, look for ties
                 for (let i=0; i<notationMeasure.notes.length-1; i++) {
@@ -377,6 +393,8 @@ export function NotationView({
         setAllNotes(allNotes); // does not seem to work . maybe it is even better
 
         setNotePositions(currentPositionInfo);
+        setStaveInfo(newStaveInfo);
+
 
 
     }

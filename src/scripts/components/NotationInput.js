@@ -49,12 +49,12 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         setNotationInfo(notation);
     }
 
-    const addNote = (keys, duration) => { // add note to the end
-        const staff = 0 ; //TODO: get from currentPosition that should be global... (React Context or similar? )
-        const measureIndex = notationInfo.staves[staff].measures.length>0 ? notationInfo.staves[staff].measures.length - 1 :0 ;
+    const addNote = (keys, duration) => { // add note to the end of the bar
+        const staff = selectedNote.staff ; //TODO: get from currentPosition that should be global... (React Context or similar? )
+        const measureIndex = selectedNote.measure >= 0 ? selectedNote.measure : 0; //notationInfo.staves[staff].measures.length>0 ? notationInfo.staves[staff].measures.length - 1 :0 ;
 
         const noteIndex = notationInfo.staves[staff].measures[measureIndex].notes.length; // index to the note after last one
-        console.log("indexes: ", measureIndex, noteIndex, );
+        console.log("indexes: ", measureIndex, noteIndex, staff);
         insertNote({note:noteIndex, measure: measureIndex, staff:staff}, keys, duration);
     }
 
