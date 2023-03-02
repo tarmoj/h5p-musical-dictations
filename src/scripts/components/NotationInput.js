@@ -88,6 +88,12 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
     }
 
+    const addBar = (staff=0) => {
+        const newNotationInfo = deepClone(notationInfo);
+        newNotationInfo.staves[staff].measures.push({  endBar: "|",  notes: [] }); // try pushing empty notes array
+        setNotationInfo(newNotationInfo);
+    }
+
     // addBar(), shiftNotes() vms -  et lisada vahele; arrow up/down -  change note
 
 
@@ -226,6 +232,9 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                 <Grid item>
                     <Button size={"small"} onClick={()=>deleteLastNote()}>Del.</Button>
                 </Grid>
+                <Grid item>
+                    <Button size={"small"} onClick={()=>addBar()}>Add bar</Button>
+                </Grid>
             </Grid>
         )
     }
@@ -316,6 +325,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                 <Grid item>
                     <Button onClick={ handleNotation }>Show</Button>
                 </Grid>
+
             </Grid>
 
             {createHeaderRow()}
