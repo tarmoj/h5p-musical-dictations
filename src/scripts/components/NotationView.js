@@ -1,6 +1,6 @@
 import React, {useRef, useEffect, useState} from 'react'
-import VexFlow, {StaveNote} from 'vexflow';
-import {deepClone, defaultNotationInfo} from './notationUtils';
+import VexFlow from 'vexflow';
+import {defaultNotationInfo} from './notationUtils';
 
 
 const VF = VexFlow.Flow;
@@ -17,12 +17,10 @@ export function NotationView({
     const container = useRef()
     const rendererRef = useRef()
 
-    const [allNotes, setAllNotes] = useState([[],[]]);
     const [staveInfo, setStaveInfo] = useState([[],[]]); // this holds vexflow objects, organised by score staves, array contanin: {vfStave, staveNotes}
     const scale = 1;
-    //let selectedNote = {note: 0, measure: 0, staff: 0}; // should be the last note of notationInfo though...
-    const [selectedNote, setLocalSelectedNote] = useState({note: -1, measure: 0, staff: 0});
-    const [notePositions, setNotePositions] = useState([]); // array of elements {staveNote, position: {note, measure, staff}}
+    const [selectedNote, setLocalSelectedNote] = useState({note: -1, measure: notationInfo.staves[0].measures.length-1, staff: 0});
+    //const [notePositions, setNotePositions] = useState([]); // array of elements {staveNote, position: {note, measure, staff}}
 
 
     useEffect(() => { // this is actually redraw function...
@@ -46,11 +44,11 @@ export function NotationView({
     }, [notationInfo, width, height, selectedNote]);
 
 
-    useEffect( () => { // this works!
-            rendererRef.current.getContext().svg.onclick = (event) => handleClick(event);
-            console.log("allNotes updated, update handleClick");
-        }, [allNotes]
-    );
+    // useEffect( () => { // this works!
+    //         rendererRef.current.getContext().svg.onclick = (event) => handleClick(event);
+    //         console.log("allNotes updated, update handleClick");
+    //     }, [allNotes] // should this be instead of staveInfo?
+    // );
 
 
     const highlightNote = (note, color = "lightblue") => { // note must be VF.StaveNote
@@ -86,18 +84,12 @@ export function NotationView({
         const svgY = rendererRef.current.getContext().svg.getBoundingClientRect().y  + window.scrollY ;
         //console.log(svgY);
         const clickedStaff = (y>svgY + staffHeight+20 && defaultNotationInfo.staves.length > 1 ) ? 1 : 0; // not best condition, for tryout only...
-        //console.log("clickedStaff: ", clickedStaff);
-        // let position = deepClone(selectedNote);
-        // const index =  findClosestNoteByX(x, clickedStaff);
-        const position = findClosestNoteByX(x, clickedStaff);
-        // position.note = index; // how to deal with in between?
-        // position.staff = clickedStaff;
-        // position.measure =  allNotes[clickedStaff][parseInt(index)].getStave().getMeasure() - 1 ;  // index can be olso 1.5 or similar, if in between
+
+        const position = getClickPositionByX(x, clickedStaff);
 
         if (position) {
             setLocalSelectedNote(position);
         }
-
 
         if (setSelectedNote) {
             setSelectedNote(position); // this updates NotationInput or anyone else interested. OR: still, use redux???
@@ -122,19 +114,15 @@ export function NotationView({
         staveNote.setContext(rendererRef.current.getContext()).draw();
     }
 
-    const getLastNote = (staffIndex) => { // returns last staveNote on that notation staff
-        // get array of all notes where position.staff===staffIndex, return the last element
-        //return notePositions.find( info => info.position.staff===  )
-    }
 
-    const findClosestNoteByX = (x, staffIndex=0) => {
+    const getClickPositionByX = (x, staffIndex=0) => {
 
         // find which bar:
         let measureIndex = -1;
         for (let i=0; i<staveInfo[staffIndex].length; i++) {
             const vfStave = staveInfo[staffIndex][i].vfStave;
-            //console.log("Stave coordinates: ", vfStave.getX(), vfStave.getNoteStartX(), vfStave.getNoteEndX(), vfStave.getWidth());
-            if (x>=vfStave.getNoteStartX() && x<=vfStave.getNoteEndX()) {
+            console.log("Stave coordinates: ", vfStave.getX(), vfStave.getNoteStartX(), vfStave.getNoteEndX(), vfStave.getWidth());
+            if (x>=vfStave.getX() && x<=vfStave.getNoteEndX()) { // was .getNoteStartX, but this is wrong in bar 1
                 measureIndex = i;
                 console.log("Stave click in m. index ", measureIndex);
                 break;
@@ -142,7 +130,6 @@ export function NotationView({
         }
 
         const padding = 5 ; // 10 px to left and right
-        //console.log("Allnotes in function:", allNotes[staffIndex]);
 
         if (staveInfo[staffIndex][measureIndex].staveNotes.length===0) {
             console.log("No notes", staffIndex, measureIndex);
@@ -152,26 +139,9 @@ export function NotationView({
 
         if ( x> staveInfo[staffIndex][measureIndex].staveNotes.at(-1).getNoteHeadEndX()+padding ) {
             console.log("click after last note in bar", measureIndex);
-            return {note: -1, measure: measureIndex, staff: staffIndex}
+            return {note: -2, measure: measureIndex, staff: staffIndex}
         }
 
-        //NB! looking by index in allNotes is not correct, since you have to look by measures
-        // it seems best to have similar setup for notationInfo, perhaps make a copy of notationIndo and add staveNote to it?
-        // let position = null;
-        // for (let i=0; i<notePositions.length; i++) {
-        //     const note = notePositions[i].staveNote;
-        //     const nextNote = (i<notePositions.length-1) ? notePositions[i+1].staveNote : null;
-        //     console.log("click Note x, width: ", note.getAbsoluteX(), note.getWidth(), note.getBoundingBox(), note.getNoteHeadBeginX(), note.getNoteHeadEndX());
-        //     if (x>= note.getNoteHeadBeginX()-padding && x<=note.getNoteHeadEndX()+padding ) {
-        //         position = notePositions[i].position;
-        //     } else if (nextNote && x>note.getNoteHeadEndX()+padding && x<nextNote.getNoteHeadBeginX()-padding) {
-        //         console.log("click In between after ", i);
-        //         position = notePositions[i].position;
-        //         console.log("In between position first: ", position);
-        //         position.note += 0.5; // to mark it is in between
-        //
-        //     }
-        // }
 
         let noteIndex = -1;
         for (let i=0; i<staveInfo[staffIndex][measureIndex].staveNotes.length; i++) {
@@ -187,16 +157,15 @@ export function NotationView({
             }
         }
         const position = {note: noteIndex, measure: measureIndex, staff: staffIndex};
-        console.log("Closest position: ", position);
+        console.log("Clicked position: ", position);
 
-        return position; //indexOfClosest;
+        return position;
     };
 
 
 
     const draw = (notationInfo, context) => {
-        let allNotes = [[], []]; // ready for two staves
-        const vfStaves = [[], []]; //  NB! think of better name! this is vexflow staves actually. do we need to store them at all? -  later: define by stave count [ Array(notationIfo.staves.length ]
+        //const vfStaves = [[], []]; //  NB! think of better name! this is vexflow staves actually. do we need to store them at all? -  later: define by stave count [ Array(notationIfo.staves.length ]
         const defaultWidth = 200;
         const currentPositionInfo = [];
         const newStaveInfo = staveInfo.slice(0);
@@ -231,14 +200,11 @@ export function NotationView({
                 const notationMeasure = staff.measures[measureIndex];
 
                 const newMeasure = new VF.Stave(startX, startY + staffIndex * staffHeight, measureWidth);
-                newMeasure.setMeasure(measureIndex+1);
-
-
+                //newMeasure.setMeasure(measureIndex+1);
 
                 if (measureIndex === 0) { // OR: hasOwnProperty("clef" etc
                     newMeasure.addClef(staff.clef).addKeySignature(staff.key).addTimeSignature(staff.time);
                 }
-
 
                 let type = VF.Barline.type.SINGLE;
                 if (staff.measures[measureIndex].endBar) {
@@ -256,12 +222,8 @@ export function NotationView({
                     type = VF.Barline.type.END;
                 }
                 newMeasure.setEndBarType(type);
-                //newMeasure.setContext(context).draw(); // maybe must be drewn after creating notes to know
-                //
-                // the width
 
-
-                vfStaves[staffIndex].push(newMeasure); //NB! this is doubled by (later remove the first one) :
+                //vfStaves[staffIndex].push(newMeasure); //NB! this is doubled by (later remove the first one) :
                 newStaveInfo[staffIndex][measureIndex] = {vfStave: newMeasure, staveNotes:[]};
 
                 let staveNotes = [];
@@ -280,7 +242,7 @@ export function NotationView({
                         noteToHighlight = staveNote; // to highlight it later
                     }
                     // double dot not implemented yet
-                    if (note.duration.substr(-1) === "d") { //if dotted, add modifier
+                    if (note.duration.at(-1) === "d") { //if dotted, add modifier
                         //console.log("Dotted note!")
                         VF.Dot.buildAndAttach([staveNote], {all: true});
                     }
@@ -310,18 +272,13 @@ export function NotationView({
                 VF.Accidental.applyAccidentals([voice], staff.key);
                 const beams = VF.Beam.applyAndGetBeams(voice);
                 staffBeams = staffBeams.concat(beams);
-                allNotes[staffIndex].push(...staveNotes); //push as values (similar to concat)
                 formatter.joinVoices([voice]);
                 voices[staffIndex] = voice;
                 // kind of works but needs more work - clefAndKeySpace -  find out by the key (how many accidentals, use minimum bar width (measureWidth)
                 // find out width that is used also for formatter.format.
                 // NB! Test with two-staff notation!
 
-                // setting width not correct
-
-
                 // does not work, since there is more and more notes in the voice and necessaryWidth gets bigger, something wrong here..
-
                 //necessaryWidth = formatter.preCalculateMinTotalWidth([voice]) * 1.5;
                 necessaryWidth = notationMeasure.notes.length * 40 ; // just calculate the space by number of notes...
                 if (measureIndex === 0) {
@@ -339,8 +296,6 @@ export function NotationView({
                 newMeasure.setContext(context).draw();
 
             }
-
-            //formatter.format(voices); // was
 
             //console.log("necessary w. befor formattter.format", necessaryWidth);
             formatter.format(voices, necessaryWidth);
@@ -360,7 +315,7 @@ export function NotationView({
             // staveconnector
             if (notationInfo.staves.length>1) {
                 if (notationInfo.staves.length>1) { // add Connector
-                    const connector = new VF.StaveConnector(vfStaves[0][0], vfStaves[notationInfo.staves.length-1][0]);
+                    const connector = new VF.StaveConnector(newStaveInfo[0][0].vfStave, newStaveInfo.at(-1)[0].vfStave); // NB! Needs testing
                     connector.setType(VF.StaveConnector.type.BOLD_DOUBLE_LEFT);
                     connector.setContext(context).draw();
                 }
@@ -375,13 +330,19 @@ export function NotationView({
         // draw selected note cursor/highlight the note if any:
         let cursorX = -1, cursorColor="lightblue";
         if (noteToHighlight) {
-            //highlightNote(noteToHighlight);
             cursorX = noteToHighlight.getNoteHeadBeginX()-5;
         } else {
             if (selectedNote.note<0) { // last note
-                cursorX = allNotes[selectedNote.staff].at(-1).getNoteHeadEndX() + 10;
+                if (staveInfo[selectedNote.staff][selectedNote.measure].staveNotes.length===0) {
+                    cursorX = staveInfo[selectedNote.staff][selectedNote.measure].vfStave.getNoteStartX() + 10; // if not notes in the bar, draw it in the beginning
+                    console.log("Empty bar",selectedNote.measure )
+                } else {
+                    cursorX = staveInfo[selectedNote.staff][selectedNote.measure].staveNotes.at(-1).getNoteHeadEndX() + 5;
+                    console.log("After last note",selectedNote.measure  )
+
+                }
             } else if  (selectedNote.note-parseInt(selectedNote.note) === 0.5) { // in between
-                cursorX = allNotes[selectedNote.staff][parseInt(selectedNote.note)].getNoteHeadEndX() + 5;
+                cursorX = staveInfo[selectedNote.staff][selectedNote.measure].staveNotes[ parseInt(selectedNote.note) ].getNoteHeadEndX() + 5;
                 cursorColor = "lightgreen";
             }
         }
@@ -390,13 +351,8 @@ export function NotationView({
             console.log("Draw cursor at ", cursorX);
             setInputCursor(cursorX, cursorColor);
         }
-        setAllNotes(allNotes); // does not seem to work . maybe it is even better
 
-        setNotePositions(currentPositionInfo);
         setStaveInfo(newStaveInfo);
-
-
-
     }
 
     return <div className={"h5p-musical-dictations-notationDiv"}> <div ref={container} /> </div>
