@@ -58,6 +58,14 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         insertNote({note:noteIndex, measure: measureIndex, staff:staff}, keys, duration);
     }
 
+    const deleteHandler  = () => {
+        if (selectedNote.note>=0) { // TODO: if selectedNote is in between like 2.5?
+            deleteNote(selectedNote)
+        } else {
+            deleteLastNote();
+        }
+    }
+
     const deleteNote =  (position) =>  { // position { measure: , note: staff: }
 
         const notation = deepClone(notationInfo);
@@ -75,16 +83,24 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         setNotationInfo(notation);
     }
 
-    const deleteLastNote = () => {
-        const staff = 0 ; //TODO: get from currentPosition that should be global... (React Context or similar? )
-        const measureIndex = notationInfo.staves[staff].measures.length>0 ? notationInfo.staves[staff].measures.length - 1 :0 ;
-        const noteIndex = notationInfo.staves[staff].measures[measureIndex].notes.length - 1; // index to the note after last one
-        console.log("indexes: ", measureIndex, noteIndex, );
-        if (noteIndex>=0) {
-            deleteNote({note:noteIndex, measure: measureIndex, staff:staff} );
-        } else {
-            console.log("Nothing to delete"); // this deletes notes only in one bar...
-        }
+    const deleteLastNote = () => { // removes last note in selected measurein measure
+
+        const notation = deepClone(notationInfo);
+        const measureIndex = selectedNote.measure || 0;
+        const staff = selectedNote.staff || 0;
+
+        notation.staves[staff].measures[measureIndex].notes.pop();
+        setNotationInfo(notation);
+
+        // const staff = 0 ; //TODO: get from currentPosition that should be global... (React Context or similar? )
+        // const measureIndex = selectedNote.measure>=0 ? selectedNote.measure : ( notationInfo.staves[staff].measures.length>0 ? notationInfo.staves[staff].measures.length - 1 :0 );
+        // const noteIndex = notationInfo.staves[staff].measures[measureIndex].notes.length - 1; // index to the note after last one
+        // console.log("indexes: ", measureIndex, noteIndex, );
+        // if (noteIndex>=0) {
+        //     deleteNote({note:noteIndex, measure: measureIndex, staff:staff} );
+        // } else {
+        //     console.log("Nothing to delete"); // this deletes notes only in one bar...
+        // }
 
     }
 
@@ -230,7 +246,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                 </Grid>
 
                 <Grid item>
-                    <Button size={"small"} onClick={()=>deleteLastNote()}>Del.</Button>
+                    <Button size={"small"} onClick={deleteHandler}>Del.</Button>
                 </Grid>
                 <Grid item>
                     <Button size={"small"} onClick={()=>addBar()}>Add bar</Button>

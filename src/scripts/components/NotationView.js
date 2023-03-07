@@ -121,7 +121,7 @@ export function NotationView({
         let measureIndex = -1;
         for (let i=0; i<staveInfo[staffIndex].length; i++) {
             const vfStave = staveInfo[staffIndex][i].vfStave;
-            console.log("Stave coordinates: ", vfStave.getX(), vfStave.getNoteStartX(), vfStave.getNoteEndX(), vfStave.getWidth());
+            //console.log("Stave coordinates: ", vfStave.getX(), vfStave.getNoteStartX(), vfStave.getNoteEndX(), vfStave.getWidth());
             if (x>=vfStave.getX() && x<=vfStave.getNoteEndX()) { // was .getNoteStartX, but this is wrong in bar 1
                 measureIndex = i;
                 console.log("Stave click in m. index ", measureIndex);

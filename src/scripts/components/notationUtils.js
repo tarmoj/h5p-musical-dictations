@@ -328,7 +328,7 @@ export const getVfNoteByMidiNoteInKey = (midiNote, key="C") => { // key as tonal
 const getLyNoteName = (vfName) => {
     let lyNote = "";
     noteNames.forEach( (value, key) => {
-        if (value===vfName.toUpperCase()) { // VF names in uppercase
+        if (value.toLowerCase()===vfName.toLowerCase()) {
             console.log("Found: ", key);
             lyNote =key; // this is the lilynote
         }
