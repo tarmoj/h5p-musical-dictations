@@ -31,12 +31,12 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
     useEffect( () => console.log("selectNote: ", selectedNote), [selectedNote] );
 
-    const insertNote =  (position, keys, duration) =>  { // position { measure: , note: staff: }
+    const replaceNote =  (position, keys, duration) =>  { // position { measure: , note: staff: }
 
         const notation = deepClone(notationInfo);
 
         const measureIndex = position.measure || 0;
-        const noteIndex = position.note || 0;
+        const noteIndex =  position.note || 0;
         const staff = position.staff || 0;
 
         console.log("Add note to position ", measureIndex, noteIndex);
@@ -49,13 +49,36 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         setNotationInfo(notation);
     }
 
+    const insertNote =  (position, keys, duration) =>  { // position { measure: , note: staff: }
+
+        const notation = deepClone(notationInfo);
+
+        const measureIndex = position.measure || 0; // do we need those? for any case...
+        const noteIndex =  position.note || 0;
+        const staff = position.staff || 0;
+
+        console.log("Insert note to position ", measureIndex, noteIndex);
+        notation.staves[staff].measures[measureIndex].notes.splice(noteIndex, 0,  {
+            clef: "treble", keys: keys, duration: duration, auto_stem: "true"
+        } );
+        console.log("Notes after insert: ", notation.staves[staff].measures[measureIndex].notes)
+
+
+        // does this trigger re-render for react component?
+        setNotationInfo(notation); // somehow this does not trigger re-render...
+        // if (setSelectedNote) {
+        //     setSelectedNote(position);
+        // }
+
+    }
+
     const addNote = (keys, duration) => { // add note to the end of the bar
         const staff = selectedNote.staff ; //TODO: get from currentPosition that should be global... (React Context or similar? )
         const measureIndex = selectedNote.measure >= 0 ? selectedNote.measure : 0; //notationInfo.staves[staff].measures.length>0 ? notationInfo.staves[staff].measures.length - 1 :0 ;
 
         const noteIndex = notationInfo.staves[staff].measures[measureIndex].notes.length; // index to the note after last one
         console.log("indexes: ", measureIndex, noteIndex, staff);
-        insertNote({note:noteIndex, measure: measureIndex, staff:staff}, keys, duration);
+        replaceNote({note:noteIndex, measure: measureIndex, staff:staff}, keys, duration);
     }
 
     const deleteHandler  = () => {
@@ -130,10 +153,14 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         const vfNote = getVfNoteByMidiNoteInKey(midiNote, key);
         console.log("vfnote: ", vfNote);
         //console.log("Notation at this point: ", notationInfo);
-        if (selectedNote.note<0) { // signals that none selected, insert in the end
+        if (selectedNote.note-parseInt(selectedNote.note) === 0.5) {
+            const newPosition = deepClone(selectedNote);
+            newPosition.note = selectedNote.note + 0.5; // to insert it into right place
+            insertNote(newPosition, [vfNote], currentDuration.toString())
+        } else if (selectedNote.note<0) { // signals that none selected, insert in the end
             addNote([vfNote], currentDuration.toString() );
         } else {
-            insertNote(selectedNote, [vfNote], currentDuration.toString() );
+            replaceNote(selectedNote, [vfNote], currentDuration.toString() );
         }
 
 
