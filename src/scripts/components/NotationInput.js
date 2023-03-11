@@ -51,7 +51,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
             clef: "treble", keys: keys, duration: duration, auto_stem: "true"
         }; // + other fields later
 
-        console.log("Notes: ", notation.staves[notation.currentStaff].measures[measureIndex].notes)
+        console.log("Notes: ", notation.staves[staff].measures[measureIndex].notes)
         // does this trigger re-render for react component?
         setNotationInfo(notation);
     }
@@ -108,7 +108,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
         notation.staves[staff].measures[measureIndex].notes.splice(noteIndex, 1);
 
-        console.log("Notes: ", notation.staves[notation.currentStaff].measures[measureIndex].notes)
+        console.log("Notes: ", notation.staves[staff].measures[measureIndex].notes)
         // does this trigger re-render for react component?
         setNotationInfo(notation);
     }
@@ -154,8 +154,9 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
     }
 
     const handlePlayNote = midiNote => { // called when a MIDI keyboard key is pressed
-        console.log ("We are in key: ",  currentKey);
-        const key = currentKey ? currentKey : "C";
+        const key = notationInfo.staves[0].key; //currentKey ? currentKey : "C";
+        console.log ("We are in key: ",  key);
+
 
         const vfNote = getVfNoteByMidiNoteInKey(midiNote, key);
         console.log("vfnote: ", vfNote);
