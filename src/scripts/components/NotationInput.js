@@ -31,6 +31,13 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
     useEffect( () => console.log("selectNote: ", selectedNote), [selectedNote] );
 
+    // TODO: we need common handler for insert/add/replace note/rest
+
+    const addRest = () => {
+        addNote(["b/4"], currentDuration + "r");
+    }
+
+
     const replaceNote =  (position, keys, duration) =>  { // position { measure: , note: staff: }
 
         const notation = deepClone(notationInfo);
@@ -272,11 +279,21 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                     </FormControl>
                 </Grid>
 
+            </Grid>
+        )
+    }
+
+    const createExtraButtonsRow = () => {
+        return (
+            <Grid item container spacing={1}>
                 <Grid item>
-                    <Button size={"small"} onClick={deleteHandler}>Del.</Button>
+                    <Button size={"small"} onClick={addRest}>Rest</Button>
                 </Grid>
                 <Grid item>
-                    <Button size={"small"} onClick={()=>addBar()}>Add bar</Button>
+                    <Button size={"small"} onClick={deleteHandler}>Delete</Button>
+                </Grid>
+                <Grid item>
+                    <Button size={"small"} onClick={addBar}>Add bar</Button>
                 </Grid>
             </Grid>
         )
@@ -371,7 +388,8 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
             </Grid>
 
-            {createHeaderRow()}
+            {/*{createHeaderRow()}*/}
+            {createExtraButtonsRow()}
             {createDurationsRow()}
             {createPianoRow()}
         </Grid>

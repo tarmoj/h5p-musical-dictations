@@ -13,7 +13,7 @@ export default function Main( {correctDictation, showFromDictation = "", resizeF
     const [correctNotationInfo, setCorrectNotationInfo] = useState(parseLilypondDictation(correctDictation));  // could have used a constant but that gets reevaluated each render tine
     const [showCorrectNotation, setShowCorrectNotation] = useState(false);
     const [feedBack, setFeedBack] = useState("");
-    const [ selectedNote, setSelectedNote] = useState({ measure:-1, note:-1, staff:-1 } );
+    const [ selectedNote, setSelectedNote] = useState({ measure: responseNotationInfo.staves[0].measures.length-1, note:-1, staff:0 } );
     // let selectedNote = { measure:0, note:0, staff:0 }; // try not state
     // const setSelectedNote = (position) => selectedNote = position;
 
