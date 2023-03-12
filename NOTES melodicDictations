@@ -10,10 +10,14 @@ https://stackoverflow.com/questions/71835697/create-react-app-dependency-version
 TODO: rename notationUtils -> notation.js NotationInput -> NotationInput
 
 TODO: insert/add/remove  rest/note
+Dot - almost -  check why dd + button view change: Dot -  for one note only and then out? Probably yes. OK
+Dot - influences only once - adds or removes selected note ; button checked does not work quite... -  OK
+Dot -  kui peale viimast nooti ja on noot taktis, siis mõjub viimasele noodile (vt dotChange) ? kuidas teha dotted välimus
 Change note on duration change - OK
-notation2Lilypond -  handle rest (duration contains r) correctly
-Dot - almost
+notation2Lilypond -  handle rest  (duration contains r) and dot  correctly
 Toonart -OK
+
+----
 Buttons controls, shortcuts
 Tie
 Triplet

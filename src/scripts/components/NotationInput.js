@@ -22,7 +22,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
     const [lyInput, setLyInput] = useState(lyStart);
     const [currentKey, setCurrentKey] = useState("C");
     const [currentDuration, setCurrentDuration] = useState("4");
-    const [dot, setDot] = useState(""); // emptry string or "d" ; in future could be also "dd"
+    const [dotted, setDotted] = useState(false); // empty string or "d" ; in future could be also "dd"
 
     // notation functions (add, insert, delete
 
@@ -136,11 +136,33 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
     }
 
     const noteChange = (vfNote) => {
-        inputHandler(vfNote, currentDuration + dot);
+        inputHandler(vfNote, currentDuration );
     }
 
     const restHandler = () => {
-        inputHandler("b/4", currentDuration + dot + "r");
+        inputHandler("b/4", currentDuration +  "r");
+    }
+
+    const dotChange = (dotted) => {
+        if (selectedNote.note>=0) { // Need to update notation
+            const note = notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes[selectedNote.note];
+            const vfNote = note.keys[0]; // NB! chords not supported!
+            let duration = note.duration;
+            if (!dotted && duration.includes("d")) {
+                duration = duration.replace("d",""); // for several dots need reg.exp
+            }
+
+            if (dotted && !duration.includes("d")) {
+                if (duration.endsWith("r")) {
+                    duration = duration.slice(0, -1) + "dr";
+                } else {
+                    duration += "d";
+                }
+            }
+
+            console.log("Change dot: ", duration);
+            inputHandler(vfNote, duration);
+        }
     }
 
     const durationChange = (newDuration) => {
@@ -372,7 +394,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                     <ToggleButtonGroup
                         value={currentDuration}
                         exclusive
-                        onChange={ event =>  durationChange(event.target.value + dot)}
+                        onChange={ event =>  durationChange(event.target.value +  (dotted ? "d" : "" ) )}
                         aria-label="duration selection"
                     >
                         <ToggleButton value="1" aria-label="whole note">
@@ -396,11 +418,13 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                     </ToggleButtonGroup>
                 </Grid>
                 <Grid item>
-                    <ToggleButton value="." aria-label="dot" onChange={(event)=> {
-                        const newDot = dot === "d" ? "" : "d";
-                        console.log("Toggle change", newDot)
-                        durationChange(currentDuration + newDot);
-                        setDot(newDot);
+                    <ToggleButton value="." aria-label="use dot"  selected={dotted} onChange={(event)=> {
+                        const newDotted = !dotted;
+                        console.log("Toggle change", newDotted)
+                        const newDuration = newDotted ? currentDuration + "d" : currentDuration;
+                        //durationChange(newDuration);
+                        dotChange(newDotted);
+                        setDotted(newDotted);
                     }
 
                     }>
