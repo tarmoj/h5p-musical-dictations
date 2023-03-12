@@ -33,6 +33,10 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
     // TODO: we need common handler for insert/add/replace note/rest
 
+
+
+
+
     const addRest = () => {
         addNote(["b/4"], currentDuration + "r");
     }
@@ -122,16 +126,6 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         notation.staves[staff].measures[measureIndex].notes.pop();
         setNotationInfo(notation);
 
-        // const staff = 0 ; //TODO: get from currentPosition that should be global... (React Context or similar? )
-        // const measureIndex = selectedNote.measure>=0 ? selectedNote.measure : ( notationInfo.staves[staff].measures.length>0 ? notationInfo.staves[staff].measures.length - 1 :0 );
-        // const noteIndex = notationInfo.staves[staff].measures[measureIndex].notes.length - 1; // index to the note after last one
-        // console.log("indexes: ", measureIndex, noteIndex, );
-        // if (noteIndex>=0) {
-        //     deleteNote({note:noteIndex, measure: measureIndex, staff:staff} );
-        // } else {
-        //     console.log("Nothing to delete"); // this deletes notes only in one bar...
-        // }
-
     }
 
     const addBar = (staff=0) => {
@@ -140,7 +134,21 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         setNotationInfo(newNotationInfo);
     }
 
-    // addBar(), shiftNotes() vms -  et lisada vahele; arrow up/down -  change note
+    const inputHandler = ( vfNote, isRest = false) => {
+        const duration = isRest ? currentDuration + "r" : currentDuration.toString();
+        // TODO: dot
+        const keys = isRest ? ["b/4"] : [vfNote];
+        if (selectedNote.note-parseInt(selectedNote.note) === 0.5) {
+            const newPosition = deepClone(selectedNote);
+            newPosition.note = selectedNote.note + 0.5; // to insert it into right place
+            insertNote(newPosition, keys, duration)
+        } else if (selectedNote.note<0) { // signals that none selected, insert in the end
+            addNote(keys, duration );
+        } else {
+            replaceNote(selectedNote, keys, duration );
+        }
+    }
+
 
 
     // piano keyboard - perhaps make later a separate component ?  --------------------
@@ -161,18 +169,22 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         const vfNote = getVfNoteByMidiNoteInKey(midiNote, key);
         console.log("vfnote: ", vfNote);
         //console.log("Notation at this point: ", notationInfo);
-        if (selectedNote.note-parseInt(selectedNote.note) === 0.5) {
-            const newPosition = deepClone(selectedNote);
-            newPosition.note = selectedNote.note + 0.5; // to insert it into right place
-            insertNote(newPosition, [vfNote], currentDuration.toString())
-        } else if (selectedNote.note<0) { // signals that none selected, insert in the end
-            addNote([vfNote], currentDuration.toString() );
-        } else {
-            replaceNote(selectedNote, [vfNote], currentDuration.toString() );
+        if (vfNote) {
+            inputHandler(vfNote);
         }
 
+        // if (selectedNote.note-parseInt(selectedNote.note) === 0.5) {
+        //     const newPosition = deepClone(selectedNote);
+        //     newPosition.note = selectedNote.note + 0.5; // to insert it into right place
+        //     insertNote(newPosition, [vfNote], currentDuration.toString())
+        // } else if (selectedNote.note<0) { // signals that none selected, insert in the end
+        //     addNote([vfNote], currentDuration.toString() );
+        // } else {
+        //     replaceNote(selectedNote, [vfNote], currentDuration.toString() );
+        // }
 
-        const lyNote = getLyNoteByMidiNoteInKey(midiNote, key); // suggests correct enharmonic note for black key depening on the tonality
+
+        //const lyNote = getLyNoteByMidiNoteInKey(midiNote, key); // suggests correct enharmonic note for black key depening on the tonality
 
         // if (vtNote && !chordPopupOpen) {
         //     dispatch(insertVtNote(vtNote));
@@ -288,13 +300,13 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         return (
             <Grid item container spacing={1}>
                 <Grid item>
-                    <Button size={"small"} onClick={addRest}>Rest</Button>
+                    <Button size={"small"} onClick={()=>inputHandler("rest", true)}>Rest</Button>
                 </Grid>
                 <Grid item>
                     <Button size={"small"} onClick={deleteHandler}>Delete</Button>
                 </Grid>
                 <Grid item>
-                    <Button size={"small"} onClick={addBar}>Add bar</Button>
+                    <Button size={"small"} onClick={()=>addBar()}>Add bar</Button>
                 </Grid>
             </Grid>
         )
