@@ -2,6 +2,7 @@
 export const defaultNotationInfo = {
     options: "", // scale, width, space etc, if needed
     //currentStaff:  0,
+    //currentStaff:  0,
     // it were more logical if stave and key were defined here, but I will change it later...
     //key:"F",
     //time: "4/4",

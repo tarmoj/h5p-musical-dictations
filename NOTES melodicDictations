@@ -10,7 +10,10 @@ https://stackoverflow.com/questions/71835697/create-react-app-dependency-version
 TODO: rename notationUtils -> notation.js NotationInput -> NotationInput
 
 TODO: insert/add/remove  rest/note
-Toonart
+Change note on duration change - OK
+notation2Lilypond -  handle rest (duration contains r) correctly
+Dot - almost
+Toonart -OK
 Buttons controls, shortcuts
 Tie
 Triplet

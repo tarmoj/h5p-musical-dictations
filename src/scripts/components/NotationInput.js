@@ -22,6 +22,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
     const [lyInput, setLyInput] = useState(lyStart);
     const [currentKey, setCurrentKey] = useState("C");
     const [currentDuration, setCurrentDuration] = useState("4");
+    const [dot, setDot] = useState(""); // emptry string or "d" ; in future could be also "dd"
 
     // notation functions (add, insert, delete
 
@@ -134,10 +135,30 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         setNotationInfo(newNotationInfo);
     }
 
-    const inputHandler = ( vfNote, isRest = false) => {
-        const duration = isRest ? currentDuration + "r" : currentDuration.toString();
-        // TODO: dot
-        const keys = isRest ? ["b/4"] : [vfNote];
+    const noteChange = (vfNote) => {
+        inputHandler(vfNote, currentDuration + dot);
+    }
+
+    const restHandler = () => {
+        inputHandler("b/4", currentDuration + dot + "r");
+    }
+
+    const durationChange = (newDuration) => {
+        // const dotted = false; // to state later
+        // const duration = dotted ? newDuration + "." : newDuration;
+        if (selectedNote.note>=0) { // Need to update notation
+            const note = notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes[selectedNote.note]
+            const vfNote = note.keys[0]; // NB! chords not supported!
+            const duration = note.duration.endsWith("r") ? newDuration + "r" : newDuration ; // keep it rest if it was before so
+
+            console.log("Change duration of note: ", vfNote);
+            inputHandler(vfNote, duration);
+        }
+        setCurrentDuration(newDuration)
+    }
+
+    const inputHandler = ( vfNote, duration="") => {
+        const keys = [vfNote]; // maybe send keys as array immediately -  more easy for durationChange
         if (selectedNote.note-parseInt(selectedNote.note) === 0.5) {
             const newPosition = deepClone(selectedNote);
             newPosition.note = selectedNote.note + 0.5; // to insert it into right place
@@ -170,7 +191,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         console.log("vfnote: ", vfNote);
         //console.log("Notation at this point: ", notationInfo);
         if (vfNote) {
-            inputHandler(vfNote);
+            noteChange(vfNote);
         }
 
         // if (selectedNote.note-parseInt(selectedNote.note) === 0.5) {
@@ -300,7 +321,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         return (
             <Grid item container spacing={1}>
                 <Grid item>
-                    <Button size={"small"} onClick={()=>inputHandler("rest", true)}>Rest</Button>
+                    <Button size={"small"} onClick={restHandler}>Rest</Button>
                 </Grid>
                 <Grid item>
                     <Button size={"small"} onClick={deleteHandler}>Delete</Button>
@@ -345,14 +366,13 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
     // TODO: separate togglegroup, that is not exclusive for ., tie and triplet
     const createDurationsRow = () => {
-        const dot = ""; // need a condition here
         return (
             <Grid container item direction={"row"} spacing={1}>
                 <Grid item>
                     <ToggleButtonGroup
                         value={currentDuration}
                         exclusive
-                        onChange={ event =>  setCurrentDuration(event.target.value + dot)}
+                        onChange={ event =>  durationChange(event.target.value + dot)}
                         aria-label="duration selection"
                     >
                         <ToggleButton value="1" aria-label="whole note">
@@ -376,9 +396,18 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                     </ToggleButtonGroup>
                 </Grid>
                 <Grid item>
+                    <ToggleButton value="." aria-label="dot" onChange={(event)=> {
+                        const newDot = dot === "d" ? "" : "d";
+                        console.log("Toggle change", newDot)
+                        durationChange(currentDuration + newDot);
+                        setDot(newDot);
+                    }
 
-
+                    }>
+                        Dot
+                    </ToggleButton>
                 </Grid>
+
             </Grid>
         );
     }
