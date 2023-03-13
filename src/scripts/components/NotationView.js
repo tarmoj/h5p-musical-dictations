@@ -242,7 +242,7 @@ export function NotationView({
                         noteToHighlight = staveNote; // to highlight it later
                     }
                     // double dot not implemented yet
-                    if (note.duration.at(-1) === "d") { //if dotted, add modifier
+                    if (note.duration.includes("d")) { //if dotted, add modifier, in case of rest it would be 4dr
                         //console.log("Dotted note!")
                         VF.Dot.buildAndAttach([staveNote], {all: true});
                     }

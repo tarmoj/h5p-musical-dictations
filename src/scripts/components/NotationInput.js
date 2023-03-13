@@ -143,26 +143,50 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         inputHandler("b/4", currentDuration +  "r");
     }
 
-    const dotChange = (dotted) => {
-        if (selectedNote.note>=0) { // Need to update notation
-            const note = notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes[selectedNote.note];
-            const vfNote = note.keys[0]; // NB! chords not supported!
-            let duration = note.duration;
-            if (!dotted && duration.includes("d")) {
-                duration = duration.replace("d",""); // for several dots need reg.exp
-            }
+    const invertDot = (duration) => {
+        let newDuration = "";
 
-            if (dotted && !duration.includes("d")) {
-                if (duration.endsWith("r")) {
-                    duration = duration.slice(0, -1) + "dr";
-                } else {
-                    duration += "d";
-                }
+        if (duration.includes("d")) {
+            newDuration = duration.replace("d",""); // for several dots need reg.exp
+        } else { // add dot
+            if (duration.endsWith("r")) {
+                newDuration = duration.slice(0, -1) + "dr";
+            } else {
+                newDuration = duration + "d";
             }
-
-            console.log("Change dot: ", duration);
-            inputHandler(vfNote, duration);
         }
+        return newDuration;
+    }
+
+    const dotChange = () => {
+
+        let note = null;
+        if (selectedNote.note>=0) {
+            if (selectedNote.note - parseInt(selectedNote.note)===0.5) {
+                console.log("Selection between notes, no dot");
+                return;
+            }
+            note = notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes[selectedNote.note];
+        } else if (notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes.length>0) {
+            note =   notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes.at(-1);
+           // this should bot be handled by inputHandler but directly replaceNote
+
+            const duration = invertDot(note.duration);
+
+            const position = deepClone(selectedNote);
+            position.note = notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes.length-1;
+            replaceNote(position, note.keys, duration);
+        } else {
+            console.log("No note to add dot to");
+            return;
+        }
+
+        //const vfNote = note.keys[0]; // NB! chords not supported!
+        let duration = invertDot(note.duration);
+        console.log("Change dot: ", duration);
+        //inputHandler(vfNote, duration); // or also replace here?
+        replaceNote(selectedNote, note.keys, duration);
+
     }
 
     const durationChange = (newDuration) => {
