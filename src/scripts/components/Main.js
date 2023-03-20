@@ -17,7 +17,7 @@ export default function Main( {correctDictation, showFromDictation = "", resizeF
 
     const lyRef = useRef();
 
-    useEffect( () => {console.log("selectedNote not in Main: ", selectedNote); setSelectedNote(selectedNote)}, [selectedNote] ); // gets called but this does not forward value to NotationInput somehow...
+    //useEffect( () => {console.log("selectedNote not in Main: ", selectedNote); setSelectedNote(selectedNote)}, [selectedNote] ); // gets called but this does not forward value to NotationInput somehow...
 
     const checkResponse = () => {
 
@@ -73,7 +73,7 @@ export default function Main( {correctDictation, showFromDictation = "", resizeF
         <div>
             <div>Enter the dictation in Lilypond notation  (absolute pitches, german nomenclature)</div>
             <div id={"score1"} ></div>
-            <NotationView id="userNotation" div={"score"} notationInfo={responseNotationInfo} globalSelectedNote={selectedNote} Note={selectedNote} setSelectedNote={setSelectedNote} />
+            <NotationView id="userNotation" div={"score"} notationInfo={responseNotationInfo} selectedNote={selectedNote} setSelectedNote={setSelectedNote} />
             <NotationInput lyStart={showFromDictation ? showFromDictation :  `\\clef treble \\time 4/4 \\key d \\major d'8 e' fis' g' a'4 a`}
                            setNotationInfo={setResponseNotationInfo}
                            notationInfo = {responseNotationInfo}

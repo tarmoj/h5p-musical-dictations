@@ -189,7 +189,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
             const newPosition = deepClone(selectedNote);
             newPosition.note = selectedNote.note + 0.5; // to insert it into right place
             insertNote(newPosition, keys, duration);
-            console.log("Set selectedNote to: ", newPosition);
+            //console.log("Set selectedNote to: ", newPosition);
             setSelectedNote(newPosition);
         } else if (selectedNote.note<0) { // signals that none selected, insert in the end
             addNote(keys, duration );

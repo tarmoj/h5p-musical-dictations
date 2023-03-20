@@ -12,7 +12,7 @@ export function NotationView({
                                  width = 500, // this will be expanded when notation will grow longer
                                  height = 140,
                                  staffHeight = 100,
-                                 globalSelectedNote,
+                                 selectedNote,
                                  setSelectedNote // this needs better names!
                              }) {
     const container = useRef()
@@ -20,8 +20,7 @@ export function NotationView({
 
     const [staveInfo, setStaveInfo] = useState([[],[]]); // this holds vexflow objects, organised by score staves, array contanin: {vfStave, staveNotes}
     const scale = 1;
-    const [selectedNote, setLocalSelectedNote] = useState({note: -1, measure: notationInfo.staves[0].measures.length-1, staff: 0});
-    //const [notePositions, setNotePositions] = useState([]); // array of elements {staveNote, position: {note, measure, staff}}
+
 
 
     useEffect(() => { // this is actually redraw function...
@@ -54,7 +53,7 @@ export function NotationView({
     // );
 
 
-    useEffect( () => console.log("selectedNote in sel.note hook: ", globalSelectedNote), [globalSelectedNote] );
+    //useEffect( () => console.log("selectedNote in sel.note hook: ", selectedNote), [selectedNote] );
 
     const highlightNote = (note, color = "lightblue") => { // note must be VF.StaveNote
         if (note ) {
@@ -92,12 +91,11 @@ export function NotationView({
 
         const position = getClickPositionByX(x, clickedStaff);
 
-        if (position) {
-            setLocalSelectedNote(position);
-        }
 
         if (setSelectedNote) {
-            setSelectedNote(position); // this updates NotationInput or anyone else interested. OR: still, use redux???
+            if (position) {
+                setSelectedNote(position); // this updates NotationInput or anyone else interested. OR: still, use redux???
+            }
         } else {
             console.log("SetSelected not set");
         }
