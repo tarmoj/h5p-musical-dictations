@@ -14,11 +14,10 @@ export default function Main( {correctDictation, showFromDictation = "", resizeF
     const [showCorrectNotation, setShowCorrectNotation] = useState(false);
     const [feedBack, setFeedBack] = useState("");
     const [ selectedNote, setSelectedNote] = useState({ measure: responseNotationInfo.staves[0].measures.length-1, note:-1, staff:0 } );
-    // let selectedNote = { measure:0, note:0, staff:0 }; // try not state
-    // const setSelectedNote = (position) => selectedNote = position;
 
     const lyRef = useRef();
 
+    useEffect( () => {console.log("selectedNote not in Main: ", selectedNote); setSelectedNote(selectedNote)}, [selectedNote] ); // gets called but this does not forward value to NotationInput somehow...
 
     const checkResponse = () => {
 
@@ -74,14 +73,16 @@ export default function Main( {correctDictation, showFromDictation = "", resizeF
         <div>
             <div>Enter the dictation in Lilypond notation  (absolute pitches, german nomenclature)</div>
             <div id={"score1"} ></div>
-            <NotationView id="userNotation" div={"score"} notationInfo={responseNotationInfo} selectedNote={selectedNote} setSelectedNote={setSelectedNote} />
+            <NotationView id="userNotation" div={"score"} notationInfo={responseNotationInfo} globalSelectedNote={selectedNote} Note={selectedNote} setSelectedNote={setSelectedNote} />
             <NotationInput lyStart={showFromDictation ? showFromDictation :  `\\clef treble \\time 4/4 \\key d \\major d'8 e' fis' g' a'4 a`}
                            setNotationInfo={setResponseNotationInfo}
                            notationInfo = {responseNotationInfo}
                            selectedNote={selectedNote} setSelectedNote={setSelectedNote}
             />
             <button onClick={ () => {
-                    console.log("responseNotation:", responseNotationInfo)
+                    console.log("set selected note test position");
+                    setSelectedNote({note:1, measure:1, staff: 6});
+
                    //insertNote("[g/4]", "2");
                 }
             }>Test</button>

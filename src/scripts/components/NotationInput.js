@@ -66,7 +66,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
 
         // does this trigger re-render for react component?
-        setNotationInfo(notation); // somehow this does not trigger re-render...
+        setNotationInfo(notation);
         // if (setSelectedNote) {
         //     setSelectedNote(position);
         // }
@@ -188,7 +188,9 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         if (selectedNote.note-parseInt(selectedNote.note) === 0.5) {
             const newPosition = deepClone(selectedNote);
             newPosition.note = selectedNote.note + 0.5; // to insert it into right place
-            insertNote(newPosition, keys, duration)
+            insertNote(newPosition, keys, duration);
+            console.log("Set selectedNote to: ", newPosition);
+            setSelectedNote(newPosition);
         } else if (selectedNote.note<0) { // signals that none selected, insert in the end
             addNote(keys, duration );
         } else {

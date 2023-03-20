@@ -12,7 +12,8 @@ export function NotationView({
                                  width = 500, // this will be expanded when notation will grow longer
                                  height = 140,
                                  staffHeight = 100,
-                                 setSelectedNote
+                                 globalSelectedNote,
+                                 setSelectedNote // this needs better names!
                              }) {
     const container = useRef()
     const rendererRef = useRef()
@@ -39,6 +40,8 @@ export function NotationView({
         context.clear();
         context.setFont('Arial', 10, '').setBackgroundFillStyle('#eeeedd');
 
+        console.log("Selected note in draw hook: ", selectedNote);
+
         draw(notationInfo, context); // should we also pass renderer?
 
     }, [notationInfo, width, height, selectedNote]);
@@ -50,6 +53,8 @@ export function NotationView({
     //     }, [allNotes] // should this be instead of staveInfo?
     // );
 
+
+    useEffect( () => console.log("selectedNote in sel.note hook: ", globalSelectedNote), [globalSelectedNote] );
 
     const highlightNote = (note, color = "lightblue") => { // note must be VF.StaveNote
         if (note ) {
@@ -129,7 +134,7 @@ export function NotationView({
             }
         }
 
-        const padding = 5 ; // 10 px to left and right
+        const padding = 5 ; // N // px to left and right
 
         if (staveInfo[staffIndex][measureIndex].staveNotes.length===0) {
             console.log("No notes", staffIndex, measureIndex);
@@ -140,6 +145,11 @@ export function NotationView({
         if ( x> staveInfo[staffIndex][measureIndex].staveNotes.at(-1).getNoteHeadEndX()+padding ) {
             console.log("click after last note in bar", measureIndex);
             return {note: -2, measure: measureIndex, staff: staffIndex}
+        }
+
+        if ( x<staveInfo[staffIndex][measureIndex].staveNotes.at(0).getNoteHeadBeginX()-padding ) {
+            console.log("click before last note in bar", measureIndex);
+            return {note: 0, measure: measureIndex, staff: staffIndex}
         }
 
 

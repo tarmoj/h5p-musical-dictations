@@ -12,12 +12,13 @@ TODO:
 // rename notationUtils -> notation.js NotationInput -> NotationInput - osalt tehtud
 
 
-Dot -  kui peale viimast nooti ja on noot taktis, siis mõjub viimasele noodile (vt dotChange) ? kuidas teha dotted välimus
 
 
 click before first note -  select first note
 
 NotationView div -  make scrollable (css)
+
+Arrow up / Down -  enharmonic notes, half tone up/down
 
 Keyboard shortcuts -  nootide kestused, Del, insert? dot ? Klvaiatuuri tähed? Kuidas näidata sel juhul oktavi?
 arrow - go to next/previous bar (next - select first not, previous -  select after last (position.note = -1) )
@@ -34,6 +35,9 @@ Dot - almost -  check why dd + button view change: Dot -  for one note only and 
 Dot - influences only once - adds or removes selected note ; button checked does not work quite... -  OK
 Change note on duration change - OK
 Toonart -OK
+
+Dot -  kui peale viimast nooti ja on noot taktis, siis mõjub viimasele noodile (vt dotChange)  OK
+
 
 ----
 Buttons controls, shortcuts
