@@ -7,6 +7,7 @@ import {
     deepClone,
     getLyNoteByMidiNoteInKey, getVfNoteByMidiNoteInKey,
     notationInfoToLyString,
+    noteNames,
     parseLilypondDictation
 } from "./notationUtils";
 
@@ -45,7 +46,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
             clef: "treble", keys: keys, duration: duration, auto_stem: "true"
         }; // + other fields later
 
-        console.log("Notes: ", notation.staves[staff].measures[measureIndex].notes)
+        //console.log("Notes: ", notation.staves[staff].measures[measureIndex].notes)
         // does this trigger re-render for react component?
         setNotationInfo(notation);
     }
@@ -124,8 +125,38 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         setNotationInfo(newNotationInfo);
     }
 
+    const getCurrentNote = () => notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes[selectedNote.note];
+
+
     const noteChange = (vfNote) => {
         inputHandler(vfNote, currentDuration );
+    }
+
+    const noteStep = (step) => { // step>=0 for up in noteNames, <0 -  down
+        const note = getCurrentNote();
+        console.log("Note in noteStep", note);
+        const [noteName, octave] = note.keys[0].split("/")
+        const vfNoteNames = Array.from(noteNames.values());
+        const index = vfNoteNames.indexOf(noteName);
+
+        console.log("Found index in notenames: ", index, noteName);
+
+        if (index<0) {
+            console.log("note not found in noteStep: ", noteName);
+            return;
+        }
+
+        if (vfNoteNames[index + step]) { // TODO: if goes over octave!
+            console.log("replace with: ", vfNoteNames[index + step]);
+            replaceNote(selectedNote, [ vfNoteNames[index + step]+ "/"+octave ], note.duration);
+
+        } else {
+            console.log("No more notes");
+        }
+        // get the next from map and replaceNote with that in currentPosition
+
+
+
     }
 
     const restHandler = () => {
@@ -356,6 +387,12 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                 </Grid>
                 <Grid item>
                     <Button size={"small"} onClick={()=>addBar()}>Add bar</Button>
+                </Grid>
+                <Grid item>
+                    <Button size={"small"} onClick={()=>noteStep(1)}>Note up</Button>
+                </Grid>
+                <Grid item>
+                    <Button size={"small"} onClick={()=>noteStep(-1)}>Note down</Button>
                 </Grid>
             </Grid>
         )

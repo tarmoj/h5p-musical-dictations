@@ -12,10 +12,6 @@ TODO:
 // rename notationUtils -> notation.js NotationInput -> NotationInput - osalt tehtud
 
 
-
-
-click before first note -  select first note
-
 NotationView div -  make scrollable (css)
 
 Arrow up / Down -  enharmonic notes, half tone up/down
@@ -37,6 +33,8 @@ Change note on duration change - OK
 Toonart -OK
 
 Dot -  kui peale viimast nooti ja on noot taktis, siis mõjub viimasele noodile (vt dotChange)  OK
+
+click before first note -  select first note, logical selectedNote in NotationView -  OK
 
 
 ----

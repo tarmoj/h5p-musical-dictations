@@ -70,7 +70,7 @@ const simplify = (string) => {
 }
 
 //NB! change @ tp b for vexflow
-const noteNames = new Map([
+export const noteNames = new Map([
     ["ceses","Cbb"], ["ces","Cb"], ["c","C"], ["cis","C#"], ["cisis","C##"],
     ["deses","Dbb"], ["des", "Db"], ["d", "D"], ["dis","D#"], ["disis","D##"],
     ["eses","Ebb"], ["es","Eb"], ["e","E"], ["eis","E#"], ["eisis","E##"],
