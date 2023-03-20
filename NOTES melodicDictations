@@ -7,14 +7,32 @@ https://stackoverflow.com/questions/71835697/create-react-app-dependency-version
     run npm i web-vitals --save-dev
     run npm install
 
-TODO: rename notationUtils -> notation.js NotationInput -> NotationInput
+TODO:
 
-TODO: insert/add/remove  rest/note
+// rename notationUtils -> notation.js NotationInput -> NotationInput - osalt tehtud
+
+
+Dot -  kui peale viimast nooti ja on noot taktis, siis mõjub viimasele noodile (vt dotChange) ? kuidas teha dotted välimus
+
+
+click before first note -  select first note
+
+NotationView div -  make scrollable (css)
+
+Keyboard shortcuts -  nootide kestused, Del, insert? dot ? Klvaiatuuri tähed? Kuidas näidata sel juhul oktavi?
+arrow - go to next/previous bar (next - select first not, previous -  select after last (position.note = -1) )
+
+tekita inputNotation, kus N tühja takti vastavalt correctNotationile (ilmselt Main.js)-s
+
+Kui ühehäälne, siis nootide paigustus kuidagi ladusamaks (praegu vist vertikaali järgi... )
+
+
+notation2Lilypond -  handle rest  (duration contains r) and dot  correctly
+
+
 Dot - almost -  check why dd + button view change: Dot -  for one note only and then out? Probably yes. OK
 Dot - influences only once - adds or removes selected note ; button checked does not work quite... -  OK
-Dot -  kui peale viimast nooti ja on noot taktis, siis mõjub viimasele noodile (vt dotChange) ? kuidas teha dotted välimus
 Change note on duration change - OK
-notation2Lilypond -  handle rest  (duration contains r) and dot  correctly
 Toonart -OK
 
 ----

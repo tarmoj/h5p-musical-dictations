@@ -30,18 +30,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         setLyInput(notationInfoToLyString(notationInfo));
     } , [notationInfo]);
 
-    useEffect( () => console.log("selectNote: ", selectedNote), [selectedNote] );
-
-    // TODO: we need common handler for insert/add/replace note/rest
-
-
-
-
-
-    const addRest = () => {
-        addNote(["b/4"], currentDuration + "r");
-    }
-
+    //useEffect( () => console.log("selectedNote: ", selectedNote), [selectedNote] );
 
     const replaceNote =  (position, keys, duration) =>  { // position { measure: , note: staff: }
 
@@ -85,7 +74,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
     }
 
     const addNote = (keys, duration) => { // add note to the end of the bar
-        const staff = selectedNote.staff ; //TODO: get from currentPosition that should be global... (React Context or similar? )
+        const staff = selectedNote.staff ;
         const measureIndex = selectedNote.measure >= 0 ? selectedNote.measure : 0; //notationInfo.staves[staff].measures.length>0 ? notationInfo.staves[staff].measures.length - 1 :0 ;
 
         const noteIndex = notationInfo.staves[staff].measures[measureIndex].notes.length; // index to the note after last one
@@ -94,7 +83,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
     }
 
     const deleteHandler  = () => {
-        if (selectedNote.note>=0) { // TODO: if selectedNote is in between like 2.5?
+        if (selectedNote.note>=0 && selectedNote.note-parseInt(selectedNote.note)===0 ) {
             deleteNote(selectedNote)
         } else {
             deleteLastNote();
@@ -160,38 +149,29 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
     const dotChange = () => {
 
-        let note = null;
+        //let note = null;
         if (selectedNote.note>=0) {
             if (selectedNote.note - parseInt(selectedNote.note)===0.5) {
                 console.log("Selection between notes, no dot");
                 return;
             }
-            note = notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes[selectedNote.note];
-        } else if (notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes.length>0) {
-            note =   notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes.at(-1);
-           // this should bot be handled by inputHandler but directly replaceNote
-
+            const note = notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes[selectedNote.note];
             const duration = invertDot(note.duration);
-
+            //console.log("Change dot: ", duration);
+            replaceNote(selectedNote, note.keys, duration);
+        } else if (notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes.length>0) {
+            const note =   notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes.at(-1);
+            const duration = invertDot(note.duration);
             const position = deepClone(selectedNote);
             position.note = notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes.length-1;
+            //console.log("Dealing with  last note dot ", selectedNote.note, duration, note,position);
             replaceNote(position, note.keys, duration);
         } else {
             console.log("No note to add dot to");
-            return;
         }
-
-        //const vfNote = note.keys[0]; // NB! chords not supported!
-        let duration = invertDot(note.duration);
-        console.log("Change dot: ", duration);
-        //inputHandler(vfNote, duration); // or also replace here?
-        replaceNote(selectedNote, note.keys, duration);
-
     }
 
     const durationChange = (newDuration) => {
-        // const dotted = false; // to state later
-        // const duration = dotted ? newDuration + "." : newDuration;
         if (selectedNote.note>=0) { // Need to update notation
             const note = notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes[selectedNote.note]
             const vfNote = note.keys[0]; // NB! chords not supported!
@@ -442,18 +422,9 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                     </ToggleButtonGroup>
                 </Grid>
                 <Grid item>
-                    <ToggleButton value="." aria-label="use dot"  selected={dotted} onChange={(event)=> {
-                        const newDotted = !dotted;
-                        console.log("Toggle change", newDotted)
-                        const newDuration = newDotted ? currentDuration + "d" : currentDuration;
-                        //durationChange(newDuration);
-                        dotChange(newDotted);
-                        setDotted(newDotted);
-                    }
-
-                    }>
+                    <Button value="." aria-label="add or remove dot"  onClick={dotChange}>
                         Dot
-                    </ToggleButton>
+                    </Button>
                 </Grid>
 
             </Grid>
