@@ -14,7 +14,6 @@ TODO:
 
 NotationView div -  make scrollable (css)
 
-Arrow up / Down -  enharmonic notes, half tone up/down
 
 Keyboard shortcuts -  nootide kestused, Del, insert? dot ? Klvaiatuuri tähed? Kuidas näidata sel juhul oktavi?
 arrow - go to next/previous bar (next - select first not, previous -  select after last (position.note = -1) )
@@ -35,6 +34,9 @@ Toonart -OK
 Dot -  kui peale viimast nooti ja on noot taktis, siis mõjub viimasele noodile (vt dotChange)  OK
 
 click before first note -  select first note, logical selectedNote in NotationView -  OK
+
+Arrow up / Down -  enharmonic notes, half tone up/down - OK
+
 
 
 ----

@@ -134,28 +134,28 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
     const noteStep = (step) => { // step>=0 for up in noteNames, <0 -  down
         const note = getCurrentNote();
-        console.log("Note in noteStep", note);
-        const [noteName, octave] = note.keys[0].split("/")
+        let [noteName, octave] = note.keys[0].split("/")
         const vfNoteNames = Array.from(noteNames.values());
-        const index = vfNoteNames.indexOf(noteName);
-
-        console.log("Found index in notenames: ", index, noteName);
+        let index = vfNoteNames.indexOf(noteName);
 
         if (index<0) {
             console.log("note not found in noteStep: ", noteName);
             return;
         }
 
-        if (vfNoteNames[index + step]) { // TODO: if goes over octave!
-            console.log("replace with: ", vfNoteNames[index + step]);
-            replaceNote(selectedNote, [ vfNoteNames[index + step]+ "/"+octave ], note.duration);
+        index += step;
 
-        } else {
-            console.log("No more notes");
+        if (index >= vfNoteNames.length ) {
+            index = 0;
+            octave = (parseInt(octave)+1).toString();
         }
-        // get the next from map and replaceNote with that in currentPosition
 
+        if (index <0 ) {
+            index = vfNoteNames.length-1;
+            octave = (parseInt(octave)-1).toString();
+        }
 
+        replaceNote(selectedNote, [ vfNoteNames[index]+ "/"+octave ], note.duration);
 
     }
 
