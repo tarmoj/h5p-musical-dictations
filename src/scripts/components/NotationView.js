@@ -1,6 +1,7 @@
 import React, {useRef, useEffect, useState} from 'react'
 import VexFlow from 'vexflow';
 import {defaultNotationInfo} from './notationUtils';
+import "../../styles/h5p-musical-dictations.css" ; // needed here only for testing via Preview.js
 
 
 const VF = VexFlow.Flow;
@@ -75,13 +76,16 @@ export function NotationView({
 
     const handleClick = (event) => {
         //console.log("Target: ", event.target, event.target.getBoundingClientRect().x );
-        const offsetX = rendererRef.current.getContext().svg.getBoundingClientRect().x  + window.scrollX ;;//event.target.getBoundingClientRect().x;
+        //const offsetX = rendererRef.current.getContext().svg.getBoundingClientRect().x  + window.scrollX ;//event.target.getBoundingClientRect().x;
+        const offsetX = 0; // in case of css dispplay:block no correction seems to be needed
         const offsetY = 0; //event.target.getBoundingClientRect().y;
         //console.log("OffsetX: ", offsetX);
 
+
+
         let x = (event.layerX - offsetX)  / scale;
         let y = event.layerY / scale;
-        console.log("Clicked: ", x,y);
+        //console.log("Clicked: ", x,y, offsetX, window.scrollX);
 
 
         // y is different when scrolled!! try to get Y from stave
@@ -90,7 +94,6 @@ export function NotationView({
         const clickedStaff = (y>svgY + staffHeight+20 && defaultNotationInfo.staves.length > 1 ) ? 1 : 0; // not best condition, for tryout only...
 
         const position = getClickPositionByX(x, clickedStaff);
-
 
         if (setSelectedNote) {
             if (position) {
@@ -155,7 +158,7 @@ export function NotationView({
         for (let i=0; i<staveInfo[staffIndex][measureIndex].staveNotes.length; i++) {
             const note = staveInfo[staffIndex][measureIndex].staveNotes[i];
             const nextNote = (i<staveInfo[staffIndex][measureIndex].staveNotes.length-1) ? staveInfo[staffIndex][measureIndex].staveNotes[i+1] : null;
-            console.log("click Note x, width: ", note.getAbsoluteX(), note.getWidth(), note.getBoundingBox(), note.getNoteHeadBeginX(), note.getNoteHeadEndX());
+            //console.log("click Note x, width: ", note.getAbsoluteX(), note.getWidth(), note.getBoundingBox(), note.getNoteHeadBeginX(), note.getNoteHeadEndX());
             if (x>= note.getNoteHeadBeginX()-padding && x<=note.getNoteHeadEndX()+padding ) {
                 noteIndex = i;
             } else if (nextNote && x>note.getNoteHeadEndX()+padding && x<nextNote.getNoteHeadBeginX()-padding) {
@@ -165,7 +168,7 @@ export function NotationView({
             }
         }
         const position = {note: noteIndex, measure: measureIndex, staff: staffIndex};
-        console.log("Clicked position: ", position);
+        //console.log("Clicked position: ", position);
 
         return position;
     };
@@ -363,5 +366,5 @@ export function NotationView({
         setStaveInfo(newStaveInfo);
     }
 
-    return <div className={"h5p-musical-dictations-notationDiv"}> <div ref={container} /> </div>
+    return <div> <div className={"h5p-musical-dictations-notationDiv"} ref={container} /> </div>
 }
