@@ -207,7 +207,7 @@ const parseLilypondString = (lyString) => {
                 console.log("Bar seems complete or over");
             }
 
-            console.log("vfNote: ", vfNote, duration, lastDuration);
+            //console.log("vfNote: ", vfNote, duration, lastDuration);
             // note object:  { clef: "treble", keys: ["f/4"], duration: "8", auto_stem: "true" }
             let note = {keys: [vfNote], duration: lastDuration, clef: stave.clef, auto_stem: "true"};
             if (vfNote==="r") {
@@ -227,12 +227,12 @@ const parseLilypondString = (lyString) => {
         // drop support for starting barlines, not needed in dictations
         if (barLine /*|| durationSum >= barDuration*/) {
             stave.measures[measureIndex].endBar = barLine; // how to detect that it is end, not start barline? - Drop support for repetition, no startBArlines
-            console.log("barline", barLine);
+            //console.log("barline", barLine);
             if (barLine !== "|.") {
                 // should we check if duration of the measure is enough?
                 measureIndex++;
                 stave.measures.push({number: 1+measureIndex, notes:[], endBar: "|."});
-                console.log("moved index to new bar", measureIndex, stave.measures);
+                //console.log("moved index to new bar", measureIndex);
             }
             barLine = "" ; // reset
             durationSum = 0;
@@ -273,7 +273,7 @@ export const getLyNoteByMidiNoteInKey = (midiNote, key="C") => { // key as tonal
             case 5: lyNote += `''`; break;
             case 6: lyNote += `'''`; break;
         }
-        console.log("Detected lyNote: ", lyNote, pitchClass, octave, key);
+        // console.log("Detected lyNote: ", lyNote, pitchClass, octave, key);
         return lyNote;
     }
 
@@ -302,7 +302,7 @@ export const getVfNoteByMidiNoteInKey = (midiNote, key="C") => { // key as tonal
         return "";
     }  else {
         vfNote += "/" + octave;
-        console.log("Detected vfNote: ", vfNote, pitchClass, octave, key);
+        // console.log("Detected vfNote: ", vfNote, pitchClass, octave, key);
         return vfNote;
     }
 
@@ -313,7 +313,7 @@ const getLyNoteName = (vfName) => {
     let lyNote = "";
     noteNames.forEach( (value, key) => {
         if (value.toLowerCase()===vfName.toLowerCase()) {
-            console.log("Found: ", key);
+            // console.log("Found: ", key);
             lyNote =key; // this is the lilynote
         }
     });
@@ -322,9 +322,9 @@ const getLyNoteName = (vfName) => {
 
 const vfNoteToLyNote = (vfNote) => {
     const [note, octave] = vfNote.split("/");
-    console.log("Split vfNote:", note, octave);
+    // console.log("Split vfNote:", note, octave);
     let lyNote = getLyNoteName(note);
-    console.log("lyNote in vfNoteToLyNote", lyNote);
+    // console.log("lyNote in vfNoteToLyNote", lyNote);
     if (!lyNote) {
         return "";
     }  else {
@@ -334,7 +334,7 @@ const vfNoteToLyNote = (vfNote) => {
             case "5": lyNote += `''`; break;
             case "6": lyNote += `\'\'\'`; break;
         }
-        console.log("vfNote2LyNote lyNote: ", lyNote);
+        // console.log("vfNote2LyNote lyNote: ", lyNote);
         return lyNote;
     }
 }
@@ -365,14 +365,14 @@ export const notationInfoToLyString = notationInfo => {
                             // noteString = `<<  ${note.keys-> map -> vfNoteToLyNote(key)}  >>` or something similar
                         } else if (note.keys.length === 1) {
                             noteString = vfNoteToLyNote(note.keys[0]);
-                            console.log("note.keys[0], noteString now: ", note.keys[0], noteString );
+                            //console.log("note.keys[0], noteString now: ", note.keys[0], noteString );
                         }
                         if (note.keys[0]==="|" || note.keys[0].startsWith("=")) { // not the case any more. Handel barlines differently
                             //lyString += ` ${note.keys[0]} `; <- old barline handling
                         } else {
-                            console.log("noteString 2", noteString)
+                            //console.log("noteString 2", noteString)
                             lyString += ` ${noteString}${note.duration} `;  // here are probably more conditions (triplets etc)
-                            console.log("lyString", lyString)
+                            //console.log("lyString", lyString)
                         }
                         if (note.hasOwnProperty("text")) {
                             // let positionString = ".top.";
@@ -391,7 +391,7 @@ export const notationInfoToLyString = notationInfo => {
             }
         }
     }
-    console.log("converted to ly: ", lyString)
+    //console.log("converted to ly: ", lyString)
     return lyString;
 };
 

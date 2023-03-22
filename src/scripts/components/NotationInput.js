@@ -248,7 +248,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
 
         const vfNote = getVfNoteByMidiNoteInKey(midiNote, key);
-        console.log("vfnote: ", vfNote);
+        //console.log("vfnote: ", vfNote);
         //console.log("Notation at this point: ", notationInfo);
         if (vfNote) {
             noteChange(vfNote);

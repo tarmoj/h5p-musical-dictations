@@ -14,7 +14,7 @@ export function NotationView({
                                  height = 140,
                                  staffHeight = 100,
                                  selectedNote,
-                                 setSelectedNote // this needs better names!
+                                 setSelectedNote
                              }) {
     const container = useRef()
     const rendererRef = useRef()
@@ -25,7 +25,6 @@ export function NotationView({
 
 
     useEffect(() => { // this is actually redraw function...
-        console.log("Effect / redraw?");
         if (rendererRef.current == null) {
             rendererRef.current = new Renderer(
                 container.current,
@@ -40,31 +39,12 @@ export function NotationView({
         context.clear();
         context.setFont('Arial', 10, '').setBackgroundFillStyle('#eeeedd');
 
-        console.log("Selected note in draw hook: ", selectedNote);
+        //console.log("Selected note in draw hook: ", selectedNote);
 
         draw(notationInfo, context); // should we also pass renderer?
 
     }, [notationInfo, width, height, selectedNote]);
 
-
-    // useEffect( () => { // this works!
-    //         rendererRef.current.getContext().svg.onclick = (event) => handleClick(event);
-    //         console.log("allNotes updated, update handleClick");
-    //     }, [allNotes] // should this be instead of staveInfo?
-    // );
-
-
-    //useEffect( () => console.log("selectedNote in sel.note hook: ", selectedNote), [selectedNote] );
-
-    const highlightNote = (note, color = "lightblue") => { // note must be VF.StaveNote
-        if (note ) {
-            console.log("Stavenote to highlight: ", note.keys, note.getAbsoluteX(), note.getStave().getYForTopText()-10);
-            const padding = 5;
-            const width = note.getNoteHeadEndX() - note.getNoteHeadBeginX(); // approximate notehead width
-            rendererRef.current.getContext().rect(note.getNoteHeadBeginX()-padding, note.getStave().getYForTopText()-10,width+2*padding, note.getStave().getHeight()+10,
-                { fill: color, opacity: "0.2" } );
-        }
-    }
 
     const setInputCursor = (x,color = "lightblue" ) => {
         const width = 25; //note.getNoteHeadEndX() - note.getNoteHeadBeginX(); // approximate notehead width
@@ -75,18 +55,16 @@ export function NotationView({
     }
 
     const handleClick = (event) => {
+
         //console.log("Target: ", event.target, event.target.getBoundingClientRect().x );
         //const offsetX = rendererRef.current.getContext().svg.getBoundingClientRect().x  + window.scrollX ;//event.target.getBoundingClientRect().x;
         const offsetX = 0; // in case of css dispplay:block no correction seems to be needed
         const offsetY = 0; //event.target.getBoundingClientRect().y;
         //console.log("OffsetX: ", offsetX);
 
-
-
         let x = (event.layerX - offsetX)  / scale;
         let y = event.layerY / scale;
         //console.log("Clicked: ", x,y, offsetX, window.scrollX);
-
 
         // y is different when scrolled!! try to get Y from stave
         const svgY = rendererRef.current.getContext().svg.getBoundingClientRect().y  + window.scrollY ;
@@ -249,7 +227,7 @@ export function NotationView({
                     }
 
                     if (selectedNote && noteIndex === selectedNote.note && measureIndex === selectedNote.measure && staffIndex === selectedNote.staff) {
-                        console.log("This note should be highlighted: ", noteIndex)
+                        // console.log("This note should be highlighted: ", noteIndex)
                         noteToHighlight = staveNote; // to highlight it later
                     }
                     // double dot not implemented yet
@@ -343,7 +321,7 @@ export function NotationView({
         if (noteToHighlight) {
             cursorX = noteToHighlight.getNoteHeadBeginX()-5;
         } else {
-            if (selectedNote.note<0) { // last note
+            if (selectedNote && selectedNote.note<0) { // last note
                 if (staveInfo[selectedNote.staff][selectedNote.measure].staveNotes.length===0) {
                     cursorX = staveInfo[selectedNote.staff][selectedNote.measure].vfStave.getNoteStartX() + 10; // if not notes in the bar, draw it in the beginning
                     console.log("Empty bar",selectedNote.measure )
@@ -352,7 +330,7 @@ export function NotationView({
                     console.log("After last note",selectedNote.measure  )
 
                 }
-            } else if  (selectedNote.note-parseInt(selectedNote.note) === 0.5) { // in between
+            } else if  (selectedNote && selectedNote.note-parseInt(selectedNote.note) === 0.5) { // in between
                 cursorX = staveInfo[selectedNote.staff][selectedNote.measure].staveNotes[ parseInt(selectedNote.note) ].getNoteHeadEndX() + 5;
                 cursorColor = "lightgreen";
             }

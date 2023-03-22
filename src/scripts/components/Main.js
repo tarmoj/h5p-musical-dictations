@@ -49,8 +49,8 @@ export default function Main( {correctDictation=correctLyDictation, showFromDict
 
     const checkResponse = () => {
 
-        const lyInput = lyRef.current.value; // get it in some other way from NotationInput? // not needed any more...
-        const responseNotation = parseLilypondDictation(lyInput); // for any case, if user has not pressed "show"
+        //const lyInput = lyRef.current.value; // get it in some other way from NotationInput? // not needed any more...
+        const responseNotation = deepClone(responseNotationInfo);//parseLilypondDictation(lyInput); // for any case, if user has not pressed "show"
         let correct = true;
 
         const staveIndex = 0; // support for one voiced, ie 1 stave dications only (for now)

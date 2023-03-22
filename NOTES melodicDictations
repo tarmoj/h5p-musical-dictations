@@ -12,9 +12,6 @@ TODO: -----------------------------------
 // rename notationUtils -> notation.js NotationInput -> NotationInput - osalt tehtud
 
 
-tekita inputNotation, kus N tühja takti vastavalt correctNotationile (ilmselt Main.js)-s OK
-
-show Correct notation - selectedNote is null + fix other similar problems.
 
 Keyboard shortcuts -  nootide kestused, Del, insert? dot ? Klvaiatuuri tähed? Kuidas näidata sel juhul oktavi?
 arrow - go to next/previous bar (next - select first not, previous -  select after last (position.note = -1) )
@@ -44,6 +41,11 @@ click before first note -  select first note, logical selectedNote in NotationVi
 Arrow up / Down -  enharmonic notes, half tone up/down - OK
 
 NotationView div -  make scrollable (css) OK
+
+
+tekita inputNotation, kus N tühja takti vastavalt correctNotationile (ilmselt Main.js)-s OK
+
+show Correct notation - selectedNote is null + fix other similar problems. - OK
 
 
 
