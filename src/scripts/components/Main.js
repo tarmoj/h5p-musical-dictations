@@ -23,7 +23,7 @@ export default function Main( {correctDictation=correctLyDictation, showFromDict
 
 
 
-    const [responseNotationInfo, setResponseNotationInfo] =useState(parseLilypondDictation(lyStart)); // lyStart - temporary
+    const [responseNotationInfo, setResponseNotationInfo] =useState(defaultNotationInfo); // lyStart - temporary
     const [correctNotationInfo, setCorrectNotationInfo] = useState(parseLilypondDictation(correctDictation));  // could have used a constant but that gets reevaluated each render tine
     const [showCorrectNotation, setShowCorrectNotation] = useState(false);
     const [feedBack, setFeedBack] = useState("");
