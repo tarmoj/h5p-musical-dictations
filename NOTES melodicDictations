@@ -7,23 +7,29 @@ https://stackoverflow.com/questions/71835697/create-react-app-dependency-version
     run npm i web-vitals --save-dev
     run npm install
 
-TODO:
+TODO: -----------------------------------
 
 // rename notationUtils -> notation.js NotationInput -> NotationInput - osalt tehtud
 
 
-NotationView div -  make scrollable (css)
+tekita inputNotation, kus N tühja takti vastavalt correctNotationile (ilmselt Main.js)-s OK
 
+show Correct notation - selectedNote is null + fix other similar problems.
 
 Keyboard shortcuts -  nootide kestused, Del, insert? dot ? Klvaiatuuri tähed? Kuidas näidata sel juhul oktavi?
 arrow - go to next/previous bar (next - select first not, previous -  select after last (position.note = -1) )
 
-tekita inputNotation, kus N tühja takti vastavalt correctNotationile (ilmselt Main.js)-s
-
 Kui ühehäälne, siis nootide paigustus kuidagi ladusamaks (praegu vist vertikaali järgi... )
 
+key and time ära staves alt notationInfo esimesele tasandile (võtab veidi mõtlemist) -  pole nii oluline
 
 notation2Lilypond -  handle rest  (duration contains r) and dot  correctly
+
+layout
+
+tekita leht (või editor widget, aga see vist keerulisem), kus saab noote sisestada (headerRow - time, key selection visible)
+
+DONE ----------------
 
 
 Dot - almost -  check why dd + button view change: Dot -  for one note only and then out? Probably yes. OK
@@ -36,6 +42,9 @@ Dot -  kui peale viimast nooti ja on noot taktis, siis mõjub viimasele noodile 
 click before first note -  select first note, logical selectedNote in NotationView -  OK
 
 Arrow up / Down -  enharmonic notes, half tone up/down - OK
+
+NotationView div -  make scrollable (css) OK
+
 
 
 

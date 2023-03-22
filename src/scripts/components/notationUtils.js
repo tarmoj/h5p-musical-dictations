@@ -18,32 +18,12 @@ export const defaultNotationInfo = {
                 // also possible to define new key or clef here
                 // in the code -  if measure.hasOwnProperty.clef etc
                 notes: [
-                    { clef: "treble", keys: ["F/4"], duration: "1", auto_stem: "true" ,
+                    { clef: "treble", keys: ["g/4"], duration: "4", auto_stem: "true" ,
                         //selected:true, color:"green"
                         /*optional: tied: true|false, text:"something", position:""*/ }, // cannot be empty, vf requires that the measure is filled... or perhaps there is a way to override it
                 ]
             },
                 // // second measure etc
-                // just for testing:
-                {
-                    number : 2, // optional
-                    //startBar: "", // optional can be: |  ||  |. etc (lilypond style)  :|.
-                    endBar: "|",
-                    // also possible to define new key or clef here
-                    // in the code -  if measure.hasOwnProperty.clef etc
-                    notes: [
-                        { clef: "treble", keys: ["G/4"], duration: "2", auto_stem: "true" ,
-                            //selected:true, color:"green"
-                            /*optional: tied: true|false, text:"something", position:""*/
-                        }, // cannot be empty, vf requires that the measure is filled... or perhaps there is a way to override it
-                        {
-                            clef: "treble", keys: ["Bb/4"], duration: "2", auto_stem: "true"
-
-                        },
-                    ]
-                },
-
-
 
             ],
 
@@ -414,3 +394,16 @@ export const notationInfoToLyString = notationInfo => {
     console.log("converted to ly: ", lyString)
     return lyString;
 };
+
+export const addMeasure= (notationInfo, count=1) => {
+    if (!notationInfo) {
+        console.log("addMeasure: notationInfo is null");
+        return;
+    }
+
+    for (let i=0; i<count; i++) {
+        for (let staff of notationInfo.staves) {
+            staff.measures.push({  endBar: "|",  notes: [] });
+        }
+    }
+}

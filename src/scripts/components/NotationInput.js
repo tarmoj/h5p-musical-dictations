@@ -4,6 +4,7 @@ import {Piano} from "react-piano";
 import 'react-piano/dist/styles.css';
 import classNames from 'classnames';
 import {
+    addMeasure,
     deepClone,
     getLyNoteByMidiNoteInKey, getVfNoteByMidiNoteInKey,
     notationInfoToLyString,
@@ -119,9 +120,9 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
     }
 
-    const addBar = (staff=0) => {
+    const addBar = () => {
         const newNotationInfo = deepClone(notationInfo);
-        newNotationInfo.staves[staff].measures.push({  endBar: "|",  notes: [] }); // try pushing empty notes array
+        addMeasure(newNotationInfo, 1);
         setNotationInfo(newNotationInfo);
     }
 

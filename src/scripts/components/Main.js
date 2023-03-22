@@ -1,15 +1,29 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {NotationView} from "./NotationView"
 import {NotationInput} from "./NotationInput";
-import {defaultNotationInfo, parseLilypondDictation, deepClone} from "./notationUtils";
+import {defaultNotationInfo, parseLilypondDictation, deepClone, addMeasure} from "./notationUtils";
+
+
+// temporary -  for testing:
+
+const correctLyDictation = `
+    \\clef "treble" \\key c \\major \\time 2/4  
+    c'4 c'8 d'8 | 
+    e'4 e'8 f'8 | 
+    g'8 a'8 g'8 f'8 | 
+    g'4 g'4 \\bar "|."             
+        `;
+
+const lyStart = ` \\clef "treble" \\key c \\major \\time 2/4  
+    c'4 `;
 
 
 
-export default function Main( {correctDictation, showFromDictation = "", resizeFunction= () => console.log("empty resize")} ) {
+export default function Main( {correctDictation=correctLyDictation, showFromDictation=lyStart, resizeFunction= () => console.log("empty resize")} ) {
 
 
 
-    const [responseNotationInfo, setResponseNotationInfo] = useState(defaultNotationInfo);//useState( showFromDictation ? parseLilypondDictation(showFromDictation) : defaultNotationInfo);
+    const [responseNotationInfo, setResponseNotationInfo] =useState(parseLilypondDictation(lyStart)); // lyStart - temporary
     const [correctNotationInfo, setCorrectNotationInfo] = useState(parseLilypondDictation(correctDictation));  // could have used a constant but that gets reevaluated each render tine
     const [showCorrectNotation, setShowCorrectNotation] = useState(false);
     const [feedBack, setFeedBack] = useState("");
@@ -18,6 +32,20 @@ export default function Main( {correctDictation, showFromDictation = "", resizeF
     const lyRef = useRef();
 
     //useEffect( () => {console.log("selectedNote not in Main: ", selectedNote); setSelectedNote(selectedNote)}, [selectedNote] ); // gets called but this does not forward value to NotationInput somehow...
+
+    // to test, later use it in useState init value
+    useEffect( ()=>createResponseDictationStart(), [] );
+
+    const createResponseDictationStart = () => {
+        let seedNotation =showFromDictation ?  parseLilypondDictation(showFromDictation) : defaultNotationInfo;
+        const bars = correctNotationInfo.staves[0].measures.length;
+        addMeasure( seedNotation, bars - seedNotation.staves[0].measures.length);
+
+        console.log("seeNotation created: ", seedNotation);
+        //return seedNotation;
+        setResponseNotationInfo(seedNotation);
+
+    }
 
     const checkResponse = () => {
 
@@ -74,7 +102,7 @@ export default function Main( {correctDictation, showFromDictation = "", resizeF
             <div>Enter the dictation in Lilypond notation  (absolute pitches, german nomenclature)</div>
             <div id={"score1"} ></div>
             <NotationView id="userNotation" div={"score"} notationInfo={responseNotationInfo} selectedNote={selectedNote} setSelectedNote={setSelectedNote} />
-            <NotationInput lyStart={showFromDictation ? showFromDictation :  `\\clef treble \\time 4/4 \\key d \\major d'8 e' fis' g' a'4 a`}
+            <NotationInput lyStart={responseNotationInfo}
                            setNotationInfo={setResponseNotationInfo}
                            notationInfo = {responseNotationInfo}
                            selectedNote={selectedNote} setSelectedNote={setSelectedNote}
