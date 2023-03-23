@@ -278,14 +278,14 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
     }
 
 
-    const handleNotation = () => {
-        console.log("commented out...");
-        // const notation = parseLilypondDictation(lyInput);
-        // if (notation && setNotationInfo) {
-        //     setNotationInfo(notation);
-        // } else {
-        //     console.log("Notation error or setter not set");
-        // }
+    const handleLyNotation = () => {
+        //console.log("commented out...");
+        const notation = parseLilypondDictation(lyInput);
+        if (notation && setNotationInfo) {
+            setNotationInfo(notation);
+        } else {
+            console.log("Notation error or setter not set");
+        }
 
         // const testLy = notationInfoToLyString(notation);
         // setLyInput(testLy);
@@ -485,7 +485,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                     <textarea rows="3" cols="50" value={lyInput} onChange={ event => setLyInput( event.target.value )}/>
                 </Grid>
                 <Grid item>
-                    <Button onClick={ handleNotation }>Engrave</Button>
+                    <Button onClick={ handleLyNotation }>Engrave</Button>
                 </Grid>
             </Grid>
 

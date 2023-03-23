@@ -370,8 +370,13 @@ export const notationInfoToLyString = notationInfo => {
                         if (note.keys[0]==="|" || note.keys[0].startsWith("=")) { // not the case any more. Handel barlines differently
                             //lyString += ` ${note.keys[0]} `; <- old barline handling
                         } else {
+                            let durationString = note.duration.replace("d", ".");
                             //console.log("noteString 2", noteString)
-                            lyString += ` ${noteString}${note.duration} `;  // here are probably more conditions (triplets etc)
+                            if (durationString.endsWith("r")) { // rest
+                                noteString = "r";
+                                durationString = durationString.slice(0,-1);
+                            }
+                            lyString += ` ${noteString}${durationString} `;  // here are probably more conditions (triplets etc)
                             //console.log("lyString", lyString)
                         }
                         if (note.hasOwnProperty("text")) {
