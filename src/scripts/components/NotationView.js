@@ -344,5 +344,5 @@ export function NotationView({
         setStaveInfo(newStaveInfo);
     }
 
-    return <div> <div className={"h5p-musical-dictations-notationDiv"} ref={container} /> </div>
+    return <div className={"h5p-musical-dictations-notationDiv"} ref={container} />
 }

@@ -11,6 +11,7 @@ import {
     noteNames,
     parseLilypondDictation
 } from "./notationUtils";
+import {NotationView} from "./NotationView";
 
 
 // TODO: how to do translation? est.json? https://react.i18next.com/ ?
@@ -479,20 +480,22 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
     return <div className={"h5p-musical-dictations-uiDiv"}>
         <Grid container direction={"column"} spacing={1}>
             <Grid container  direction={"column"} spacing={1}>
-                <Grid item>Lilypond notation UI:</Grid>
+                <Grid item>Lilypond notation (absolute pitches, german nomenclature):</Grid>
                 <Grid item>
-                    <textarea rows="5" cols="50" value={lyInput} onChange={ event => setLyInput( event.target.value )}/>
+                    <textarea rows="3" cols="50" value={lyInput} onChange={ event => setLyInput( event.target.value )}/>
                 </Grid>
                 <Grid item>
-                    <Button onClick={ handleNotation }>Show</Button>
+                    <Button onClick={ handleNotation }>Engrave</Button>
                 </Grid>
-
             </Grid>
+
+            <NotationView id="userNotation" div={"score"} notationInfo={notationInfo} selectedNote={selectedNote} setSelectedNote={setSelectedNote} />
 
             {/*{createHeaderRow()}*/}
             {createExtraButtonsRow()}
             {createDurationsRow()}
             {createPianoRow()}
+
         </Grid>
     </div>
 }

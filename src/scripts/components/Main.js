@@ -29,20 +29,18 @@ export default function Main( {correctDictation=correctLyDictation, showFromDict
     const [feedBack, setFeedBack] = useState("");
     const [ selectedNote, setSelectedNote] = useState({ measure: responseNotationInfo.staves[0].measures.length-1, note:-1, staff:0 } );
 
-    const lyRef = useRef();
+    // const lyRef = useRef();
 
     //useEffect( () => {console.log("selectedNote not in Main: ", selectedNote); setSelectedNote(selectedNote)}, [selectedNote] ); // gets called but this does not forward value to NotationInput somehow...
 
-    // to test, later use it in useState init value
-    useEffect( ()=>createResponseDictationStart(), [] );
+    useEffect( ()=>createResponseDictationStart(), [] ); // set the proper lyStart for response NotationInput
 
     const createResponseDictationStart = () => {
         let seedNotation =showFromDictation ?  parseLilypondDictation(showFromDictation) : defaultNotationInfo;
         const bars = correctNotationInfo.staves[0].measures.length;
         addMeasure( seedNotation, bars - seedNotation.staves[0].measures.length);
 
-        console.log("seeNotation created: ", seedNotation);
-        //return seedNotation;
+        //console.log("seeNotation created: ", seedNotation);
         setResponseNotationInfo(seedNotation);
 
     }
@@ -99,9 +97,8 @@ export default function Main( {correctDictation=correctLyDictation, showFromDict
 
     return (
         <div>
-            <div>Enter the dictation in Lilypond notation  (absolute pitches, german nomenclature)</div>
-            <div id={"score1"} ></div>
-            <NotationView id="userNotation" div={"score"} notationInfo={responseNotationInfo} selectedNote={selectedNote} setSelectedNote={setSelectedNote} />
+            {/*<div id={"score1"} ></div>*/}
+            {/*<NotationView id="userNotation" div={"score"} notationInfo={responseNotationInfo} selectedNote={selectedNote} setSelectedNote={setSelectedNote} />*/}
             <NotationInput lyStart={responseNotationInfo}
                            setNotationInfo={setResponseNotationInfo}
                            notationInfo = {responseNotationInfo}
@@ -122,8 +119,8 @@ export default function Main( {correctDictation=correctLyDictation, showFromDict
             <div>{feedBack}</div>
             { showCorrectNotation &&
             <div>
-                <textarea rows="10" cols="50" readOnly={true} value={correctDictation}/>
                 <NotationView id="correctNotation" div={"score2"} notationInfo={correctNotationInfo}  />
+                <textarea rows="10" cols="50" readOnly={true} value={correctDictation}/>
             </div>
             }
         </div>
