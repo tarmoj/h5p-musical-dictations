@@ -11,6 +11,8 @@ TODO: -----------------------------------
 
 ÜLDISEM - ka H5P paketti (library) saab lisada Tag'e vms oleks üldnimetuse järgi leitav?
 
+h5p-editor -  "Valideeri" nuppu pole tegelikult vaja.
+
 NB!! Spelling -  kõikides semantics failides -  "Porbleemide" -> "Probleemide"
 
 // rename notationUtils -> notation.js NotationInput -> NotationInput - osalt tehtud
