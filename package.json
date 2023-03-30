@@ -1,6 +1,6 @@
 {
   "name": "h5p-musical-dictations",
-  "version": "0.2.0",
+  "version": "0.3.2",
   "description": "H5P library for creating musical dictations",
   "private": true,
   "scripts": {

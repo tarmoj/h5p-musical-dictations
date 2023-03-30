@@ -9,6 +9,10 @@ https://stackoverflow.com/questions/71835697/create-react-app-dependency-version
 
 TODO: -----------------------------------
 
+ÜLDISEM - ka H5P paketti (library) saab lisada Tag'e vms oleks üldnimetuse järgi leitav?
+
+NB!! Spelling -  kõikides semantics failides -  "Porbleemide" -> "Probleemide"
+
 // rename notationUtils -> notation.js NotationInput -> NotationInput - osalt tehtud
 
 
