@@ -11,13 +11,11 @@ TODO: -----------------------------------
 
 ÜLDISEM - ka H5P paketti (library) saab lisada Tag'e vms oleks üldnimetuse järgi leitav?
 
-h5p-editor -  "Valideeri" nuppu pole tegelikult vaja.
 
-NB!! Spelling -  kõikides semantics failides -  "Porbleemide" -> "Probleemide"
 
 // rename notationUtils -> notation.js NotationInput -> NotationInput - osalt tehtud
 
-
+parseLilypond -  return null if something wrong
 
 Keyboard shortcuts -  nootide kestused, Del, insert? dot ? Klvaiatuuri tähed? Kuidas näidata sel juhul oktavi?
 arrow - go to next/previous bar (next - select first not, previous -  select after last (position.note = -1) )
@@ -26,7 +24,6 @@ Kui ühehäälne, siis nootide paigustus kuidagi ladusamaks (praegu vist vertika
 
 key and time ära staves alt notationInfo esimesele tasandile (võtab veidi mõtlemist) -  pole nii oluline
 
-notation2Lilypond -  handle rest  (duration contains r) and dot  correctly
 
 layout
 
@@ -53,7 +50,11 @@ tekita inputNotation, kus N tühja takti vastavalt correctNotationile (ilmselt M
 
 show Correct notation - selectedNote is null + fix other similar problems. - OK
 
+h5p-editor -  "Valideeri" nuppu pole tegelikult vaja. OK
 
+NB!! Spelling -  kõikides semantics failides -  "Porbleemide" -> "Probleemide" OK
+
+notation2Lilypond -  handle rest  (duration contains r) and dot  correctly OK
 
 
 ----

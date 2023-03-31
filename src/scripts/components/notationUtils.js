@@ -9,7 +9,7 @@ export const defaultNotationInfo = {
     staves: [
         {
             clef:"treble",
-            key:"F",
+            key:"C",
             time: "4/4",
             measures : [ {
                 number : 1, // optional
@@ -70,19 +70,38 @@ export const parseLilypondDictation = (lyDictation) => { // returns returns nota
 // for one-voiced dications or object { stave1:"", stave2, "" }. More than 2 staves not supported, currently one voice per stave.
     let notationInfo = deepClone(defaultNotationInfo);
     if (typeof(lyDictation)==="string") {
-        notationInfo.staves[0] = parseLilypondString(lyDictation);
+        const stave = parseLilypondString(lyDictation);
+        if (stave) {
+            notationInfo.staves[0] = stave;
+        } else {
+            console.log("Stave is null!");
+            return null;
+        }
+
     } else if ( typeof(lyDictation)==="object" ) {
         if (lyDictation.hasOwnProperty("stave1")) {
             const stave1 = parseLilypondString(lyDictation.stave1);
-            notationInfo.staves[0] = stave1;
+            if (stave1) {
+                notationInfo.staves[0] = stave1;
+            } else {
+                console.log("stave1 is null");
+                return null;
+            }
+
         }
         if (lyDictation.hasOwnProperty("stave1")) {
             const stave2 = parseLilypondString(lyDictation.stave2);
-            notationInfo.staves[1] = stave2;
+            if (stave2) {
+                notationInfo.staves[1] = stave2;
+            } else {
+                console.log("stave2 is null");
+                return null;
+            }
         }
         //etc if more voices needed
     } else {
         console.log("Unknown lyDictation: ", lyDictation);
+        return null;
     }
 
     return notationInfo;
@@ -91,6 +110,11 @@ export const parseLilypondDictation = (lyDictation) => { // returns returns nota
 
 
 const parseLilypondString = (lyString) => {
+    if (!lyString) {
+        alert("Empty Lilypond string!");
+        return null;
+    }
+
     const chunks = simplify(lyString).split(" ");
     let stave=deepClone(defaultNotationInfo.staves[0]);
     let notes = [] ; // each note has format {keys:[], duration: "", [optional-  chord: ""]}
@@ -163,7 +187,8 @@ const parseLilypondString = (lyString) => {
             } else {
                 if (! noteNames.has(noteName)) { // ERROR
                     alert(noteName +  " is not a recognized note or keyword.");
-                    break;
+                    return null;
+                    //break;
                 }
                 console.log("noteName is: ", noteName);
                 vfNote = noteNames.get(noteName);
