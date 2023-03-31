@@ -15,10 +15,11 @@ TODO: -----------------------------------
 
 // rename notationUtils -> notation.js NotationInput -> NotationInput - osalt tehtud
 
-parseLilypond -  return null if something wrong
 
-Keyboard shortcuts -  nootide kestused, Del, insert? dot ? Klvaiatuuri tähed? Kuidas näidata sel juhul oktavi?
+Keyboard shortcuts - KUIDAS TEHA; ET EI KEHTIKS; KUI FOOKUS LYINPUTIS?   nootide kestused, Del, insert? dot ? Klvaiatuuri tähed? Kuidas näidata sel juhul oktavi?
 arrow - go to next/previous bar (next - select first not, previous -  select after last (position.note = -1) )
+
+LyInput -  lisa, et kui Enter, siis Engrave.
 
 Kui ühehäälne, siis nootide paigustus kuidagi ladusamaks (praegu vist vertikaali järgi... )
 
@@ -56,6 +57,7 @@ NB!! Spelling -  kõikides semantics failides -  "Porbleemide" -> "Probleemide" 
 
 notation2Lilypond -  handle rest  (duration contains r) and dot  correctly OK
 
+parseLilypond -  return null if something wrong  OK
 
 ----
 Buttons controls, shortcuts

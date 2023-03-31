@@ -26,12 +26,64 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
     const [currentKey, setCurrentKey] = useState("C");
     const [currentDuration, setCurrentDuration] = useState("4");
     const [dotted, setDotted] = useState(false); // empty string or "d" ; in future could be also "dd"
+    const [lyFocus, setLyFocus] = useState(false);
 
     // notation functions (add, insert, delete
 
     useEffect( () => {
         setLyInput(notationInfoToLyString(notationInfo));
     } , [notationInfo]);
+
+    useEffect(() => {
+        document.addEventListener("keydown", onKeyDown);
+        return () => {
+            document.removeEventListener("keydown", onKeyDown);
+        };
+    });
+
+    const onKeyDown = (e) => {
+        const noteNameKeys = ["c", "d", "e", "f", "g", "a", "b"];
+        console.log("key pressed: ", e.key, lyFocus);
+        if (!lyFocus) { // ignore keys when focus in lilypond input
+            if (noteNameKeys.includes(e.key)) {
+                console.log("Note from key", e.key);
+                inputHandler(e.key.toUpperCase()+"/4", currentDuration);
+            }
+            // else if (e.key === "1") {
+            //     onNoteDurationClick("whole");
+            // } else if (e.key === "2") {
+            //     onNoteDurationClick("half");
+            // } else if (e.key === "3") {
+            //     onNoteDurationClick("quarter");
+            // } else if (e.key === "4") {
+            //     onNoteDurationClick("eighth");
+            // } else if (e.key === "5") {
+            //     onNoteDurationClick("sixteenth");
+            // } else if (e.key === "6") {
+            //     onDotClick("dot");
+            // } else if (e.key === "0") {
+            //     onRestClick("rest");
+            // } else if (e.key === "n") {
+            //     onNoteAccidentalClick("dblflat");
+            // } else if (e.key === "m") {
+            //     onNoteAccidentalClick("flat");
+            // } else if (e.key === ",") {
+            //     onNoteAccidentalClick("nat");
+            // } else if (e.key === ".") {
+            //     onNoteAccidentalClick("sharp");
+            // } else if (e.key === "-") {
+            //     onNoteAccidentalClick("dblsharp");
+            // } else if (e.key === "Shift") {
+            //     onBarlineClick();
+            // } else if (e.key === "ArrowUp") {
+            //     onOctaveUpClick();
+            // } else if (e.key === "ArrowDown") {
+            //     onOctaveDownClick();
+            else if (e.key === "Backspace" || e.key === "Delete") {
+                deleteHandler();
+            }
+        }
+    }
 
     //useEffect( () => console.log("selectedNote: ", selectedNote), [selectedNote] );
 
@@ -482,7 +534,12 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
             <Grid container  direction={"column"} spacing={1}>
                 <Grid item>Lilypond notation (absolute pitches, german nomenclature):</Grid>
                 <Grid item>
-                    <textarea rows="3" cols="50" value={lyInput} onChange={ event => setLyInput( event.target.value )}/>
+                    <textarea rows="3" cols="50" value={lyInput}
+                              onChange={ event => setLyInput( event.target.value )}
+                              onFocus={()=>setLyFocus(true)}
+                              onBlur={()=>setLyFocus(false)}
+
+                    />
                 </Grid>
                 <Grid item>
                     <Button onClick={ handleLyNotation }>Engrave</Button>
