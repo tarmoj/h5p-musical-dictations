@@ -43,11 +43,26 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
     const onKeyDown = (e) => {
         const noteNameKeys = ["c", "d", "e", "f", "g", "a", "b"];
-        console.log("key pressed: ", e.key, lyFocus);
+        console.log("key pressed: ", e.key, e.ctrlKey, e.ctrl);
         if (!lyFocus) { // ignore keys when focus in lilypond input
             if (noteNameKeys.includes(e.key)) {
                 console.log("Note from key", e.key);
                 inputHandler(e.key.toUpperCase()+"/4", currentDuration);
+            } else if (e.key === "ArrowLeft") {
+                if (e.ctrlKey) {
+                    console.log("Control left");
+                    nextMeasure(-1);
+                } else {
+                    //console.log("Just arrow left")
+                    nextNote(-1);
+                }
+            } else if (e.key === "ArrowRight") {
+                if (e.ctrlKey) {
+                    nextMeasure(1);
+                } else {
+                    //console.log("Just arrow right")
+                    nextNote(1);
+                }
             }
             // else if (e.key === "1") {
             //     onNoteDurationClick("whole");
@@ -86,6 +101,48 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
     }
 
     //useEffect( () => console.log("selectedNote: ", selectedNote), [selectedNote] );
+
+    const nextMeasure = (advance=1) => { // moves to next or previous measure
+        let newPosition = deepClone(selectedNote);
+        if (advance>0) {
+            if (selectedNote.measure < notationInfo.staves[0].measures.length-1 ) {
+                newPosition.measure++;
+                if (notationInfo.staves[0].measures[newPosition.measure].notes.length>0) {
+                    newPosition.note=0;
+                } else {
+                    newPosition.note = -1;
+                }
+            } else {
+                console.log("Last bar");
+            }
+        } else {
+            if (selectedNote.measure > 0 ) {
+                newPosition.measure--;
+                newPosition.note = -1;
+            }
+        }
+        setSelectedNote(newPosition);
+    }
+
+    const nextNote = (advance=1) => { // moves to next or previous measure
+        let newPosition = deepClone(selectedNote);
+        if (advance>0) {
+            if (selectedNote.note < notationInfo.staves[0].measures[selectedNote.measure].notes.length-1 ) {
+                newPosition.note++;
+            } else {
+                newPosition.note = -1;
+            }
+        } else {
+            if (selectedNote.note > 0 ) {
+                if (selectedNote.note<0 && notationInfo.staves[0].measures[selectedNote.measure].notes.length>0) {
+                    newPosition.note=notationInfo.staves[0].measures[selectedNote.measure].notes.length-1;
+                } else {
+                    newPosition.note--;
+                }
+            }
+        }
+        setSelectedNote(newPosition);
+    }
 
     const replaceNote =  (position, keys, duration) =>  { // position { measure: , note: staff: }
 
@@ -430,6 +487,29 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         )
     }
 
+    const createNavigationRow = () => {
+        return (
+            <Grid item container spacing={1}>
+                <Grid item>
+                    <Button size={"small"} onClick={()=>nextNote(-1)}>Prev. note</Button>
+                </Grid>
+                <Grid item>
+                    <Button size={"small"} onClick={()=>nextNote(1)}>Next note</Button>
+                </Grid>
+                <Grid item>
+                    <Button size={"small"} onClick={()=>nextMeasure(-1)}>Prev. bar</Button>
+                </Grid>
+                <Grid item>
+                    <Button size={"small"} onClick={()=>nextMeasure(1)}>Next bar</Button>
+                </Grid>
+                <Grid item>
+                    <Button size={"small"} onClick={()=>addBar()}>Add bar</Button>
+                </Grid>
+
+            </Grid>
+        )
+    }
+
     const createExtraButtonsRow = () => {
         return (
             <Grid item container spacing={1}>
@@ -440,9 +520,6 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                     <Button size={"small"} onClick={deleteHandler}>Delete</Button>
                 </Grid>
                 <Grid item>
-                    <Button size={"small"} onClick={()=>addBar()}>Add bar</Button>
-                </Grid>
-                <Grid item>
                     <Button size={"small"} onClick={()=>noteStep(1)}>Note up</Button>
                 </Grid>
                 <Grid item>
@@ -451,6 +528,8 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
             </Grid>
         )
     }
+
+
 
     const changeStartingOctave = (change=0) => {
         const startingOctave = keyboardStartingOctave;

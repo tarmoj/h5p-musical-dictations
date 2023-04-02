@@ -16,7 +16,8 @@ TODO: -----------------------------------
 // rename notationUtils -> notation.js NotationInput -> NotationInput - osalt tehtud
 
 
-Keyboard shortcuts - KUIDAS TEHA; ET EI KEHTIKS; KUI FOOKUS LYINPUTIS?   nootide kestused, Del, insert? dot ? Klvaiatuuri tähed? Kuidas näidata sel juhul oktavi?
+Keyboard shortcuts - nootide kestused, Del, insert? dot ?
+Klvaiatuuri tähed? Kuidas näidata sel juhul oktavi?
 arrow - go to next/previous bar (next - select first not, previous -  select after last (position.note = -1) )
 
 LyInput -  lisa, et kui Enter, siis Engrave.
