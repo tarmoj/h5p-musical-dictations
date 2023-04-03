@@ -113,6 +113,11 @@ export function NotationView({
             }
         }
 
+        if (measureIndex===-1) {
+            console.log("No measure found");
+            return null; // does this break something
+        }
+
         const padding = 5 ; // N // px to left and right
 
         if (staveInfo[staffIndex][measureIndex].staveNotes.length===0) {

@@ -42,12 +42,15 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
     });
 
     const onKeyDown = (e) => {
-        const noteNameKeys = ["c", "d", "e", "f", "g", "a", "b"];
+        const noteNameKeys = ["c", "d", "e", "f", "g", "a", "b", "h"];
         console.log("key pressed: ", e.key, e.ctrlKey, e.ctrl);
         if (!lyFocus) { // ignore keys when focus in lilypond input
-            if (noteNameKeys.includes(e.key)) {
-                console.log("Note from key", e.key);
-                inputHandler(e.key.toUpperCase()+"/4", currentDuration);
+            if (noteNameKeys.includes(e.key.toLowerCase())) {
+                const noteName = (e.key.toLowerCase()==="h") ? "B": (e.key.toLowerCase()==="b" ) ? "Bb" : e.key.toUpperCase() ;
+                console.log("Note from key", noteName);
+                const octave = (e.key.toLowerCase() === e.key ) ? "4" : "5"; // uppercase letters give 2nd octave; what about small?
+
+                inputHandler(noteName+"/" + octave, currentDuration);
             } else if (e.key === "ArrowLeft") {
                 if (e.ctrlKey) {
                     console.log("Control left");
@@ -63,6 +66,15 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                     //console.log("Just arrow right")
                     nextNote(1);
                 }
+            } else if (e.key === "ArrowUp") {
+                noteStep(1);
+                // perhaps ctrl + up/down -  change octava?
+                e.preventDefault();
+                e.stopPropagation();
+            } else if (e.key === "ArrowDown") {
+                noteStep(-1);
+                e.preventDefault();
+                e.stopPropagation();
             }
             // else if (e.key === "1") {
             //     onNoteDurationClick("whole");
@@ -134,11 +146,9 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
             }
         } else {
             if (selectedNote.note > 0 ) {
-                if (selectedNote.note<0 && notationInfo.staves[0].measures[selectedNote.measure].notes.length>0) {
-                    newPosition.note=notationInfo.staves[0].measures[selectedNote.measure].notes.length-1;
-                } else {
                     newPosition.note--;
-                }
+            } else if (selectedNote.note<0 && notationInfo.staves[0].measures[selectedNote.measure].notes.length>0) { // at the end of the bar
+                newPosition.note=notationInfo.staves[0].measures[selectedNote.measure].notes.length-1;
             }
         }
         setSelectedNote(newPosition);
@@ -236,7 +246,19 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         setNotationInfo(newNotationInfo);
     }
 
-    const getCurrentNote = () => notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes[selectedNote.note];
+    // TODO - mõtle siin ,kuidas asendada viimane noot, kui selle mingi operatsioon. Viimase noodi valimine tehtud, aga vaja anda ka positsioon
+    const getCurrentNote = () => { // returns the selected note or one before if at the end of the bar
+        let note = null;
+        if (selectedNote.note>=0 ) {
+            note = notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes[selectedNote.note];
+        } else {
+          if (notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes.length>0) {
+              console.log("getCurrentNote: at end, return the previous one")
+              note = notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes.at(-1); // retrun the last note
+          }
+        }
+        return note;
+    }
 
 
     const noteChange = (vfNote) => {
@@ -245,6 +267,10 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
     const noteStep = (step) => { // step>=0 for up in noteNames, <0 -  down
         const note = getCurrentNote();
+        if (!note) {
+            console.log("No note to change");
+            return;
+        }
         let [noteName, octave] = note.keys[0].split("/")
         const vfNoteNames = Array.from(noteNames.values());
         let index = vfNoteNames.indexOf(noteName);
@@ -562,7 +588,6 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         )
     }
 
-    // TODO: separate togglegroup, that is not exclusive for ., tie and triplet
     const createDurationsRow = () => {
         return (
             <Grid container item direction={"row"} spacing={1}>
@@ -628,6 +653,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
             <NotationView id="userNotation" div={"score"} notationInfo={notationInfo} selectedNote={selectedNote} setSelectedNote={setSelectedNote} />
 
             {/*{createHeaderRow()}*/}
+            {createNavigationRow()}
             {createExtraButtonsRow()}
             {createDurationsRow()}
             {createPianoRow()}

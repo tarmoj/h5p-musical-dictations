@@ -130,7 +130,7 @@ const parseLilypondString = (lyString) => {
     for (let i = 0; i<chunks.length; i++) {
         chunks[i] = chunks[i].trim();
         if (chunks[i] === "\\key" && chunks.length >= i+1 ) { // must be like "\key a \major\minor
-            console.log("key: ", chunks[i+1], chunks[i+2]);
+            //console.log("key: ", chunks[i+1], chunks[i+2]);
             let vfKey = noteNames.get(chunks[i+1].toLowerCase());
             if (vfKey) {
                 if (chunks[i+2]==="\\minor") {
@@ -190,7 +190,7 @@ const parseLilypondString = (lyString) => {
                     return null;
                     //break;
                 }
-                console.log("noteName is: ", noteName);
+                //console.log("noteName is: ", noteName);
                 vfNote = noteNames.get(noteName);
 
                 //for now octave by absolute notation ' - 1st oct, '' -2nd, none - small, , - great etc.
@@ -225,11 +225,11 @@ const parseLilypondString = (lyString) => {
             }
 
             durationSum += durationMap.get(lastDuration);
-            console.log("durationSum: ", durationSum);
+            //console.log("durationSum: ", durationSum);
 
             if (durationSum >= barDuration) { // && next chunk is not barLine // - perhaps check it befor anythin else?
                 //barLine = "|"; // fake barline, probably does not work -  also an extra barline might be comin
-                console.log("Bar seems complete or over");
+                //console.log("Bar seems complete or over");
             }
 
             //console.log("vfNote: ", vfNote, duration, lastDuration);
