@@ -247,11 +247,13 @@ export function NotationView({
 
                 newStaveInfo[staffIndex][measureIndex].staveNotes = staveNotes;
 
+                //TODO: think how to do a tie over barline
+
                 // now when stavenotes are created, look for ties
                 for (let i=0; i<notationMeasure.notes.length-1; i++) {
                     const note = notationMeasure.notes[i];
-                    if (note.hasOwnProperty("tied"))  {
-                        //console.log("Found tie by index: ", i, note.tied);
+                    if (note.hasOwnProperty("tied") && note.tied)  {
+                        console.log("Found tie by index: ", i, note.tied);
                         ties.push( new VF.StaveTie( {
                             first_note: staveNotes[i],
                             last_note: staveNotes[i+1],

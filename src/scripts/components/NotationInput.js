@@ -105,24 +105,9 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                 dotChange();
             } else if (e.key === "r") {
                 restHandler();
-            }
-            // } else if (e.key === "n") {
-            //     onNoteAccidentalClick("dblflat");
-            // } else if (e.key === "m") {
-            //     onNoteAccidentalClick("flat");
-            // } else if (e.key === ",") {
-            //     onNoteAccidentalClick("nat");
-            // } else if (e.key === ".") {
-            //     onNoteAccidentalClick("sharp");
-            // } else if (e.key === "-") {
-            //     onNoteAccidentalClick("dblsharp");
-            // } else if (e.key === "Shift") {
-            //     onBarlineClick();
-            // } else if (e.key === "ArrowUp") {
-            //     onOctaveUpClick();
-            // } else if (e.key === "ArrowDown") {
-            //     onOctaveDownClick();
-            else if (e.key === "Backspace" || e.key === "Delete") {
+            } else if (e.key === "t") { // tie
+                tieChange();
+            } else if (e.key === "Backspace" || e.key === "Delete") {
                 deleteHandler();
             }
         }
@@ -359,6 +344,35 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         }
     }
 
+    const tieChange = () => { // adds or removes tie to the note
+
+
+
+        const notation = deepClone(notationInfo);
+        console.log("Set/unset tie");
+        // TODO: position:
+
+        const note = selectedNote.note>=0 ? notation.staves[selectedNote.staff].measures[selectedNote.measure].notes[selectedNote.note] :
+            notation.staves[selectedNote.staff].measures[selectedNote.measure].notes.at(-1);
+
+        // what if the note is the last one in th bar?
+
+
+        if (!note) {
+            console.log("No note");
+            return;
+        }
+
+        if ( !note.hasOwnProperty("tied") ) {
+            note.tied = true; // set
+        } else {
+            note.tied = !note.tied; // or flip
+        }
+        console.log("Tie situation for note: ", note);
+
+        setNotationInfo(notation);
+    }
+
     const durationChange = (newDuration) => {
         if (selectedNote.note>=0) { // Need to update notation
             const note = notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes[selectedNote.note]
@@ -570,6 +584,11 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                 </Grid>
                 <Grid item>
                     <Button size={"small"} onClick={()=>noteStep(-1)}>Note down</Button>
+                </Grid>
+                <Grid item>
+                    <Button value="Tie" aria-label="add or remove tie"  onClick={tieChange}>
+                        Tie
+                    </Button>
                 </Grid>
             </Grid>
         )

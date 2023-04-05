@@ -17,6 +17,7 @@ TODO: -----------------------------------
 
 
 Tie!
+getCurrentNote should return also position* (pole nii oluline)
 
 LyInput -  lisa, et kui Enter, siis Engrave.
 

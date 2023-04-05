@@ -19,8 +19,12 @@ export const defaultNotationInfo = {
                 // in the code -  if measure.hasOwnProperty.clef etc
                 notes: [
                     { clef: "treble", keys: ["g/4"], duration: "4", auto_stem: "true" ,
+                        tied: true, // tie is on the note, where it starts (similar to Lilypond logic
                         //selected:true, color:"green"
                         /*optional: tied: true|false, text:"something", position:""*/ }, // cannot be empty, vf requires that the measure is filled... or perhaps there is a way to override it
+                    { clef: "treble", keys: ["g/4"], duration: "4", auto_stem: "true" ,
+                        //selected:true, color:"green"
+                        /*optional: tied: true|false, text:"something", position:""*/ }
                 ]
             },
                 // // second measure etc
@@ -170,8 +174,6 @@ const parseLilypondString = (lyString) => {
                 //notes[notes.length-1].textPosition = chunks[i].charAt(0)==='^' ?  "top" : "bottom";
                 console.log("Found text, position: ", text, notes[notes.length - 1].textPosition);
             }
-        } else if  (chunks[i] === "~") { // can be also separate, not only by note ie bot e4 ~ e8 or e4~ e8
-            console.log("separate tie, add tied to previous note. Not implemented yet." )
         } else  { // might be a note or error
             let vfNote="";
             const index = chunks[i].search(/[~,'\\\d\s]/); // in lylypond one of those may follow th note: , ' digit \ whitespace or nothing
@@ -239,7 +241,7 @@ const parseLilypondString = (lyString) => {
                 note.keys= (stave.clef==="bass") ? ["d/3"] : ["b/4"];
                 note.duration= lastDuration+"r";
             }
-            if (chunks[i].includes("~")) {
+            if (chunks[i].includes("~")) { // check if the chunk IS ~" (ie not attached to note, add it to the previous one
                 console.log("Found tie", chunks[i]);
                 note.tied = true;
             }
