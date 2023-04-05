@@ -1,5 +1,15 @@
 import React, {useRef, useEffect, useState} from 'react'
-import {Button, FormControl, Grid, InputLabel, MenuItem, Select, ToggleButton, ToggleButtonGroup} from "@mui/material";
+import {
+    Button,
+    Dialog, DialogContent, DialogContentText, DialogTitle,
+    FormControl,
+    Grid,
+    InputLabel,
+    MenuItem,
+    Select,
+    ToggleButton,
+    ToggleButtonGroup
+} from "@mui/material";
 import {Piano} from "react-piano";
 import 'react-piano/dist/styles.css';
 import classNames from 'classnames';
@@ -638,6 +648,37 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         );
     }
 
+    const [dialogOpen, setDialogOpen] = useState(false);
+
+    const createShortcutsDialog = () => {
+        //TODO: translation
+        return  (
+            <Grid item container alignItems={"flex-start"}>
+                <Button variant="outlined" size={"small"} onClick={() => setDialogOpen(true)}>
+                    Info
+                </Button>
+                <Dialog onClose={()=>setDialogOpen(false)} open={dialogOpen}>
+                    <DialogTitle>{"Keyboard shortcuts"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                           You can use the following sohrtcuts to enter or change the music:<br />
+                            <i>NB! Click somewhere on the screen first to activate the shortcuts!</i><br />
+                            <br />
+                            Note names: keys c, d, e, f, g, a, b, h. Uppercase (C, D, etc) stands for 2nd octave, ctrl + note name for the small octave.<br />
+                            Durations: 1 - whole note, 2 - halfnote, 4 -  quarter, 8 -  eighths, 6 -  sixteenths<br />
+                            Rest: r<br />
+                            Dot (add or remove): .<br />
+                            Raise or lower note (enharmonics included): arrow up or down <br />
+                            Navigation:  left or right moves to the next note, ctrl+left/right to the next/previous bar.<br />
+                                <br />
+                            Click between the notes to insert notes in the middle of the bar.<br />
+                        </DialogContentText>
+                    </DialogContent>
+                </Dialog>
+            </Grid>
+        );
+    }
+
 
 
 
@@ -664,6 +705,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
             {/*{createHeaderRow()}*/}
             {createNavigationRow()}
+            {createShortcutsDialog()}
             {createExtraButtonsRow()}
             {createDurationsRow()}
             {createPianoRow()}
