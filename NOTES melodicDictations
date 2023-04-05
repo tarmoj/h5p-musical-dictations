@@ -16,9 +16,7 @@ TODO: -----------------------------------
 // rename notationUtils -> notation.js NotationInput -> NotationInput - osalt tehtud
 
 
-Keyboard shortcuts - nootide kestused, Del, insert? dot ?
-Klvaiatuuri tähed? Kuidas näidata sel juhul oktavi?
-arrow - go to next/previous bar (next - select first not, previous -  select after last (position.note = -1) )
+Shortcuts's dialog window.
 
 LyInput -  lisa, et kui Enter, siis Engrave.
 
@@ -59,6 +57,9 @@ NB!! Spelling -  kõikides semantics failides -  "Porbleemide" -> "Probleemide" 
 notation2Lilypond -  handle rest  (duration contains r) and dot  correctly OK
 
 parseLilypond -  return null if something wrong  OK
+
+Keyboard shortcuts - nootide kestused, Del, insert? dot ? OK
+Klvaiatuuri tähed? Kuidas näidata sel juhul oktavi? - EI
 
 ----
 Buttons controls, shortcuts

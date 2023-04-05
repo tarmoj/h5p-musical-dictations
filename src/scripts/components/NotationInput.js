@@ -45,13 +45,16 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         const noteNameKeys = ["c", "d", "e", "f", "g", "a", "b", "h"];
         console.log("key pressed: ", e.key, e.ctrlKey, e.ctrl);
         if (!lyFocus) { // ignore keys when focus in lilypond input
+            e.preventDefault(); // cancel default. Not sure if it good though
+            e.stopPropagation();
             if (noteNameKeys.includes(e.key.toLowerCase())) {
-                e.preventDefault(); // cancel default. Not sure if it good though
-                e.stopPropagation();
+
                 const noteName = (e.key.toLowerCase()==="h") ? "B": (e.key.toLowerCase()==="b" ) ? "Bb" : e.key.toUpperCase() ;
                 console.log("Note from key", noteName);
-                const octave = (e.key.toLowerCase() === e.key ) ? "4" : "5"; // uppercase letters give 2nd octave; what about small?
-
+                let octave = (e.key.toLowerCase() === e.key ) ? "4" : "5"; // uppercase letters give 2nd octave; what about small?
+                if (e.ctrlKey) { // Ctrl + noteName -  small octava
+                    octave = "3";
+                }
                 inputHandler(noteName+"/" + octave, currentDuration);
             } else if (e.key === "ArrowLeft") {
                 if (e.ctrlKey) {
