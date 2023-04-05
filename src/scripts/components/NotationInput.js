@@ -1,7 +1,7 @@
 import React, {useRef, useEffect, useState} from 'react'
 import {
     Button,
-    Dialog, DialogContent, DialogContentText, DialogTitle,
+    Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
     FormControl,
     Grid,
     InputLabel,
@@ -674,6 +674,9 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                             Click between the notes to insert notes in the middle of the bar.<br />
                         </DialogContentText>
                     </DialogContent>
+                    <DialogActions>
+                        <Button onClick={()=>setDialogOpen(false)}>Close</Button>
+                    </DialogActions>
                 </Dialog>
             </Grid>
         );

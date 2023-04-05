@@ -21,8 +21,6 @@ const lyStart = ` \\clef "treble" \\key c \\major \\time 2/4
 
 export default function Main( {correctDictation=correctLyDictation, showFromDictation=lyStart, resizeFunction= () => console.log("empty resize")} ) {
 
-
-
     const [responseNotationInfo, setResponseNotationInfo] =useState(defaultNotationInfo); // lyStart - temporary
     const [correctNotationInfo, setCorrectNotationInfo] = useState(parseLilypondDictation(correctDictation));  // could have used a constant but that gets reevaluated each render tine
     const [showCorrectNotation, setShowCorrectNotation] = useState(false);

@@ -16,11 +16,13 @@ TODO: -----------------------------------
 // rename notationUtils -> notation.js NotationInput -> NotationInput - osalt tehtud
 
 
-Shortcuts's dialog window.
-
 Tie!
 
 LyInput -  lisa, et kui Enter, siis Engrave.
+
+Layout!
+
+Translation!
 
 Kui ühehäälne, siis nootide paigustus kuidagi ladusamaks (praegu vist vertikaali järgi... )
 
@@ -62,6 +64,9 @@ parseLilypond -  return null if something wrong  OK
 
 Keyboard shortcuts - nootide kestused, Del, insert? dot ? OK
 Klvaiatuuri tähed? Kuidas näidata sel juhul oktavi? - EI
+
+Shortcuts's dialog window. -  ADD close button. OK
+
 
 ----
 Buttons controls, shortcuts
