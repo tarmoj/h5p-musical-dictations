@@ -46,6 +46,8 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         console.log("key pressed: ", e.key, e.ctrlKey, e.ctrl);
         if (!lyFocus) { // ignore keys when focus in lilypond input
             if (noteNameKeys.includes(e.key.toLowerCase())) {
+                e.preventDefault(); // cancel default. Not sure if it good though
+                e.stopPropagation();
                 const noteName = (e.key.toLowerCase()==="h") ? "B": (e.key.toLowerCase()==="b" ) ? "Bb" : e.key.toUpperCase() ;
                 console.log("Note from key", noteName);
                 const octave = (e.key.toLowerCase() === e.key ) ? "4" : "5"; // uppercase letters give 2nd octave; what about small?
@@ -271,6 +273,10 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
             console.log("No note to change");
             return;
         }
+        let position = deepClone(selectedNote); //necessary for being able to  change the last note
+        if (position.note<0) {
+            position.note = notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes.length -1 ;
+        }
         let [noteName, octave] = note.keys[0].split("/")
         const vfNoteNames = Array.from(noteNames.values());
         let index = vfNoteNames.indexOf(noteName);
@@ -292,7 +298,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
             octave = (parseInt(octave)-1).toString();
         }
 
-        replaceNote(selectedNote, [ vfNoteNames[index]+ "/"+octave ], note.duration);
+        replaceNote(position, [ vfNoteNames[index]+ "/"+octave ], note.duration);
 
     }
 
