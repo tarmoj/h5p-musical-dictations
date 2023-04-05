@@ -78,20 +78,21 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                 e.preventDefault();
                 e.stopPropagation();
             }
-            // else if (e.key === "1") {
-            //     onNoteDurationClick("whole");
-            // } else if (e.key === "2") {
-            //     onNoteDurationClick("half");
-            // } else if (e.key === "3") {
-            //     onNoteDurationClick("quarter");
-            // } else if (e.key === "4") {
-            //     onNoteDurationClick("eighth");
-            // } else if (e.key === "5") {
-            //     onNoteDurationClick("sixteenth");
-            // } else if (e.key === "6") {
-            //     onDotClick("dot");
-            // } else if (e.key === "0") {
-            //     onRestClick("rest");
+            else if (e.key === "1") {
+                durationChange("1" +  (dotted ? "d" : "" ));
+            } else if (e.key === "2") {
+                durationChange("2" +  (dotted ? "d" : "" ));
+            } else if (e.key === "4") {
+                durationChange("4" +  (dotted ? "d" : "" ));
+            } else if (e.key === "8") {
+                durationChange("8" +  (dotted ? "d" : "" ));
+            } else if (e.key === "6") {
+                durationChange("16" +  (dotted ? "d" : "" ));
+            } else if (e.key === ".") {
+                dotChange();
+            } else if (e.key === "r") {
+                restHandler();
+            }
             // } else if (e.key === "n") {
             //     onNoteAccidentalClick("dblflat");
             // } else if (e.key === "m") {
