@@ -23,20 +23,24 @@ import {
 } from "./notationUtils";
 import {NotationView} from "./NotationView";
 import Image from "mui-image";
-import Tie from '../../images/held.png';
-import wholenote from "../../images/whole.png" ; // require() does not work with Preview, do separate imports
-import halfnote from "../../images/half.png"
-import quarternote from "../../images/quarter.png"
-import eightnote from "../../images/eighth.png"
-import sixteenthnote from "../../images/sixteenth.png"
-import dot from "../../images/dot.png"
-import rest from "../../images/rest.png"
+import Tie from '../../images/tie.png';
+import WholeNote from "../../images/whole.png" ; // require() does not work with Preview, do separate imports
+import HalfNote from "../../images/half.png"
+import QuarterNote from "../../images/quarter.png"
+import EightNote from "../../images/eighth.png"
+import SixteenthNote from "../../images/sixteenth.png"
+import Dot from "../../images/dot.png"
+import Rest from "../../images/rest.png"
+import AddBar from "../../images/add-bar.png"
 
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+
+
 
 // TODO: how to do translation? est.json? https://react.i18next.com/ ?
-
 
 
 export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedNote,
@@ -417,7 +421,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
     // piano keyboard - perhaps make later a separate component ?  --------------------
     // for piano keyboard
-    const firstNote = (keyboardStartingOctave+1)*12; // default - c3
+    const firstNote = (keyboardStartingOctave+1)*12+5; // default - f3
     const lastNote = (keyboardStartingOctave+3)*12 + 4; // for now range is fixed to 2 octaves + maj. third
     // see https://github.com/kevinsqi/react-piano/blob/master/src/KeyboardShortcuts.js for redfining
     const octaveData = {
@@ -488,7 +492,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
             >
                 {keyboardShortcut}
                 { midiNumber%12===0 &&
-                    <p style={{color:"black", fontSize:"0.5em", textAlign:"left", marginLeft:"3px" }}>C{(midiNumber/12-1)}</p>
+                    <p style={{color:"black", fontSize:"0.6em", textAlign:"left", marginLeft:"3px" }}>C{(midiNumber/12-1)}</p>
                 } {/*C3, C4 etc on C keys*/}
             </div>
         ) : null;
@@ -616,8 +620,8 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
     const createPianoRow = () => {
         return (
-            <Grid item container direction={"row"}>
-                <Grid item><Button onClick={()=>changeStartingOctave(-1)}>{"<"}</Button></Grid>
+            <Grid item container direction={"row"} alignItems={"center"}>
+                <Grid item><IconButton onClick={()=>changeStartingOctave(-1)}> <NavigateBeforeIcon /> </IconButton></Grid>
                 <Grid item>
                     <div >  {/*make it scrollable like notation, if does not fit  oli: className={"vtDiv center"} */}
                         <Piano
@@ -631,14 +635,14 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                         />
                     </div>
                 </Grid>
-                <Grid item><Button onClick={()=>changeStartingOctave(1)}>{">"}</Button></Grid>
+                <Grid item><IconButton onClick={()=>changeStartingOctave(1)}><NavigateNextIcon /></IconButton></Grid>
             </Grid>
         )
     }
 
     const createButtonsRow = () => {
         return (
-            <Grid container item direction={"row"} spacing={1}>
+            <Grid container item direction={"row"} spacing={1} alignItems={"center"}>
                 <Grid item>
                     <ToggleButtonGroup
                         value={currentDuration}
@@ -647,20 +651,20 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                         aria-label="duration selection"
                     >
                         <ToggleButton value="1" aria-label="whole note">
-                            <img src={wholenote} />
-                            <label>1</label>
+                            <img src={WholeNote} />
+                            <label style={{color:"darkgrey", fontSize:"0.5em", textAlign:"left", marginLeft:"3px", marginTop:"3px" }} >1</label>
                         </ToggleButton>
                         <ToggleButton value="2" aria-label="half note">
-                            <img src={halfnote} />
+                            <img src={HalfNote} />
                         </ToggleButton>
                         <ToggleButton value="4" aria-label="quarter note">
-                            <img src={quarternote} />
+                            <img src={QuarterNote} />
                         </ToggleButton>
                         <ToggleButton value="8" aria-label="eighth note">
-                            <img src={eightnote} />
+                            <img src={EightNote} />
                         </ToggleButton>
                         <ToggleButton value="16" aria-label="sixteenth note">
-                            <img src={sixteenthnote} />
+                            <img src={SixteenthNote} />
                         </ToggleButton>
                         {/*<ToggleButton value="32" aria-label="thirtysecond note">*/}
                         {/*    32*/}
@@ -670,11 +674,11 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                 {/*ToggleButtons is used down here to give similar look, they are simple buttons by function*/}
                 <Grid item>
                     <ToggleButton sx={{height:51}} value={"."} aria-label={"add or remove dot"}  onClick={() => dotChange()}>
-                       <img src={dot} width={5} />
+                       <img src={Dot} width={5} />
                     </ToggleButton>
                 </Grid>
                 <Grid item>
-                    <ToggleButton  value={"rest"} aria-label={"rest"}  onClick={() => restHandler()}><img src={rest} /></ToggleButton>
+                    <ToggleButton  value={"rest"} aria-label={"rest"}  onClick={() => restHandler()}><img src={Rest} /></ToggleButton>
                 </Grid>
                 <Grid item>
                     <ToggleButton sx={{height:51}} value={"tie"} aria-label={"add or remove tie"}  onClick={()=>tieChange()}>
@@ -682,7 +686,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                     </ToggleButton>
                 </Grid>
                 <Grid item>
-                    <ToggleButton sx={{height:51}} value={"addBar"} aria-label={"add bar"} onClick={()=>addBar()}>Add bar</ToggleButton>
+                    <ToggleButton sx={{height:51}} value={"addBar"} aria-label={"add bar"} onClick={()=>addBar()}><img src={AddBar} /></ToggleButton>
                 </Grid>
                 <Grid item>
                     <ToggleButton sx={{height:51}} value={"delete"} aria-label={"delete"} onClick={()=>deleteHandler()}> <BackspaceIcon /> </ToggleButton>
@@ -719,8 +723,6 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                             Raise or lower note (enharmonics included): arrow up or down <br />
                             Navigation:  left or right moves to the next note, ctrl+left/right to the next/previous bar.<br />
                                 <br />
-
-
                             Click between the notes to insert notes in the middle of the bar.<br />
                         </DialogContentText>
                     </DialogContent>
