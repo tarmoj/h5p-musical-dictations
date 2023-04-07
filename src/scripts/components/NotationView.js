@@ -161,8 +161,9 @@ export function NotationView({
     const draw = (notationInfo, context) => {
         //const vfStaves = [[], []]; //  NB! think of better name! this is vexflow staves actually. do we need to store them at all? -  later: define by stave count [ Array(notationIfo.staves.length ]
         const defaultWidth = 200;
-        const currentPositionInfo = [];
+        //const currentPositionInfo = [];
         const newStaveInfo = staveInfo.slice(0);
+        const allStaveNotes = [[],[]];
         //How can I pre-calculate the width of a voice?
         //
         // You can call Formatter.getMinTotalWidth() to return the minimum amount of horizontal space required to render a voice.
@@ -178,7 +179,7 @@ export function NotationView({
         for (let measureIndex = 0; measureIndex < notationInfo.staves[0].measures.length; measureIndex++) { // should we check if there is equal amount of measures?
             let measureWidth = defaultWidth;
             let staffBeams = [];
-            let ties = [];
+            //let ties = [];
 
             // if (measureIndex === 0) { // OR: hasOwnProperty("clef" etc
             //   measureWidth += clefAndKeySpace;
@@ -217,7 +218,6 @@ export function NotationView({
                 }
                 newMeasure.setEndBarType(type);
 
-                //vfStaves[staffIndex].push(newMeasure); //NB! this is doubled by (later remove the first one) :
                 newStaveInfo[staffIndex][measureIndex] = {vfStave: newMeasure, staveNotes:[]};
 
                 let staveNotes = [];
@@ -225,7 +225,7 @@ export function NotationView({
                 let noteIndex = 0;
                 for (let note of notationMeasure.notes) {
                     const staveNote = new VF.StaveNote(note);
-                    currentPositionInfo.push( { staveNote : staveNote, position : {note: noteIndex, measure: measureIndex, staff: staffIndex} } )
+                    //currentPositionInfo.push( { staveNote : staveNote, position : {note: noteIndex, measure: measureIndex, staff: staffIndex} } )
 
                     if (note.hasOwnProperty("color")) {
                         staveNote.setStyle({fillStyle: note.color, strokeStyle: note.color});
@@ -240,29 +240,17 @@ export function NotationView({
                         //console.log("Dotted note!")
                         VF.Dot.buildAndAttach([staveNote], {all: true});
                     }
+
+                    if (note.hasOwnProperty("tied") && note.tied)  {
+                        staveNote.tied = true; // add this property
+                    }
                     staveNotes.push(staveNote);
                     //console.log("Added to bar: ", note.keys);
+                    allStaveNotes[staffIndex].push(staveNote);
                     noteIndex++;
                 }
 
-                newStaveInfo[staffIndex][measureIndex].staveNotes = staveNotes;
-
-                //TODO: think how to do a tie over barline
-
-                // now when stavenotes are created, look for ties
-                for (let i=0; i<notationMeasure.notes.length-1; i++) {
-                    const note = notationMeasure.notes[i];
-                    if (note.hasOwnProperty("tied") && note.tied)  {
-                        console.log("Found tie by index: ", i, note.tied);
-                        ties.push( new VF.StaveTie( {
-                            first_note: staveNotes[i],
-                            last_note: staveNotes[i+1],
-                            first_indices: [0],
-                            last_indices: [0],
-                        }  ) );
-
-                    }
-                }
+                newStaveInfo[staffIndex][measureIndex].staveNotes = staveNotes; // VÕIBOLLA -  liida hiljem kõikide taktide stavenote'id ühte jadasse ja proovi siis pided tekitada?
 
                 const voice = new VF.Voice().setMode(VF.Voice.Mode.SOFT).addTickables(staveNotes).setStave(newMeasure);
                 VF.Accidental.applyAccidentals([voice], staff.key);
@@ -303,9 +291,9 @@ export function NotationView({
 
             // and other drawings -  ties, tuplets, slurs etc
 
-            ties.forEach((t) => {
-                t.setContext(context).draw();
-            });
+            // ties.forEach((t) => {
+            //     t.setContext(context).draw();
+            // });
 
 
             // staveconnector
@@ -322,6 +310,44 @@ export function NotationView({
                 rendererRef.current.resize(startX+40, height);
             }
         }
+
+        // draw ties. Mus happen after all notes are set for cross bar  ties
+
+        for (let i=0; i<notationInfo.staves.length;i++) { // walk through all stavenotes notes by staves until the penultimate note
+            for (let j=0; j<allStaveNotes[i].length-1; j++) {
+                const note =  allStaveNotes[i][j];
+                if (note.tied && note.tied===true && note.keys[0] === allStaveNotes[i][j+1].keys[0]) { // chords not supported
+                    //console.log("Found tied note", note, i, j);
+                    const tie = new VF.StaveTie( {
+                                    first_note: note, // kui see takti viimane
+                                    last_note: allStaveNotes[i][j+1], // siis see peaks olema järgmise takti esimene
+                                    first_indices: [0],
+                                    last_indices: [0],
+                                }  );
+                    tie.setContext(context).draw();
+                }
+            }
+        }
+
+
+        // NB! this should be implemented for all staves, not onl one voice
+        // const staff = 0;
+        // const ties = [];
+        // for (let mIndex=0; mIndex<notationInfo.staves[staff].measures, mIndex++) {
+        //     for (let i = 0; i < notationInfo.staves[staff].measures[mIndex].notes.length - 1; i++) {
+        //         const note = notationMeasure.notes[i];
+        //         if (note.hasOwnProperty("tied") && note.tied) {
+        //             console.log("Found tie by index: ", i, note.tied);
+        //             ties.push(new VF.StaveTie({
+        //                 first_note: newStaveInfo[staff][].staveNotes[i],
+        //                 last_note: staveNotes[i + 1],
+        //                 first_indices: [0],
+        //                 last_indices: [0],
+        //             }));
+        //
+        //         }
+        //     }
+        // }
 
         // draw selected note cursor/highlight the note if any:
         let cursorX = -1, cursorColor="lightblue";

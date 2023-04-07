@@ -368,7 +368,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         } else {
             note.tied = !note.tied; // or flip
         }
-        console.log("Tie situation for note: ", note);
+        //console.log("Tie situation for note: ", note);
 
         setNotationInfo(notation);
     }
@@ -687,9 +687,12 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                             Durations: 1 - whole note, 2 - halfnote, 4 -  quarter, 8 -  eighths, 6 -  sixteenths<br />
                             Rest: r<br />
                             Dot (add or remove): .<br />
+                            Tie (add or remove): t<br />
                             Raise or lower note (enharmonics included): arrow up or down <br />
                             Navigation:  left or right moves to the next note, ctrl+left/right to the next/previous bar.<br />
                                 <br />
+
+
                             Click between the notes to insert notes in the middle of the bar.<br />
                         </DialogContentText>
                     </DialogContent>
