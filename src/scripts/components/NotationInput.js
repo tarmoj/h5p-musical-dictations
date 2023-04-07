@@ -3,7 +3,7 @@ import {
     Button,
     Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
     FormControl,
-    Grid,
+    Grid, IconButton,
     InputLabel,
     MenuItem,
     Select,
@@ -22,7 +22,18 @@ import {
     parseLilypondDictation
 } from "./notationUtils";
 import {NotationView} from "./NotationView";
+import Image from "mui-image";
+import Tie from '../../images/held.png';
+import wholenote from "../../images/whole.png" ; // require() does not work with Preview, do separate imports
+import halfnote from "../../images/half.png"
+import quarternote from "../../images/quarter.png"
+import eightnote from "../../images/eighth.png"
+import sixteenthnote from "../../images/sixteenth.png"
+import dot from "../../images/dot.png"
+import rest from "../../images/rest.png"
 
+import BackspaceIcon from '@mui/icons-material/Backspace';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 // TODO: how to do translation? est.json? https://react.i18next.com/ ?
 
@@ -37,6 +48,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
     const [currentDuration, setCurrentDuration] = useState("4");
     const [dotted, setDotted] = useState(false); // empty string or "d" ; in future could be also "dd"
     const [lyFocus, setLyFocus] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     // notation functions (add, insert, delete
 
@@ -374,6 +386,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
     }
 
     const durationChange = (newDuration) => {
+        console.log("setting new duration to: ", newDuration);
         if (selectedNote.note>=0) { // Need to update notation
             const note = notationInfo.staves[selectedNote.staff].measures[selectedNote.measure].notes[selectedNote.note]
             const vfNote = note.keys[0]; // NB! chords not supported!
@@ -585,11 +598,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                 <Grid item>
                     <Button size={"small"} onClick={()=>noteStep(-1)}>Note down</Button>
                 </Grid>
-                <Grid item>
-                    <Button value="Tie" aria-label="add or remove tie"  onClick={tieChange}>
-                        Tie
-                    </Button>
-                </Grid>
+
             </Grid>
         )
     }
@@ -627,55 +636,74 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         )
     }
 
-    const createDurationsRow = () => {
+    const createButtonsRow = () => {
         return (
             <Grid container item direction={"row"} spacing={1}>
                 <Grid item>
                     <ToggleButtonGroup
                         value={currentDuration}
                         exclusive
-                        onChange={ event =>  durationChange(event.target.value +  (dotted ? "d" : "" ) )}
+                        onChange={ event => {console.log("event",event.target, event.currentTarget); durationChange(event.currentTarget.value +  (dotted ? "d" : "" ) ) }}
                         aria-label="duration selection"
                     >
                         <ToggleButton value="1" aria-label="whole note">
-                            1
+                            <img src={wholenote} />
+                            <label>1</label>
                         </ToggleButton>
                         <ToggleButton value="2" aria-label="half note">
-                            2
+                            <img src={halfnote} />
                         </ToggleButton>
                         <ToggleButton value="4" aria-label="quarter note">
-                            4
+                            <img src={quarternote} />
                         </ToggleButton>
                         <ToggleButton value="8" aria-label="eighth note">
-                            8
+                            <img src={eightnote} />
                         </ToggleButton>
                         <ToggleButton value="16" aria-label="sixteenth note">
-                            16
+                            <img src={sixteenthnote} />
                         </ToggleButton>
-                        <ToggleButton value="32" aria-label="thirtysecond note">
-                            32
-                        </ToggleButton>
+                        {/*<ToggleButton value="32" aria-label="thirtysecond note">*/}
+                        {/*    32*/}
+                        {/*</ToggleButton>*/}
                     </ToggleButtonGroup>
                 </Grid>
+                {/*ToggleButtons is used down here to give similar look, they are simple buttons by function*/}
                 <Grid item>
-                    <Button value="." aria-label="add or remove dot"  onClick={dotChange}>
-                        Dot
-                    </Button>
+                    <ToggleButton sx={{height:51}} value={"."} aria-label={"add or remove dot"}  onClick={() => dotChange()}>
+                       <img src={dot} width={5} />
+                    </ToggleButton>
+                </Grid>
+                <Grid item>
+                    <ToggleButton  value={"rest"} aria-label={"rest"}  onClick={() => restHandler()}><img src={rest} /></ToggleButton>
+                </Grid>
+                <Grid item>
+                    <ToggleButton sx={{height:51}} value={"tie"} aria-label={"add or remove tie"}  onClick={()=>tieChange()}>
+                        <img src={Tie}/>
+                    </ToggleButton>
+                </Grid>
+                <Grid item>
+                    <ToggleButton sx={{height:51}} value={"addBar"} aria-label={"add bar"} onClick={()=>addBar()}>Add bar</ToggleButton>
+                </Grid>
+                <Grid item>
+                    <ToggleButton sx={{height:51}} value={"delete"} aria-label={"delete"} onClick={()=>deleteHandler()}> <BackspaceIcon /> </ToggleButton>
                 </Grid>
 
+                <Grid item>
+                    {createShortcutsDialog()}
+                </Grid>
             </Grid>
         );
     }
 
-    const [dialogOpen, setDialogOpen] = useState(false);
+
 
     const createShortcutsDialog = () => {
         //TODO: translation
         return  (
             <Grid item container alignItems={"flex-start"}>
-                <Button variant="outlined" size={"small"} onClick={() => setDialogOpen(true)}>
-                    Info
-                </Button>
+                <IconButton  onClick={() => setDialogOpen(true)} >
+                    <HelpOutlineIcon />
+                </IconButton>
                 <Dialog onClose={()=>setDialogOpen(false)} open={dialogOpen}>
                     <DialogTitle>{"Keyboard shortcuts"}</DialogTitle>
                     <DialogContent>
@@ -729,10 +757,10 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
             <NotationView id="userNotation" div={"score"} notationInfo={notationInfo} selectedNote={selectedNote} setSelectedNote={setSelectedNote} />
 
             {/*{createHeaderRow()}*/}
-            {createNavigationRow()}
-            {createShortcutsDialog()}
-            {createExtraButtonsRow()}
-            {createDurationsRow()}
+            {/*{createNavigationRow()}*/}
+            {/*{createShortcutsDialog()}*/}
+            {/*{createExtraButtonsRow()}*/}
+            {createButtonsRow()}
             {createPianoRow()}
 
         </Grid>
