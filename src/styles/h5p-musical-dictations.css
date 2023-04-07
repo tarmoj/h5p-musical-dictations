@@ -6,6 +6,7 @@
 .h5p-musical-dictations-notationDiv {
   max-width: 900px;
   display: block;
+  width: 100%;
   overflow-x: auto;
   white-space: nowrap;
 }

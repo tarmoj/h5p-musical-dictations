@@ -16,14 +16,17 @@ TODO: -----------------------------------
 // rename notationUtils -> notation.js NotationInput -> NotationInput - osalt tehtud
 
 
-Tie!
-getCurrentNote should return also position* (pole nii oluline)
+Translation!
+
+Testi, kas tie -> lilypondi toimib
+
+
+. getCurrentNote should return also position* (pole nii oluline)
 
 LyInput -  lisa, et kui Enter, siis Engrave.
 
-Layout!
+Kui on aega - labelite paigutus ToggleButtonite peal
 
-Translation!
 
 Kui ühehäälne, siis nootide paigustus kuidagi ladusamaks (praegu vist vertikaali järgi... )
 
@@ -67,6 +70,10 @@ Keyboard shortcuts - nootide kestused, Del, insert? dot ? OK
 Klvaiatuuri tähed? Kuidas näidata sel juhul oktavi? - EI
 
 Shortcuts's dialog window. -  ADD close button. OK
+
+Tie! OK
+
+Layout! OK!
 
 
 ----

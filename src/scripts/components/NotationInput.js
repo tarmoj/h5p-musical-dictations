@@ -564,50 +564,6 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         )
     }
 
-    const createNavigationRow = () => {
-        return (
-            <Grid item container spacing={1}>
-                <Grid item>
-                    <Button size={"small"} onClick={()=>nextNote(-1)}>Prev. note</Button>
-                </Grid>
-                <Grid item>
-                    <Button size={"small"} onClick={()=>nextNote(1)}>Next note</Button>
-                </Grid>
-                <Grid item>
-                    <Button size={"small"} onClick={()=>nextMeasure(-1)}>Prev. bar</Button>
-                </Grid>
-                <Grid item>
-                    <Button size={"small"} onClick={()=>nextMeasure(1)}>Next bar</Button>
-                </Grid>
-                <Grid item>
-                    <Button size={"small"} onClick={()=>addBar()}>Add bar</Button>
-                </Grid>
-
-            </Grid>
-        )
-    }
-
-    const createExtraButtonsRow = () => {
-        return (
-            <Grid item container spacing={1}>
-                <Grid item>
-                    <Button size={"small"} onClick={restHandler}>Rest</Button>
-                </Grid>
-                <Grid item>
-                    <Button size={"small"} onClick={deleteHandler}>Delete</Button>
-                </Grid>
-                <Grid item>
-                    <Button size={"small"} onClick={()=>noteStep(1)}>Note up</Button>
-                </Grid>
-                <Grid item>
-                    <Button size={"small"} onClick={()=>noteStep(-1)}>Note down</Button>
-                </Grid>
-
-            </Grid>
-        )
-    }
-
-
 
     const changeStartingOctave = (change=0) => {
         const startingOctave = keyboardStartingOctave;
@@ -641,6 +597,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
     }
 
     const createButtonsRow = () => {
+
         return (
             <Grid container item direction={"row"} spacing={1} alignItems={"center"}>
                 <Grid item>
@@ -650,9 +607,9 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                         onChange={ event => {console.log("event",event.target, event.currentTarget); durationChange(event.currentTarget.value +  (dotted ? "d" : "" ) ) }}
                         aria-label="duration selection"
                     >
-                        <ToggleButton value="1" aria-label="whole note">
+                        <ToggleButton value="1" aria-label="whole note" >
                             <img src={WholeNote} />
-                            <label style={{color:"darkgrey", fontSize:"0.5em", textAlign:"left", marginLeft:"3px", marginTop:"3px" }} >1</label>
+                            {/*<label style={{color:"red", fontSize:"0.5em", textAlign:"left",  left:"3", top:"-20" }} >1</label>*/}
                         </ToggleButton>
                         <ToggleButton value="2" aria-label="half note">
                             <img src={HalfNote} />
@@ -674,7 +631,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                 {/*ToggleButtons is used down here to give similar look, they are simple buttons by function*/}
                 <Grid item>
                     <ToggleButton sx={{height:51}} value={"."} aria-label={"add or remove dot"}  onClick={() => dotChange()}>
-                       <img src={Dot} width={5} />
+                       <img src={Dot} />
                     </ToggleButton>
                 </Grid>
                 <Grid item>
