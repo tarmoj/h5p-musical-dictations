@@ -71,7 +71,7 @@ export default class MusicalDictations extends H5P.ContentType(true) {
                 src: absolutePath,
                 controls: true
             }) );
-            $wrapper.append('<br />');
+            $wrapper.append('<br />'); // does not seem to work
 
             $wrapper.append(this.root);  // for Rect components
 

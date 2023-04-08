@@ -19,12 +19,9 @@ export const defaultNotationInfo = {
                 // in the code -  if measure.hasOwnProperty.clef etc
                 notes: [
                     { clef: "treble", keys: ["g/4"], duration: "4", auto_stem: "true" ,
-                        tied: true, // tie is on the note, where it starts (similar to Lilypond logic
-                        //selected:true, color:"green"
-                        /*optional: tied: true|false, text:"something", position:""*/ }, // cannot be empty, vf requires that the measure is filled... or perhaps there is a way to override it
-                    { clef: "treble", keys: ["g/4"], duration: "4", auto_stem: "true" ,
-                        //selected:true, color:"green"
-                        /*optional: tied: true|false, text:"something", position:""*/ }
+                        //tied: true, // tie is on the note, where it starts (similar to Lilypond logic
+                        //color:"green"
+                        /*optional: text:"something", position:""*/ }, // cannot be empty, vf requires that the measure is filled... or perhaps there is a way to override it
                 ]
             },
                 // // second measure etc
@@ -405,6 +402,9 @@ export const notationInfoToLyString = notationInfo => {
                             }
                             lyString += ` ${noteString}${durationString} `;  // here are probably more conditions (triplets etc)
                             //console.log("lyString", lyString)
+                        }
+                        if (note.hasOwnProperty("tied") && note.tied) {
+                            lyString = lyString.trimEnd() +  "~"; // time mark must be rigth at the end of the chunk
                         }
                         if (note.hasOwnProperty("text")) {
                             // let positionString = ".top.";
