@@ -69,8 +69,16 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
     const onKeyDown = (e) => {
         const noteNameKeys = ["c", "d", "e", "f", "g", "a", "b", "h"];
-        console.log("key pressed: ", e.key, e.ctrlKey, e.ctrl);
-        if (!lyFocus) { // ignore keys when focus in lilypond input
+        //console.log("key pressed: ", e.key, e.ctrlKey, e.ctrl);
+        if (lyFocus) {
+            if (e.key==="Enter" && e.ctrlKey) {
+                //console.log("Ctrl + return pressed in lyinput");
+                handleLyNotation();
+                e.preventDefault(); // cancel default
+                e.stopPropagation();
+            }
+
+        } else  { // ignore keys when focus in lilypond input
             e.preventDefault(); // cancel default. Not sure if it good though
             e.stopPropagation();
             if (noteNameKeys.includes(e.key.toLowerCase())) {
@@ -473,9 +481,6 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
             console.log("Notation error or setter not set");
         }
 
-        // const testLy = notationInfoToLyString(notation);
-        // setLyInput(testLy);
-
     }
 
     // extended from: https://github.com/kevinsqi/react-piano/blob/a8fac9f1ab0aab8fd21658714f1ad9f14568feee/src/ControlledPiano.js#L29
@@ -681,6 +686,8 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                             Navigation:  left or right moves to the next note, ctrl+left/right to the next/previous bar.<br />
                                 <br />
                             Click between the notes to insert notes in the middle of the bar.<br />
+                            <br />
+                            <i>Lilypond input</i>> - show notation (engrave): Ctrl + Enter <br />
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
