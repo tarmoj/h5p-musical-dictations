@@ -687,7 +687,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                                 <br />
                             Click between the notes to insert notes in the middle of the bar.<br />
                             <br />
-                            <i>Lilypond input</i>> - show notation (engrave): Ctrl + Enter <br />
+                            <i>Lilypond input</i> - show notation (engrave): Ctrl + Enter <br />
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

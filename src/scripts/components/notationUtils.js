@@ -44,13 +44,13 @@ export const deepClone = (obj) => { // from util/util
 
 const simplify = (string) => {
     if (typeof(string)==="string") {
-        return string.trim().replace(/\s\s+/g, ' ');
+        let result = string.replaceAll("\n", " "); // newlines to spaces
+        return result.trim().replace(/\s\s+/g, ' '); // remove extra spaces
     } else {
         return string;
     }
 }
 
-//NB! change @ tp b for vexflow
 export const noteNames = new Map([
     ["ceses","Cbb"], ["ces","Cb"], ["c","C"], ["cis","C#"], ["cisis","C##"],
     ["deses","Dbb"], ["des", "Db"], ["d", "D"], ["dis","D#"], ["disis","D##"],
@@ -125,11 +125,9 @@ const parseLilypondString = (lyString) => {
     let durationSum = 0;
     let barDuration = 4; // default is 4/4
 
-    //TODO: automatic barlines - time signature -> barDurataion
-    // use durationMap, let durations = 0; durations += durationMap.get[duration]
-
     for (let i = 0; i<chunks.length; i++) {
-        chunks[i] = chunks[i].trim();
+        chunks[i] = chunks[i].trim(); // to avoid error on string like " |\ng'8"
+
         if (chunks[i] === "\\key" && chunks.length >= i+1 ) { // must be like "\key a \major\minor
             //console.log("key: ", chunks[i+1], chunks[i+2]);
             let vfKey = noteNames.get(chunks[i+1].toLowerCase());
@@ -219,7 +217,13 @@ const parseLilypondString = (lyString) => {
 
             if (duration) {
                 // double dot not implemented yet
+                const originalDuration = duration;
                 duration = duration.replace(/\./g, "d"); // d instead of dot for VexFlow
+                if (!durationMap.has(duration)) {
+                    alert(`Duration ${originalDuration} not known!` );
+                    return null;
+                }
+
                 lastDuration = duration;
             }
 

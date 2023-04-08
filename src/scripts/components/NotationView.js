@@ -127,7 +127,7 @@ export function NotationView({
 
 
         if ( x> staveInfo[staffIndex][measureIndex].staveNotes.at(-1).getNoteHeadEndX()+padding ) {
-            console.log("click after last note in bar", measureIndex);
+            //console.log("click after last note in bar", measureIndex);
             return {note: -2, measure: measureIndex, staff: staffIndex}
         }
 

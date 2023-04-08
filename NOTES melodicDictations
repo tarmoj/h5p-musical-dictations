@@ -15,7 +15,10 @@ TODO: -----------------------------------
 
 // rename notationUtils -> notation.js NotationInput -> NotationInput - osalt tehtud
 
+notationUtils:
 | is not a recognized command
+duration 9 or similar -  crash
+
 
 Põhiosa kujundus (vasem serv, nupud, Lilypondi area breadcrumb vms) peaaegu!
 
