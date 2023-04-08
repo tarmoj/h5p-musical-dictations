@@ -330,25 +330,6 @@ export function NotationView({
         }
 
 
-        // NB! this should be implemented for all staves, not onl one voice
-        // const staff = 0;
-        // const ties = [];
-        // for (let mIndex=0; mIndex<notationInfo.staves[staff].measures, mIndex++) {
-        //     for (let i = 0; i < notationInfo.staves[staff].measures[mIndex].notes.length - 1; i++) {
-        //         const note = notationMeasure.notes[i];
-        //         if (note.hasOwnProperty("tied") && note.tied) {
-        //             console.log("Found tie by index: ", i, note.tied);
-        //             ties.push(new VF.StaveTie({
-        //                 first_note: newStaveInfo[staff][].staveNotes[i],
-        //                 last_note: staveNotes[i + 1],
-        //                 first_indices: [0],
-        //                 last_indices: [0],
-        //             }));
-        //
-        //         }
-        //     }
-        // }
-
         // draw selected note cursor/highlight the note if any:
         let cursorX = -1, cursorColor="lightblue";
         if (noteToHighlight) {
@@ -357,10 +338,10 @@ export function NotationView({
             if (selectedNote && selectedNote.note<0) { // last note
                 if (staveInfo[selectedNote.staff][selectedNote.measure].staveNotes.length===0) {
                     cursorX = staveInfo[selectedNote.staff][selectedNote.measure].vfStave.getNoteStartX() + 10; // if not notes in the bar, draw it in the beginning
-                    console.log("Empty bar",selectedNote.measure )
+                    //console.log("Empty bar",selectedNote.measure )
                 } else {
                     cursorX = staveInfo[selectedNote.staff][selectedNote.measure].staveNotes.at(-1).getNoteHeadEndX() + 5;
-                    console.log("After last note",selectedNote.measure  )
+                    //console.log("After last note",selectedNote.measure  )
 
                 }
             } else if  (selectedNote && selectedNote.note-parseInt(selectedNote.note) === 0.5) { // in between

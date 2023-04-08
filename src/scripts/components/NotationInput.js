@@ -2,11 +2,11 @@ import React, {useRef, useEffect, useState} from 'react'
 import {
     Button,
     Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
-    FormControl,
+    FormControl, FormControlLabel, FormGroup,
     Grid, IconButton,
     InputLabel,
     MenuItem,
-    Select,
+    Select, Switch,
     ToggleButton,
     ToggleButtonGroup
 } from "@mui/material";
@@ -700,32 +700,33 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
 
 
+    const [showLilypond, setShowLilypond] = useState(true);
 
-
-    // TODO: key input needed only in in two parts -  key, radio buttons major/minor
     return <div className={"h5p-musical-dictations-uiDiv"}>
         <Grid container direction={"column"} spacing={1}>
-            <Grid container  direction={"column"} spacing={1}>
+            {/*<Button size={"small"} onClick={ () => setShowLilypond(!showLilypond) } >Lilypond input</Button>*/}
+
+            <FormGroup>
+                <FormControlLabel control={<Switch size={"small"} checked={showLilypond} onChange={ () => setShowLilypond(!showLilypond)} />}
+                                  label="Show Lilypond input" />
+            </FormGroup>
+            {showLilypond && <Grid container direction={"column"} spacing={1}>
                 <Grid item>Lilypond notation (absolute pitches, german nomenclature):</Grid>
                 <Grid item>
                     <textarea rows="3" cols="50" value={lyInput}
-                              onChange={ event => setLyInput( event.target.value )}
-                              onFocus={()=>setLyFocus(true)}
-                              onBlur={()=>setLyFocus(false)}
+                              onChange={event => setLyInput(event.target.value)}
+                              onFocus={() => setLyFocus(true)}
+                              onBlur={() => setLyFocus(false)}
 
                     />
                 </Grid>
                 <Grid item>
-                    <Button onClick={ handleLyNotation }>Engrave</Button>
+                    <Button onClick={handleLyNotation}>Engrave</Button>
                 </Grid>
-            </Grid>
+            </Grid> }
 
             <NotationView id="userNotation" div={"score"} notationInfo={notationInfo} selectedNote={selectedNote} setSelectedNote={setSelectedNote} />
 
-            {/*{createHeaderRow()}*/}
-            {/*{createNavigationRow()}*/}
-            {/*{createShortcutsDialog()}*/}
-            {/*{createExtraButtonsRow()}*/}
             {createButtonsRow()}
             {createPianoRow()}
 
