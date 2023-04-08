@@ -44,9 +44,11 @@ export default class MusicalDictations extends H5P.ContentType(true) {
         this.id = contentId;
 
         //temporary, later think about translation (H5P or independent):
-        this.l10n = {"euSupportText" : "The project is supported by EU social Fund"};
+        this.l10n = {
+            "euSupportText" : "The project is supported by EU social Fund"
+        };
 
-        console.log("correctLy, audio:", this.correctLyDictation, this.audioFile);
+        //console.log("correctLy, audio:", this.correctLyDictation, this.audioFile);
 
         const resize = () => { console.log("resize function called", this); this.trigger("resize"); } // to be forwarded to React components
 

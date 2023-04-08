@@ -77,6 +77,12 @@ export default function Main( {correctDictation=correctLyDictation, showFromDict
                     }
                 }
             }
+
+            if ( responseNotation.staves[staveIndex].measures[i] && responseNotation.staves[staveIndex].measures[i].notes.length < correctNotationInfo.staves[staveIndex].measures[i].notes.length) {
+                correct = false;
+                console.log("Too few notes");
+            }
+
             if ( responseNotation.staves[staveIndex].measures[i] && responseNotation.staves[staveIndex].measures[i].notes.length > correctNotationInfo.staves[staveIndex].measures[i].notes.length) {
                 correct = false;
                 console.log("i in this point", i, responseNotation.staves[staveIndex].measures[i].notes.length);

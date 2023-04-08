@@ -700,15 +700,15 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
 
 
-    const [showLilypond, setShowLilypond] = useState(true);
+    const [showLilypond, setShowLilypond] = useState(false);
 
     return <div className={"h5p-musical-dictations-uiDiv"}>
         <Grid container direction={"column"} spacing={1}>
-            {/*<Button size={"small"} onClick={ () => setShowLilypond(!showLilypond) } >Lilypond input</Button>*/}
+            {/*<Button size={"small"} onClick={ () => setShowLilypond(!showLilypond) } >Text input</Button>*/}
 
             <FormGroup>
                 <FormControlLabel control={<Switch size={"small"} checked={showLilypond} onChange={ () => setShowLilypond(!showLilypond)} />}
-                                  label="Show Lilypond input" />
+                                  label="Text input" />
             </FormGroup>
             {showLilypond && <Grid container direction={"column"} spacing={1}>
                 <Grid item>Lilypond notation (absolute pitches, german nomenclature):</Grid>
