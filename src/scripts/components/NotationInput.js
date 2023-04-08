@@ -44,7 +44,7 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
 
 export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedNote,
-                                setSelectedNote }) {
+                                setSelectedNote, t }) {
 
     const [keyboardStartingOctave, setKeyboardStartingOctave ] = useState(3);
     const [lyInput, setLyInput] = useState(lyStart);
@@ -518,7 +518,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
                 <Grid item>
                     <FormControl variant="standard">
-                        <InputLabel id="keyLabel">Key</InputLabel>
+                        <InputLabel id="keyLabel">{t.key}</InputLabel>
                         <Select
                             id="keySelect"
                             labelId="keyLabel"
@@ -540,23 +540,22 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                             id="clefSelect"
                             // value={selectedClef}
                             defaultValue={"treble"}
-                            label="Clef"
+                            label={t.clef}
                             onChange={ (event) => console.log("clef: ", event.target.value)}
                         >
-                            <MenuItem value={"treble"}>treble</MenuItem>
-                            <MenuItem value={"bass"}>bass</MenuItem>
+                            <MenuItem value={"treble"}>{t.treble}</MenuItem>
+                            <MenuItem value={"bass"}>{t.bass}</MenuItem>
                         </Select>
                     </FormControl>
                 </Grid>
 
                 <Grid item>
                     <FormControl variant="standard">
-                        <InputLabel id="timeLabel">Time</InputLabel>
+                        <InputLabel id="timeLabel">{t.time}</InputLabel>
                         <Select
                             id="clefSelect"
                             // value={selectedClef}
                             defaultValue={"4/4"}
-                            label="Muhv"
                             onChange={ (event) => console.log("clef: ", event.target.value)}
                         >
                             <MenuItem value={"3/4"}>3/4</MenuItem>
@@ -582,7 +581,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
     const createPianoRow = () => {
         return (
             <Grid item container direction={"row"} alignItems={"center"}>
-                <Grid item><IconButton onClick={()=>changeStartingOctave(-1)}> <NavigateBeforeIcon /> </IconButton></Grid>
+                <Grid item><IconButton aria-label={"octava lower"} onClick={()=>changeStartingOctave(-1)}> <NavigateBeforeIcon /> </IconButton></Grid>
                 <Grid item>
                     <div >  {/*make it scrollable like notation, if does not fit  oli: className={"vtDiv center"} */}
                         <Piano
@@ -596,7 +595,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                         />
                     </div>
                 </Grid>
-                <Grid item><IconButton onClick={()=>changeStartingOctave(1)}><NavigateNextIcon /></IconButton></Grid>
+                <Grid item><IconButton aria-label={"octava higher"} onClick={()=>changeStartingOctave(1)}><NavigateNextIcon /></IconButton></Grid>
             </Grid>
         )
     }
@@ -609,7 +608,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                     <ToggleButtonGroup
                         value={currentDuration}
                         exclusive
-                        onChange={ event => {console.log("event",event.target, event.currentTarget); durationChange(event.currentTarget.value +  (dotted ? "d" : "" ) ) }}
+                        onChange={ event => durationChange(event.currentTarget.value +  (dotted ? "d" : "" ) ) }
                         aria-label="duration selection"
                     >
                         <ToggleButton value="1" aria-label="whole note" >
@@ -628,9 +627,6 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                         <ToggleButton value="16" aria-label="sixteenth note">
                             <img src={SixteenthNote} />
                         </ToggleButton>
-                        {/*<ToggleButton value="32" aria-label="thirtysecond note">*/}
-                        {/*    32*/}
-                        {/*</ToggleButton>*/}
                     </ToggleButtonGroup>
                 </Grid>
                 {/*ToggleButtons is used down here to give similar look, they are simple buttons by function*/}
@@ -664,30 +660,29 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
 
     const createShortcutsDialog = () => {
-        //TODO: translation
         return  (
             <Grid item container alignItems={"flex-start"}>
-                <IconButton  onClick={() => setDialogOpen(true)} >
+                <IconButton aria-label={"Show shortcuts dialog"} onClick={() => setDialogOpen(true)} >
                     <HelpOutlineIcon />
                 </IconButton>
                 <Dialog onClose={()=>setDialogOpen(false)} open={dialogOpen}>
-                    <DialogTitle>{"Keyboard shortcuts"}</DialogTitle>
+                    <DialogTitle>{t.keyboardShortcuts}</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                           You can use the following sohrtcuts to enter or change the music:<br />
-                            <i>NB! Click somewhere on the screen first to activate the shortcuts!</i><br />
+                            {t.youCanUseFollowingShortcuts} <br />
+                            <i>NB! {t.clickSomewhereOnTheScreen}</i><br />
                             <br />
-                            Note names: keys c, d, e, f, g, a, b, h. Uppercase (C, D, etc) stands for 2nd octave, ctrl + note name for the small octave.<br />
-                            Durations: 1 - whole note, 2 - halfnote, 4 -  quarter, 8 -  eighths, 6 -  sixteenths<br />
-                            Rest: r<br />
-                            Dot (add or remove): .<br />
-                            Tie (add or remove): t<br />
-                            Raise or lower note (enharmonics included): arrow up or down <br />
-                            Navigation:  left or right moves to the next note, ctrl+left/right to the next/previous bar.<br />
+                            {t.noteNameInfo}<br />
+                            {t.durationInfo} <br />
+                            {t.rest}: r<br />
+                            {t.dotInfo}: .<br />
+                            {t.tieInfo}: t<br />
+                            {t.raiseLowerInfo} <br />
+                            {t.navigationInfo}<br />
                                 <br />
-                            Click between the notes to insert notes in the middle of the bar.<br />
+                            {t.clickBetweenNotes}<br />
                             <br />
-                            <i>Lilypond input</i> - show notation (engrave): Ctrl + Enter <br />
+                            <i>{t.textInput}</i> - {t.engraveInfo} <br />
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -708,24 +703,23 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
 
             <FormGroup>
                 <FormControlLabel control={<Switch size={"small"} checked={showLilypond} onChange={ () => setShowLilypond(!showLilypond)} />}
-                                  label="Text input" />
+                                  label={t.textInput} />
             </FormGroup>
             {showLilypond && <Grid container direction={"column"} spacing={1}>
-                <Grid item>Lilypond notation (absolute pitches, german nomenclature):</Grid>
+                <Grid item>{t.lilypondNotationLabel}:</Grid>
                 <Grid item>
                     <textarea rows="3" cols="50" value={lyInput}
                               onChange={event => setLyInput(event.target.value)}
                               onFocus={() => setLyFocus(true)}
                               onBlur={() => setLyFocus(false)}
-
                     />
                 </Grid>
                 <Grid item>
-                    <Button onClick={handleLyNotation}>Engrave</Button>
+                    <Button onClick={handleLyNotation}>{t.engrave}</Button>
                 </Grid>
             </Grid> }
 
-            <NotationView id="userNotation" div={"score"} notationInfo={notationInfo} selectedNote={selectedNote} setSelectedNote={setSelectedNote} />
+            <NotationView id="userNotation" div={"score"} notationInfo={notationInfo} selectedNote={selectedNote} setSelectedNote={setSelectedNote} t={t} />
 
             {createButtonsRow()}
             {createPianoRow()}

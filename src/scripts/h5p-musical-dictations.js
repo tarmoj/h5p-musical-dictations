@@ -44,8 +44,31 @@ export default class MusicalDictations extends H5P.ContentType(true) {
         this.id = contentId;
 
         //temporary, later think about translation (H5P or independent):
-        this.l10n = {
-            "euSupportText" : "The project is supported by EU social Fund"
+        this.l10n =  {
+            "explanation": "Listen to the musical excerpt, write down the notation",
+            "euSupportText": "The project is supported by European Social Fund",
+            "correct": "Correct",
+            "wrong": "Wrong",
+            "check": "Check",
+            "showHide": "Show/hide",
+            "key": "Key", // Notation input
+            "clef": "Clef",
+            "treble": "treble",
+            "bass": "bass",
+            "time": "Time",
+            "textInput": "Text input",
+            "lilypondNotationLabel" : "Lilypond notation (absolute pitches, german nomenclature)",
+            "engrave": "Engrave",
+            "keyboardShortcuts" : "Keyboard shortcuts", // shortcuts' dialog
+            "youCanUseFollowingShortcuts" : "You can use the following sohrtcuts to enter or change the music:",
+            "clickSomewhereOnTheScreen" : "Click somewhere on the screen first to activate the shortcuts!",
+
+
+            "emptyLilypondString": "Empty Lilypond string!", // notationUtils
+            "isNotRecognizedNote" : " is not a recognized note or keyword.",
+            "durationNotKnown" : "Duration not known! ",
+            "disclaimerText": "NB! This is not an official H5P.org content type. With any problems please turn to the author tarmo.johannes@muba.edu.ee",
+            ...params.l10n
         };
 
         //console.log("correctLy, audio:", this.correctLyDictation, this.audioFile);
@@ -60,7 +83,7 @@ export default class MusicalDictations extends H5P.ContentType(true) {
         this.attach = function ($wrapper) {
             $wrapper.addClass('h5p-musical-dictations');
 
-            $wrapper.append($('<div>'), {id:'explanation'}).html('Listen to the musical excerpt, write down the notation. <br />');
+            $wrapper.append($('<div>'), {id:'explanation'}).html(this.l10n.explanation + ' <br />');
 
             //audio
             const audioFile = this.audioFile;
@@ -97,7 +120,7 @@ export default class MusicalDictations extends H5P.ContentType(true) {
             // this.root is the container for React content
             ReactDOM.render(
                 <div>
-                    <Main correctDictation={this.correctLyDictation} showFromDictation={ this.showFromDiction} resizeFunction={resize}/>
+                    <Main correctDictation={this.correctLyDictation} showFromDictation={ this.showFromDiction} resizeFunction={resize} t={this.l10n}  />
                 </div>,
                 this.root
             );

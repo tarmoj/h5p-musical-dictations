@@ -18,9 +18,46 @@ const correctLyDictation = `
 const lyStart = ` \\clef "treble" \\key c \\major \\time 2/4  
     c'4 `;
 
+const translations =   {
+    "explanation": "Listen to the musical excerpt, write down the notation",
+    "euSupportText": "The project is supported by European Social Fund",
+    "correct": "Correct",
+    "wrong": "Wrong",
+    "check": "Check",
+    "showHide": "Show/hide",
+    "key": "Key", // Notation input
+    "clef": "Clef",
+    "treble": "treble",
+    "bass": "bass",
+    "time": "Time",
+    "textInput": "Text input",
+    "lilypondNotationLabel" : "Lilypond notation (absolute pitches, german nomenclature)",
+    "engrave": "Engrave",
+    "keyboardShortcuts" : "Keyboard shortcuts", // shortcuts' dialog
+    "youCanUseFollowingShortcuts" : "You can use the following sohrtcuts to enter or change the music:",
+    "clickSomewhereOnTheScreen" : "Click somewhere on the screen first to activate the shortcuts!",
+    "noteNameInfo" :"Note names: keys c, d, e, f, g, a, b, h. Uppercase (C, D, etc) stands for 2nd octave, ctrl + note name for the small octave.",
+    "durationInfo":    "Durations: 1 - whole note, 2 - halfnote, 4 -  quarter, 8 -  eighths, 6 -  sixteenths",
+    "rest": "Rest",
+    "dotInfo" : "Dot (add or remove)",
+    "tieInfo": " Tie (add or remove)",
+    "raiseLowerInfo": "Raise or lower note (enharmonics included): arrow up or down",
+    "navigationInfo": "Navigation:  left or right moves to the next note, ctrl+left/right to the next/previous bar.",
+    "clickBetweenNotes": "Click between the notes to insert notes in the middle of the bar.",
+    "engraveInfo": "show notation (engrave): Ctrl + Enter",
+
+    "emptyLilypondString": "Empty Lilypond string!", // notationUtils
+    "isNotRecognizedNote" : " is not a recognized note or keyword.",
+    "durationNotKnown" : "Duration not known! ",
+    "disclaimerText": "NB! This is not an official H5P.org content type. With any problems please turn to the author tarmo.johannes@muba.edu.ee",
+};
 
 
-export default function Main( {correctDictation=correctLyDictation, showFromDictation=lyStart, resizeFunction= () => console.log("empty resize")} ) {
+export default function Main( {correctDictation=correctLyDictation,
+                                  showFromDictation=lyStart,
+                                  resizeFunction= () => console.log("empty resize"),
+                                  t = translations} ) {
+    console.log("translation strings in Main", t);
 
     const [responseNotationInfo, setResponseNotationInfo] =useState(defaultNotationInfo); // lyStart - temporary
     const [correctNotationInfo, setCorrectNotationInfo] = useState(parseLilypondDictation(correctDictation));  // could have used a constant but that gets reevaluated each render tine
@@ -28,9 +65,6 @@ export default function Main( {correctDictation=correctLyDictation, showFromDict
     const [feedBack, setFeedBack] = useState("");
     const [ selectedNote, setSelectedNote] = useState({ measure: responseNotationInfo.staves[0].measures.length-1, note:-1, staff:0 } );
 
-    // const lyRef = useRef();
-
-    //useEffect( () => {console.log("selectedNote not in Main: ", selectedNote); setSelectedNote(selectedNote)}, [selectedNote] ); // gets called but this does not forward value to NotationInput somehow...
 
     useEffect( ()=>createResponseDictationStart(), [] ); // set the proper lyStart for response NotationInput
 
@@ -95,7 +129,7 @@ export default function Main( {correctDictation=correctLyDictation, showFromDict
         setResponseNotationInfo(responseNotation);
         setShowCorrectNotation(true);
         resizeFunction();
-        setFeedBack( correct ? "Correct!" : "Wrong");
+        setFeedBack( correct ? t.correct : t.wrong);
     }
 
 
@@ -106,15 +140,16 @@ export default function Main( {correctDictation=correctLyDictation, showFromDict
                            setNotationInfo={setResponseNotationInfo}
                            notationInfo = {responseNotationInfo}
                            selectedNote={selectedNote} setSelectedNote={setSelectedNote}
+                           t = {t}
             />
 
-            <Button variant={"text"}  onClick={ () => checkResponse() }>Check</Button>
+            <Button variant={"text"}  onClick={ () => checkResponse() }>{t.check}</Button>
             <span><b>{feedBack}</b></span>
             <Button variant={"text"}
                 onClick={ () => {
                 setShowCorrectNotation(!showCorrectNotation);
                 resizeFunction();
-            } }>Show/hide</Button>
+            } }>{t.showHide}</Button>
 
             { showCorrectNotation &&
             <div>

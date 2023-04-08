@@ -14,7 +14,8 @@ export function NotationView({
                                  height = 140,
                                  staffHeight = 100,
                                  selectedNote,
-                                 setSelectedNote
+                                 setSelectedNote,
+                                 t
                              }) {
     const container = useRef()
     const rendererRef = useRef()
@@ -30,7 +31,7 @@ export function NotationView({
                 container.current,
                 Renderer.Backends.SVG
             ) ;
-            // try adding on click listener
+            //  adding on click listener
             rendererRef.current.getContext().svg.onclick = (event) => handleClick(event);
         }
         const renderer = rendererRef.current;

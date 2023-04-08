@@ -29,5 +29,19 @@
     "name": "audioFile",
     "type": "audio",
     "label": "Audio file"
+  },
+  {
+    "name": "l10n",
+    "type": "group",
+    "label": "UI labels",
+    "importance": "low",
+    "common": true,
+    "fields": [
+      {
+        "name": "explanation",
+        "type": "text",
+        "default": ""
+      }
+    ]
   }
 ]

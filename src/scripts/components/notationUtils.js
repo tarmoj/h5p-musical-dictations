@@ -112,7 +112,7 @@ export const parseLilypondDictation = (lyDictation) => { // returns returns nota
 
 const parseLilypondString = (lyString) => {
     if (!lyString) {
-        alert("Empty Lilypond string!");
+        alert(t.emptyLilypondString);
         return null;
     }
 
@@ -183,7 +183,7 @@ const parseLilypondString = (lyString) => {
                 vfNote = "r"; // to signal it is a rest
             } else {
                 if (! noteNames.has(noteName)) { // ERROR
-                    alert(noteName +  " is not a recognized note or keyword.");
+                    alert(noteName +  t.isNotRecognizedNote);
                     return null;
                     //break;
                 }
@@ -220,7 +220,7 @@ const parseLilypondString = (lyString) => {
                 const originalDuration = duration;
                 duration = duration.replace(/\./g, "d"); // d instead of dot for VexFlow
                 if (!durationMap.has(duration)) {
-                    alert(`Duration ${originalDuration} not known!` );
+                    alert(t.durationNotKnown + " " + originalDuration );
                     return null;
                 }
 
