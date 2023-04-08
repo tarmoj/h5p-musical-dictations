@@ -15,10 +15,14 @@ TODO: -----------------------------------
 
 // rename notationUtils -> notation.js NotationInput -> NotationInput - osalt tehtud
 
+Põhiosa kujundus (vasem serv, nupud, Lilypondi area breadcrumb vms)
+
+CHECK -  kui noote liiga vähe, siis peaks olema WRONG!
 
 Translation!
 
 Testi, kas tie -> lilypondi toimib
+
 
 
 . getCurrentNote should return also position* (pole nii oluline)

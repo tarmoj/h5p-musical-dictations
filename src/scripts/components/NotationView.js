@@ -370,7 +370,7 @@ export function NotationView({
         }
 
         if (cursorX>=0) {
-            console.log("Draw cursor at ", cursorX);
+            //console.log("Draw cursor at ", cursorX);
             setInputCursor(cursorX, cursorColor);
         }
 

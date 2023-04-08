@@ -150,7 +150,7 @@ const parseLilypondString = (lyString) => {
             const timeParts = stave.time.split("/");
             if (timeParts.length === 2) {
                 const inQuarters = parseInt(timeParts[0]) *  4/parseInt(timeParts[1]);
-                console.log("Bar duration: ", inQuarters);
+                //console.log("Bar duration: ", inQuarters);
                 if (inQuarters) {
                     barDuration = inQuarters;
                 };

@@ -1,22 +1,18 @@
 .h5p-musical-dictations {
-
+  margin-left: 0.5rem;
 }
 
 
 .h5p-musical-dictations-notationDiv {
   max-width: 900px;
   display: block;
-  width: 100%;
+  width: 95vw;
   overflow-x: auto;
   white-space: nowrap;
 }
 
+
 .h5p-musical-dictations-uiDiv {
-  margin: 2rem;
+  margin-left: 0.5rem;
 }
 
-
-
-/*.h5p-musical-dictations * {*/
-/*  margin: 2px;*/
-/*}*/

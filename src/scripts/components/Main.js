@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {NotationView} from "./NotationView"
 import {NotationInput} from "./NotationInput";
 import {defaultNotationInfo, parseLilypondDictation, deepClone, addMeasure} from "./notationUtils";
+import {Button} from "@mui/material";
 
 
 // temporary -  for testing:
@@ -95,26 +96,20 @@ export default function Main( {correctDictation=correctLyDictation, showFromDict
 
     return (
         <div>
-            {/*<div id={"score1"} ></div>*/}
-            {/*<NotationView id="userNotation" div={"score"} notationInfo={responseNotationInfo} selectedNote={selectedNote} setSelectedNote={setSelectedNote} />*/}
             <NotationInput lyStart={responseNotationInfo}
                            setNotationInfo={setResponseNotationInfo}
                            notationInfo = {responseNotationInfo}
                            selectedNote={selectedNote} setSelectedNote={setSelectedNote}
             />
-            <button onClick={ () => {
-                    console.log("set selected note test position");
-                    setSelectedNote({note:1, measure:1, staff: 6});
 
-                   //insertNote("[g/4]", "2");
-                }
-            }>Test</button>
-            <button onClick={ () => checkResponse() }>Check</button>
-            <button onClick={ () => {
+            <Button variant={"text"}  onClick={ () => checkResponse() }>Check</Button>
+            <span><b>{feedBack}</b></span>
+            <Button variant={"text"}
+                onClick={ () => {
                 setShowCorrectNotation(!showCorrectNotation);
                 resizeFunction();
-            } }>Show/hide correct</button>
-            <div>{feedBack}</div>
+            } }>Show/hide</Button>
+
             { showCorrectNotation &&
             <div>
                 <NotationView id="correctNotation" div={"score2"} notationInfo={correctNotationInfo}  />
