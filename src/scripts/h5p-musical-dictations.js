@@ -62,7 +62,15 @@ export default class MusicalDictations extends H5P.ContentType(true) {
             "keyboardShortcuts" : "Keyboard shortcuts", // shortcuts' dialog
             "youCanUseFollowingShortcuts" : "You can use the following sohrtcuts to enter or change the music:",
             "clickSomewhereOnTheScreen" : "Click somewhere on the screen first to activate the shortcuts!",
-
+            "noteNameInfo" :"Note names: keys c, d, e, f, g, a, b, h. Uppercase (C, D, etc) stands for 2nd octave, ctrl + note name for the small octave.",
+            "durationInfo":    "Durations: 1 - whole note, 2 - halfnote, 4 -  quarter, 8 -  eighths, 6 -  sixteenths",
+            "rest": "Rest",
+            "dotInfo" : "Dot (add or remove)",
+            "tieInfo": " Tie (add or remove)",
+            "raiseLowerInfo": "Raise or lower note (enharmonics included): arrow up or down",
+            "navigationInfo": "Navigation:  left or right moves to the next note, ctrl+left/right to the next/previous bar.",
+            "clickBetweenNotes": "Click between the notes to insert notes in the middle of the bar.",
+            "engraveInfo": "show notation (engrave): Ctrl + Enter",
 
             "emptyLilypondString": "Empty Lilypond string!", // notationUtils
             "isNotRecognizedNote" : " is not a recognized note or keyword.",

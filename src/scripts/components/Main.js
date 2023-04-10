@@ -19,37 +19,37 @@ const lyStart = ` \\clef "treble" \\key c \\major \\time 2/4
     c'4 `;
 
 const translations =   {
-    "explanation": "Listen to the musical excerpt, write down the notation",
-    "euSupportText": "The project is supported by European Social Fund",
-    "correct": "Correct",
-    "wrong": "Wrong",
-    "check": "Check",
-    "showHide": "Show/hide",
-    "key": "Key", // Notation input
-    "clef": "Clef",
-    "treble": "treble",
-    "bass": "bass",
-    "time": "Time",
-    "textInput": "Text input",
-    "lilypondNotationLabel" : "Lilypond notation (absolute pitches, german nomenclature)",
-    "engrave": "Engrave",
-    "keyboardShortcuts" : "Keyboard shortcuts", // shortcuts' dialog
-    "youCanUseFollowingShortcuts" : "You can use the following sohrtcuts to enter or change the music:",
-    "clickSomewhereOnTheScreen" : "Click somewhere on the screen first to activate the shortcuts!",
-    "noteNameInfo" :"Note names: keys c, d, e, f, g, a, b, h. Uppercase (C, D, etc) stands for 2nd octave, ctrl + note name for the small octave.",
-    "durationInfo":    "Durations: 1 - whole note, 2 - halfnote, 4 -  quarter, 8 -  eighths, 6 -  sixteenths",
-    "rest": "Rest",
-    "dotInfo" : "Dot (add or remove)",
-    "tieInfo": " Tie (add or remove)",
-    "raiseLowerInfo": "Raise or lower note (enharmonics included): arrow up or down",
-    "navigationInfo": "Navigation:  left or right moves to the next note, ctrl+left/right to the next/previous bar.",
-    "clickBetweenNotes": "Click between the notes to insert notes in the middle of the bar.",
-    "engraveInfo": "show notation (engrave): Ctrl + Enter",
+    "explanation": "Kuulake ja noteerige",
+    "euSupportText": "Projekti toetab Euroopa Sotsiaalfond",
+    "correct": "Õige",
+    "wrong": "Vale",
+    "check": "Kontrolli",
+    "showHide": "Näita/peida",
+    "key": "Helistik", // Notation input
+    "clef": "Võti",
+    "treble": "viiulivõti",
+    "bass": "bassivõti",
+    "time": "Taktimõõt",
+    "textInput": "Tekstiline sisestus",
+    "lilypondNotationLabel" : "Lilypondi notatsioon (absoluutsed kõrgused, saksa süsteemi noodinimed (g, as, b, h))",
+    "engrave": "Kuva",
+    "keyboardShortcuts" : "Klahvikombinatsioonid", // shortcuts' dialog
+    "youCanUseFollowingShortcuts" : "Võite kasutada järgmisi klahvikombinatsioone, et sisestada või muuta noote:",
+    "clickSomewhereOnTheScreen" : "Et klahvikombinatsioonid aktiveerida, klõpsake esmalt ükskõik kuhu aknas!",
+    "noteNameInfo" :"Noodid: klahvid c, d, e, f, g, a, b, h. Suurtähed (C, D, jne) annavad 2. oktavi, ctrl + noodinimi väikse oktavi.",
+    "durationInfo":    "Vältused: 1 - täisnoot, 2 - poolnoot, 4 -  veerandnoot, 8 -  kaheksandik, 6 -  kuueteistkümnendik",
+    "rest": "Paus",
+    "dotInfo" : "Punkt (lisa või eemalda)",
+    "tieInfo": "Pide (lisa või eemalda)",
+    "raiseLowerInfo": "Noot üles/alla (enharmoonilised vasted k.a.): nool üles või alla",
+    "navigationInfo": "Liikumine:  nool paremale/vasakule liigub järgmise/eelmise noodi peale, ctrl+nool järmisesse/eelmisesse takti.",
+    "clickBetweenNotes": "Klõpsa nootide vahele, et lisada noote takti keskel.",
+    "engraveInfo": "Näita notatsiooni (lilypond aknas): Ctrl + Enter",
 
-    "emptyLilypondString": "Empty Lilypond string!", // notationUtils
-    "isNotRecognizedNote" : " is not a recognized note or keyword.",
-    "durationNotKnown" : "Duration not known! ",
-    "disclaimerText": "NB! This is not an official H5P.org content type. With any problems please turn to the author tarmo.johannes@muba.edu.ee",
+    "emptyLilypondString": "Lilypondi teks on tühi!", // notationUtils
+    "isNotRecognizedNote" : " pole teadaolev täht või vältus.",
+    "durationNotKnown" : "Võõras vältus! ",
+    "disclaimerText": "NB! See ei ole ametlik H5P.org sisutüüp. Kõigi probleemide korral pöörduge autori poole: tarmo.johannes@muba.edu.ee",
 };
 
 
@@ -57,7 +57,6 @@ export default function Main( {correctDictation=correctLyDictation,
                                   showFromDictation=lyStart,
                                   resizeFunction= () => console.log("empty resize"),
                                   t = translations} ) {
-    console.log("translation strings in Main", t);
 
     const [responseNotationInfo, setResponseNotationInfo] =useState(defaultNotationInfo); // lyStart - temporary
     const [correctNotationInfo, setCorrectNotationInfo] = useState(parseLilypondDictation(correctDictation));  // could have used a constant but that gets reevaluated each render tine
