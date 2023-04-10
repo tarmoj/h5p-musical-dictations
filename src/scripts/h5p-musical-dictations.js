@@ -66,7 +66,7 @@ export default class MusicalDictations extends H5P.ContentType(true) {
             "durationInfo":    "Durations: 1 - whole note, 2 - halfnote, 4 -  quarter, 8 -  eighths, 6 -  sixteenths",
             "rest": "Rest",
             "dotInfo" : "Dot (add or remove)",
-            "tieInfo": " Tie (add or remove)",
+            "tieInfo": "Tie (add or remove)",
             "raiseLowerInfo": "Raise or lower note (enharmonics included): arrow up or down",
             "navigationInfo": "Navigation:  left or right moves to the next note, ctrl+left/right to the next/previous bar.",
             "clickBetweenNotes": "Click between the notes to insert notes in the middle of the bar.",

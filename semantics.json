@@ -40,7 +40,162 @@
       {
         "name": "explanation",
         "type": "text",
+        "default": "Listen to the musical excerpt, write down the notation"
+      },
+      {
+        "name": "euSupportText",
+        "type": "text",
+        "default": "The project is supported by European Social Fund"
+      },
+      {
+        "name": "correct",
+        "type": "text",
+        "default": "Correct"
+      },
+      {
+        "name": "wrong",
+        "type": "text",
+        "default": "Wrong"
+      },
+      {
+        "name": "check",
+        "type": "text",
+        "default": "Check"
+      },
+      {
+        "name": "showHide",
+        "type": "text",
+        "default": "Show/hide"
+      },
+      {
+        "name": "key",
+        "type": "text",
+        "default": "Key"
+      },
+      {
+        "name": "",
+        "type": "text",
         "default": ""
+      },
+      {
+        "name": "clef",
+        "type": "text",
+        "default": "Clef"
+      },
+      {
+        "name": "",
+        "type": "text",
+        "default": ""
+      },
+      {
+        "name": "treble",
+        "type": "text",
+        "default": "treble"
+      },
+      {
+        "name": "bass",
+        "type": "text",
+        "default": "bass"
+      },
+      {
+        "name": "time",
+        "type": "text",
+        "default": "Time"
+      },
+      {
+        "name": "textInput",
+        "type": "text",
+        "default": "Text input"
+      },
+      {
+        "name": "lilypondNotationLabel",
+        "type": "text",
+        "default": "Lilypond notation (absolute pitches, german nomenclature)"
+      },
+      {
+        "name": "engrave",
+        "type": "text",
+        "default": "Engrave"
+      },
+      {
+        "name": "keyboardShortcuts",
+        "type": "text",
+        "default": "Keyboard shortcuts"
+      },
+      {
+        "name": "youCanUseFollowingShortcuts",
+        "type": "text",
+        "default": "You can use the following sohrtcuts to enter or change the music:"
+      },
+      {
+        "name": "clickSomewhereOnTheScreen",
+        "type": "text",
+        "default": "Click somewhere on the screen first to activate the shortcuts!"
+      },
+      {
+        "name": "noteNameInfo",
+        "type": "text",
+        "default": "Note names: keys c, d, e, f, g, a, b, h. Uppercase (C, D, etc) stands for 2nd octave, ctrl + note name for the small octave."
+      },
+      {
+        "name": "durationInfo",
+        "type": "text",
+        "default": "Durations: 1 - whole note, 2 - halfnote, 4 -  quarter, 8 -  eighths, 6 -  sixteenths"
+      },
+      {
+        "name": "rest",
+        "type": "text",
+        "default": "Rest"
+      },
+      {
+        "name": "dotInfo",
+        "type": "text",
+        "default": "Dot (add or remove)"
+      },
+      {
+        "name": "tieInfo",
+        "type": "text",
+        "default": "Tie (add or remove)"
+      },
+      {
+        "name": "raiseLowerInfo",
+        "type": "text",
+        "default": "Raise or lower note (enharmonics included): arrow up or down"
+      },
+      {
+        "name": "navigationInfo",
+        "type": "text",
+        "default": "Navigation:  left or right moves to the next note, ctrl+left/right to the next/previous bar."
+      },
+      {
+        "name": "clickBetweenNotes",
+        "type": "text",
+        "default": "Click between the notes to insert notes in the middle of the bar."
+      },
+      {
+        "name": "engraveInfo",
+        "type": "text",
+        "default": "show notation (engrave): Ctrl + Enter"
+      },
+      {
+        "name": "emptyLilypondString",
+        "type": "text",
+        "default": "Empty Lilypond string!"
+      },
+      {
+        "name": "isNotRecognizedNote",
+        "type": "text",
+        "default": " is not a recognized note or keyword."
+      },
+      {
+        "name": "durationNotKnown",
+        "type": "text",
+        "default": "Duration not known!"
+      },
+      {
+        "name": "disclaimerText",
+        "type": "text",
+        "default": "NB! This is not an official H5P.org content type. With any problems please turn to the author tarmo.johannes@muba.edu.ee"
       }
     ]
   }

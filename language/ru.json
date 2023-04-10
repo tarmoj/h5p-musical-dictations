@@ -1,0 +1,123 @@
+{
+  "semantics": [
+    {
+      "label": "Disclaimer",
+      "default": "This is not an official H5P.org content type. With any problems please turn to the author tarmo.johannes@muba.edu.ee ",
+      "description": "NB!"
+    },
+    {
+      "label": "Notation",
+      "default": "\\time 3/4 \\key F \\major f'8 a' c''4 c'' | d''8 b' c'4 c' ",
+      "description": "Define the notation in Lilypond syntax (absolute pitch marking for octaves)"
+    },
+    {
+      "label": "Show from notation",
+      "default": "\\time 3/4 \\key F \\major f'8 ",
+      "description": "What you want to show to the student. Usually key, time and the first note"
+    },
+    {
+      "label": "Audio file"
+    },
+    {
+      "label": "UI labels",
+      "fields": [
+        {
+          "default": "Listen to the musical excerpt, write down the notation"
+        },
+        {
+          "default": "The project is supported by European Social Fund"
+        },
+        {
+          "default": "Correct"
+        },
+        {
+          "default": "Wrong"
+        },
+        {
+          "default": "Check"
+        },
+        {
+          "default": "Show/hide"
+        },
+        {
+          "default": "Key"
+        },
+        {
+          "default": ""
+        },
+        {
+          "default": "Clef"
+        },
+        {
+          "default": ""
+        },
+        {
+          "default": "treble"
+        },
+        {
+          "default": "bass"
+        },
+        {
+          "default": "Time"
+        },
+        {
+          "default": "Text input"
+        },
+        {
+          "default": "Lilypond notation (absolute pitches, german nomenclature)"
+        },
+        {
+          "default": "Engrave"
+        },
+        {
+          "default": "Keyboard shortcuts"
+        },
+        {
+          "default": "You can use the following sohrtcuts to enter or change the music:"
+        },
+        {
+          "default": "Click somewhere on the screen first to activate the shortcuts!"
+        },
+        {
+          "default": "Note names: keys c, d, e, f, g, a, b, h. Uppercase (C, D, etc) stands for 2nd octave, ctrl + note name for the small octave."
+        },
+        {
+          "default": "Durations: 1 - whole note, 2 - halfnote, 4 -  quarter, 8 -  eighths, 6 -  sixteenths"
+        },
+        {
+          "default": "Rest"
+        },
+        {
+          "default": "Dot (add or remove)"
+        },
+        {
+          "default": "Tie (add or remove)"
+        },
+        {
+          "default": "Raise or lower note (enharmonics included): arrow up or down"
+        },
+        {
+          "default": "Navigation:  left or right moves to the next note, ctrl+left/right to the next/previous bar."
+        },
+        {
+          "default": "Click between the notes to insert notes in the middle of the bar."
+        },
+        {
+          "default": "show notation (engrave): Ctrl + Enter"
+        },
+        {
+          "default": "Empty Lilypond string!"
+        },
+        {
+          "default": " is not a recognized note or keyword."
+        },
+        {
+          "default": "Duration not known!"
+        },
+        {
+          "default": "NB! This is not an official H5P.org content type. With any problems please turn to the author tarmo.johannes@muba.edu.ee"
+        }
+      ]
+    }
+  ]
+}
