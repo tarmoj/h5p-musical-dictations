@@ -1,121 +1,122 @@
 {
   "semantics": [
     {
-      "label": "Disclaimer",
-      "default": "This is not an official H5P.org content type. With any problems please turn to the author tarmo.johannes@muba.edu.ee ",
+      "label": "Märguanne",
+      "optional": true,
+      "default": "NB! See ei ole ametlik H5P.org sisutüüp. Kõigi probleemide korral pöörduge autori poole: tarmo.johannes@muba.edu.ee ",
       "description": "NB!"
     },
     {
-      "label": "Notation",
+      "label": "Notatsioon",
       "default": "\\time 3/4 \\key F \\major f'8 a' c''4 c'' | d''8 b' c'4 c' ",
-      "description": "Define the notation in Lilypond syntax (absolute pitch marking for octaves)"
+      "description": "Diktaat Lilypond süntaksis (absoluutsed kõrgused, saksa süsteemi noodinimed (g, as, b, h) )"
     },
     {
-      "label": "Show from notation",
+      "label": "Kuvatav algus",
       "default": "\\time 3/4 \\key F \\major f'8 ",
-      "description": "What you want to show to the student. Usually key, time and the first note"
+      "description": "Mida te soovite, et õpilane diktaadi algusest näeks. Tavaliselt helistik, taktimõõt ja esimene takt."
     },
     {
-      "label": "Audio file"
+      "label": "Audiofail"
     },
     {
       "label": "UI labels",
       "fields": [
         {
-          "default": "Listen to the musical excerpt, write down the notation"
+          "default": "Kuulake ja noteerige"
         },
         {
-          "default": "The project is supported by European Social Fund"
+          "default": "Projekti toetab Euroopa Sotsiaalfond"
         },
         {
-          "default": "Correct"
+          "default": "Õige"
         },
         {
-          "default": "Wrong"
+          "default": "Vale"
         },
         {
-          "default": "Check"
+          "default": "Kontrolli"
         },
         {
-          "default": "Show/hide"
+          "default": "Näita/peida"
         },
         {
-          "default": "Key"
-        },
-        {
-          "default": ""
-        },
-        {
-          "default": "Clef"
+          "default": "Helistik"
         },
         {
           "default": ""
         },
         {
-          "default": "treble"
+          "default": "Võti"
         },
         {
-          "default": "bass"
+          "default": ""
         },
         {
-          "default": "Time"
+          "default": "viiulivõti"
         },
         {
-          "default": "Text input"
+          "default": "bassivõti"
         },
         {
-          "default": "Lilypond notation (absolute pitches, german nomenclature)"
+          "default": "Taktimõõt"
         },
         {
-          "default": "Engrave"
+          "default": "Tekstiline sisestus"
         },
         {
-          "default": "Keyboard shortcuts"
+          "default": "Lilypondi notatsioon (absoluutsed kõrgused, saksa süsteemi noodinimed (g, as, b, h))"
         },
         {
-          "default": "You can use the following sohrtcuts to enter or change the music:"
+          "default": "Kuva"
         },
         {
-          "default": "Click somewhere on the screen first to activate the shortcuts!"
+          "default": "Klahvikombinatsioonid"
         },
         {
-          "default": "Note names: keys c, d, e, f, g, a, b, h. Uppercase (C, D, etc) stands for 2nd octave, ctrl + note name for the small octave."
+          "default": "Võite kasutada järgmisi klahvikombinatsioone, et sisestada või muuta noote:"
         },
         {
-          "default": "Durations: 1 - whole note, 2 - halfnote, 4 -  quarter, 8 -  eighths, 6 -  sixteenths"
+          "default": "Et klahvikombinatsioonid aktiveerida, klõpsake esmalt ükskõik kuhu aknas!"
         },
         {
-          "default": "Rest"
+          "default": "Noodid: klahvid c, d, e, f, g, a, b, h. Suurtähed (C, D, jne) annavad 2. oktavi, ctrl + noodinimi väikse oktavi."
         },
         {
-          "default": "Dot (add or remove)"
+          "default": "Vältused: 1 - täisnoot, 2 - poolnoot, 4 -  veerandnoot, 8 -  kaheksandik, 6 -  kuueteistkümnendik"
         },
         {
-          "default": "Tie (add or remove)"
+          "default": "Paus"
         },
         {
-          "default": "Raise or lower note (enharmonics included): arrow up or down"
+          "default": "Punkt (lisa või eemalda)"
         },
         {
-          "default": "Navigation:  left or right moves to the next note, ctrl+left/right to the next/previous bar."
+          "default": "Pide (lisa või eemalda)"
         },
         {
-          "default": "Click between the notes to insert notes in the middle of the bar."
+          "default": "Noot üles/alla (enharmoonilised vasted k.a.): nool üles või alla"
         },
         {
-          "default": "show notation (engrave): Ctrl + Enter"
+          "default": "Liikumine:  nool paremale/vasakule liigub järgmise/eelmise noodi peale, ctrl+nool järmisesse/eelmisesse takti."
         },
         {
-          "default": "Empty Lilypond string!"
+          "default": "Klõpsa nootide vahele, et lisada noote takti keskel."
         },
         {
-          "default": " is not a recognized note or keyword."
+          "default": "Näita notatsiooni (lilypond aknas): Ctrl + Enter"
         },
         {
-          "default": "Duration not known!"
+          "default": "Lilypondi teks on tühi!"
         },
         {
-          "default": "NB! This is not an official H5P.org content type. With any problems please turn to the author tarmo.johannes@muba.edu.ee"
+          "default": " pole teadaolev täht või vältus."
+        },
+        {
+          "default": "Võõras vältus!"
+        },
+        {
+          "default": "NB! See ei ole ametlik H5P.org sisutüüp. Kõigi probleemide korral pöörduge autori poole: tarmo.johannes@muba.edu.ee"
         }
       ]
     }
