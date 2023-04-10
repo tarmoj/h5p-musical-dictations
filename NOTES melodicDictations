@@ -48,6 +48,10 @@ tekita leht (või editor widget, aga see vist keerulisem), kus saab noote sisest
 
 DONE ----------------
 
+parem serv suurem (1 rem pigem)
+kui textInput  onChage - call resizeFunction()
+
+
 
 Dot - almost -  check why dd + button view change: Dot -  for one note only and then out? Probably yes. OK
 Dot - influences only once - adds or removes selected note ; button checked does not work quite... -  OK

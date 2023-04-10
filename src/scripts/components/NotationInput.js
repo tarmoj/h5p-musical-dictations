@@ -44,7 +44,7 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
 
 export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedNote,
-                                setSelectedNote, t }) {
+                                setSelectedNote, t, resizeFunction }) {
 
     const [keyboardStartingOctave, setKeyboardStartingOctave ] = useState(3);
     const [lyInput, setLyInput] = useState(lyStart);
@@ -702,7 +702,11 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
             {/*<Button size={"small"} onClick={ () => setShowLilypond(!showLilypond) } >Text input</Button>*/}
 
             <FormGroup>
-                <FormControlLabel control={<Switch size={"small"} checked={showLilypond} onChange={ () => setShowLilypond(!showLilypond)} />}
+                <FormControlLabel control={<Switch size={"small"} checked={showLilypond}
+                                                   onChange={ () => {
+                                                       setShowLilypond(!showLilypond);
+                                                       if (resizeFunction) resizeFunction();
+                                                   } } />}
                                   label={t.textInput} />
             </FormGroup>
             {showLilypond && <Grid container direction={"column"} spacing={1}>
