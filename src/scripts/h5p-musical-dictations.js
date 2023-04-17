@@ -81,7 +81,7 @@ export default class MusicalDictations extends H5P.ContentType(true) {
 
         //console.log("correctLy, audio:", this.correctLyDictation, this.audioFile);
 
-        const resize = () => { console.log("resize function called", this); this.trigger("resize"); } // to be forwarded to React components
+        const resize = () => { console.log("resize function called"); this.trigger("resize"); } // to be forwarded to React components
 
         /**
          * Attach library to wrapper.

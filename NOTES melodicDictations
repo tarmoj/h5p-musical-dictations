@@ -6,6 +6,12 @@ https://stackoverflow.com/questions/71835697/create-react-app-dependency-version
     delete both node_modules and package-lock.json
     run npm i web-vitals --save-dev
     run npm install
+    
+NB! mui5 jaoks peab olema react 17+:
+(dependencies in package.json)
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    
 
 TODO: -----------------------------------
 
@@ -48,8 +54,10 @@ tekita leht (või editor widget, aga see vist keerulisem), kus saab noote sisest
 
 DONE ----------------
 
-parem serv suurem (1 rem pigem)
-kui textInput  onChage - call resizeFunction()
+kui vajutada "Peida", siis kaota ära ka feedback väli; Või millal?
+
+parem serv suurem (1 rem pigem) - mitte päris veel... mingi jama MUIga siin
+kui textInput  onChage - call resizeFunction() OK
 
 
 
