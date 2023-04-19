@@ -112,7 +112,7 @@ export const parseLilypondDictation = (lyDictation) => { // returns returns nota
 
 const parseLilypondString = (lyString) => {
     if (!lyString) {
-        alert(t.emptyLilypondString);
+        alert("Lilypond string is empty!");
         return null;
     }
 
@@ -183,7 +183,7 @@ const parseLilypondString = (lyString) => {
                 vfNote = "r"; // to signal it is a rest
             } else {
                 if (! noteNames.has(noteName)) { // ERROR
-                    alert(noteName +  t.isNotRecognizedNote);
+                    alert("Unknown note: " + noteName);
                     return null;
                     //break;
                 }
@@ -220,7 +220,7 @@ const parseLilypondString = (lyString) => {
                 const originalDuration = duration;
                 duration = duration.replace(/\./g, "d"); // d instead of dot for VexFlow
                 if (!durationMap.has(duration)) {
-                    alert(t.durationNotKnown + " " + originalDuration );
+                    alert("Unknown duration:  " + originalDuration );
                     return null;
                 }
 
@@ -374,7 +374,7 @@ export const notationInfoToLyString = notationInfo => {
     for (let stave of notationInfo.staves) {
         let keyString = "";
         if (stave.key.endsWith("m")) { // minor
-            keyString =  stave.key.slice(-1,1).toLowerCase() + " \\minor "
+            keyString =  stave.key.slice(0, -1).toLowerCase() + " \\minor "
         } else {
             keyString = stave.key.toLowerCase() + " \\major "
         }
