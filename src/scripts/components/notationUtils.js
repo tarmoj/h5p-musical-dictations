@@ -110,7 +110,7 @@ export const parseLilypondDictation = (lyDictation) => { // returns returns nota
 };
 
 
-const parseLilypondString = (lyString) => {
+export const parseLilypondString = (lyString) => {
     if (!lyString) {
         alert("Lilypond string is empty!");
         return null;

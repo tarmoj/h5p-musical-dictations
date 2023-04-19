@@ -11,9 +11,7 @@
     "label": "Notation",
     "name": "lyNotation",
     "type": "text",
-    "widget": "textarea",
-    "default": "\\time 3/4 \\key F \\major f'8 a' c''4 c'' | d''8 b' c'4 c' ",
-    "description": "Define the notation in Lilypond syntax (absolute pitch marking for octaves)"
+    "widget": "notationwidget"
   } ,
 
   {
@@ -21,8 +19,8 @@
     "name": "show",
     "type": "text",
     "widget": "textarea",
-    "default": "\\time 3/4 \\key F \\major f'8 ",
-    "description": "What you want to show to the student. Usually key, time and the first note"
+    "default": "",
+    "description": "What you want to show to the student (in lilypond format). Usually key, time and the first note."
   },
 
   {

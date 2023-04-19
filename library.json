@@ -20,5 +20,13 @@
     {
       "path": "dist/h5p-musical-dictations.css"
     }
+  ],
+  "editorDependencies": [
+    {
+      "machineName": "H5PEditor.NotationInput",
+      "majorVersion": 1,
+      "minorVersion": 0
+    }
+    
   ]
 }
