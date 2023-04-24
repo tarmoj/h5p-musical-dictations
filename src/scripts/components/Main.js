@@ -17,7 +17,7 @@ const correctLyDictation = `
 
 const lyStart = ` \\clef "treble" \\key c \\major \\time 2/4  
     c'4 `;
-/*
+
 const translations =   {
     "explanation": "Kuulake ja noteerige",
     "euSupportText": "Projekti toetab Euroopa Sotsiaalfond",
@@ -50,13 +50,13 @@ const translations =   {
     "isNotRecognizedNote" : " pole teadaolev täht või vältus.",
     "durationNotKnown" : "Võõras vältus! ",
     "disclaimerText": "NB! See ei ole ametlik H5P.org sisutüüp. Kõigi probleemide korral pöörduge autori poole: tarmo.johannes@muba.edu.ee",
-}; */
+};
 
 
 export default function Main( {correctDictation=correctLyDictation,
                                   showFromDictation=lyStart,
                                   resizeFunction= () => console.log("empty resize"),
-                                  t} ) {
+                                  t=translations} ) {
 
     const [responseNotationInfo, setResponseNotationInfo] =useState(defaultNotationInfo); // lyStart - temporary
     const [correctNotationInfo, setCorrectNotationInfo] = useState(parseLilypondDictation(correctDictation));  // could have used a constant but that gets reevaluated each render tine

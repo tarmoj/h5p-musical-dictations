@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {
     Button,
     Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
@@ -60,12 +60,12 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
         setLyInput(notationInfoToLyString(notationInfo));
     } , [notationInfo]);
 
-    useEffect(() => {
-        document.addEventListener("keydown", onKeyDown);
-        return () => {
-            document.removeEventListener("keydown", onKeyDown);
-        };
-    });
+    // useEffect(() => {
+    //     document.addEventListener("keydown", onKeyDown);
+    //     return () => {
+    //         document.removeEventListener("keydown", onKeyDown);
+    //     };
+    // });
 
     const onKeyDown = (e) => {
         const noteNameKeys = ["c", "d", "e", "f", "g", "a", "b", "h"];
@@ -114,6 +114,8 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                 noteStep(-1);
                 e.preventDefault();
                 e.stopPropagation();
+            }  else if (e.key === "+") {
+                addBar();
             }
             else if (e.key === "1") {
                 durationChange("1" +  (dotted ? "d" : "" ));
@@ -713,18 +715,22 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                 <Grid item>{t.lilypondNotationLabel}:</Grid>
                 <Grid item>
                     <textarea rows="3" cols="50" value={lyInput}
+                              tabIndex={-1}
+                              onKeyDown={ event => {
+                                  if (event.key==="Enter" && event.ctrlKey)  {
+                                      handleLyNotation();
+                                  }
+                              } }
                               onChange={event => setLyInput(event.target.value)}
-                              onFocus={() => setLyFocus(true)}
-                              onBlur={() => setLyFocus(false)}
                     />
                 </Grid>
                 <Grid item>
                     <Button onClick={handleLyNotation}>{t.engrave}</Button>
                 </Grid>
             </Grid> }
-
-            <NotationView id="userNotation" div={"score"} notationInfo={notationInfo} selectedNote={selectedNote} setSelectedNote={setSelectedNote} t={t} />
-
+            <div tabIndex={-1} onKeyDown={onKeyDown}>
+                <NotationView id="userNotation" div={"score"} notationInfo={notationInfo} selectedNote={selectedNote} setSelectedNote={setSelectedNote} t={t} />
+            </div>
             {createButtonsRow()}
             {createPianoRow()}
 
