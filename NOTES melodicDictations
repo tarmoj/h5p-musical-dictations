@@ -15,9 +15,12 @@ NB! mui5 jaoks peab olema react 17+:
 
 TODO: -----------------------------------
 
+Tooltips on Buttons?
+https://mui.com/material-ui/react-tooltip/
+
 CLEF -  how to input bass clef exercises? depend from clef in given notation? have a look at EditorNotationInfo.
 
-ÜLDISEM - ka H5P paketti (library) saab lisada Tag'e vms oleks üldnimetuse järgi leitav?
+ÜLDISEM - ka H5P paketti (library) saab lisada Tag'e vms oleks üldnimetuse järgi leitav? - Ei, tundub.
 
 
 

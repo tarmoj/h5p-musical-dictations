@@ -32,6 +32,8 @@ import SixteenthNote from "../../images/sixteenth.png"
 import Dot from "../../images/dot.png"
 import Rest from "../../images/rest.png"
 import AddBar from "../../images/add-bar.png"
+import NoteUp from "../../images/note-up.png"
+import NoteDown from "../../images/note-down.png"
 
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
@@ -605,6 +607,7 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
     const createButtonsRow = () => {
 
         return (
+            <>
             <Grid container item direction={"row"} spacing={1} alignItems={"center"}>
                 <Grid item>
                     <ToggleButtonGroup
@@ -652,11 +655,25 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                     <ToggleButton sx={{height:51}} value={"delete"} aria-label={"delete"} onClick={()=>deleteHandler()}> <BackspaceIcon /> </ToggleButton>
                 </Grid>
 
-                <Grid item>
-                    {createShortcutsDialog()}
-                </Grid>
+
             </Grid>
+                <Grid container item direction={"row"} spacing={1} alignItems={"center"}>
+                    <Grid item>
+                        <ToggleButton sx={{height:51}} value={"noteUp"} aria-label={"note up"} onClick={()=>noteStep(1)}><img src={NoteUp} /></ToggleButton>
+                    </Grid>
+                    <Grid item>
+                        <ToggleButton sx={{height:51}} value={"noteDown"} aria-label={"note down"} onClick={()=>noteStep(-1)}><img src={NoteDown} /></ToggleButton>
+                    </Grid>
+                    <Grid item>
+                        <ToggleButton sx={{height:51}} value={"addBar"} aria-label={"add bar"} onClick={()=>addBar()}><img src={AddBar} /></ToggleButton>
+                    </Grid>
+                    <Grid item>
+                        {createShortcutsDialog()}
+                    </Grid>
+                </Grid>
+            </>
         );
+
     }
 
 
