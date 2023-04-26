@@ -36,6 +36,16 @@ export const defaultNotationInfo = {
 
 };
 
+// params come in as encoded html, need to decode
+export const  decodeHtml = (text) => {
+    return text
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/ , '<')
+        .replace(/&gt;/, '>')
+        .replace(/&quot;/g,'"')
+        .replace(/&#039;/g,"'");
+}
+
 
 // Deep clones an object
 export const deepClone = (obj) => { // from util/util
@@ -408,7 +418,7 @@ export const notationInfoToLyString = notationInfo => {
                             //console.log("lyString", lyString)
                         }
                         if (note.hasOwnProperty("tied") && note.tied) {
-                            lyString = lyString.trimEnd() +  "~"; // time mark must be rigth at the end of the chunk
+                            lyString = lyString.trimEnd() +  "~ "; // time mark must be rigth at the end of the chunk
                         }
                         if (note.hasOwnProperty("text")) {
                             // let positionString = ".top.";

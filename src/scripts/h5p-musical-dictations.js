@@ -1,6 +1,7 @@
 import React from "react";
 import * as ReactDOM from "react-dom";
 import Main from "./components/Main";
+import {decodeHtml} from "./components/notationUtils";
 
 const $ = H5P.jQuery;
 
@@ -18,16 +19,6 @@ export default class MusicalDictations extends H5P.ContentType(true) {
 
         // Create render root
         this.root = document.createElement("div");
-
-        // params come in as encoded html, need to decode
-        const  decodeHtml = (text) => {
-            return text
-                .replace(/&amp;/g, '&')
-                .replace(/&lt;/ , '<')
-                .replace(/&gt;/, '>')
-                .replace(/&quot;/g,'"')
-                .replace(/&#039;/g,"'");
-        }
 
 
         this.correctLyDictation = decodeHtml(params.lyNotation) || `
