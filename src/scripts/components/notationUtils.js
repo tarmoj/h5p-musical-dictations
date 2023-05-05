@@ -171,6 +171,15 @@ export const parseLilypondString = (lyString) => {
             i += 1;
         } else if     ( ["|", "|.", "||",  ".|:", ":|.",   ":|.|:"].includes( chunks[i])) {
             barLine = chunks[i];
+            // if (i===chunks.length-1 && chunks[i]==="|" ) {
+            //     barLine = "|.";
+            //     console.log("Replace last single barline with end barline");
+            // } else {
+            //     barLine = chunks[i];
+            // }
+
+
+            // TODO: if last bar, how to replace with |. ?
         }  else if (chunks[i].startsWith("-") || chunks[i].startsWith("^") ) { // ^ -  text above note, - -under note
             // TODO: find a vexflow solution see Vex.Flow.TextNote - test it in TryOut
             if (notes.length > 0) {
@@ -260,7 +269,6 @@ export const parseLilypondString = (lyString) => {
 
         }
         stave.measures[measureIndex].notes = notes;
-        // deal with barline
 
         // drop support for starting barlines, not needed in dictations
         if (barLine /*|| durationSum >= barDuration*/) {
@@ -437,7 +445,7 @@ export const notationInfoToLyString = notationInfo => {
             }
         }
     }
-    //console.log("converted to ly: ", lyString)
+    console.log("converted to ly: ", lyString)
     return lyString;
 };
 
@@ -452,4 +460,20 @@ export const addMeasure= (notationInfo, count=1) => {
             staff.measures.push({  endBar: "|",  notes: [] });
         }
     }
+}
+
+export const removeMeasure = (notationInfo, measureIndex) => {
+    if (!notationInfo) {
+        console.log("removeMeasure: notationInfo is null");
+        return;
+    }
+
+    if (notationInfo.staves[0].measures.length > 1  && measureIndex < notationInfo.staves[0].measures.length) {
+        for (let staff of notationInfo.staves) {
+            staff.measures.splice(measureIndex, 1);
+        }
+    } else {
+        console.log("Wrong measure index to delete: ", measureIndex);
+    }
+
 }
