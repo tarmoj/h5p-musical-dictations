@@ -274,10 +274,10 @@ export const parseLilypondString = (lyString) => {
         if (barLine /*|| durationSum >= barDuration*/) {
             stave.measures[measureIndex].endBar = barLine; // how to detect that it is end, not start barline? - Drop support for repetition, no startBArlines
             //console.log("barline", barLine);
-            if (barLine !== "|.") {
+            if (barLine !== "|."  && i!==chunks.length-1 ) { // if not last barline, then add a measure
                 // should we check if duration of the measure is enough?
                 measureIndex++;
-                stave.measures.push({number: 1+measureIndex, notes:[], endBar: "|."});
+                stave.measures.push({number: 1+measureIndex, notes:[], endBar: "|"});
                 //console.log("moved index to new bar", measureIndex);
             }
             barLine = "" ; // reset
@@ -445,7 +445,7 @@ export const notationInfoToLyString = notationInfo => {
             }
         }
     }
-    console.log("converted to ly: ", lyString)
+    //console.log("converted to ly: ", lyString)
     return lyString;
 };
 
