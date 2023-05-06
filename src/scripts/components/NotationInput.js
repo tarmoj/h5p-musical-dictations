@@ -14,7 +14,7 @@ import {Piano} from "react-piano";
 import 'react-piano/dist/styles.css';
 import classNames from 'classnames';
 import {
-    addMeasure,
+    addMeasure, removeMeasure,
     deepClone,
     getLyNoteByMidiNoteInKey, getVfNoteByMidiNoteInKey,
     notationInfoToLyString,
@@ -34,6 +34,7 @@ import Rest from "../../images/rest.png"
 import AddBar from "../../images/add-bar.png"
 import NoteUp from "../../images/note-up.png"
 import NoteDown from "../../images/note-down.png"
+import DeleteBar from "../../images/delete-bar.png"
 
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
@@ -272,6 +273,12 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
     const addBar = () => {
         const newNotationInfo = deepClone(notationInfo);
         addMeasure(newNotationInfo, 1);
+        setNotationInfo(newNotationInfo);
+    }
+
+    const deleteBar = () => {
+        const newNotationInfo = deepClone(notationInfo);
+        removeMeasure(newNotationInfo, selectedNote.measure);
         setNotationInfo(newNotationInfo);
     }
 
@@ -649,9 +656,6 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                     </ToggleButton>
                 </Grid>
                 <Grid item>
-                    <ToggleButton sx={{height:51}} value={"addBar"} aria-label={"add bar"} onClick={()=>addBar()}><img src={AddBar} /></ToggleButton>
-                </Grid>
-                <Grid item>
                     <ToggleButton sx={{height:51}} value={"delete"} aria-label={"delete"} onClick={()=>deleteHandler()}> <BackspaceIcon /> </ToggleButton>
                 </Grid>
 
@@ -666,6 +670,9 @@ export function NotationInput({lyStart, setNotationInfo, notationInfo, selectedN
                     </Grid>
                     <Grid item>
                         <ToggleButton sx={{height:51}} value={"addBar"} aria-label={"add bar"} onClick={()=>addBar()}><img src={AddBar} /></ToggleButton>
+                    </Grid>
+                    <Grid item>
+                        <ToggleButton sx={{height:51}} value={"deleteBar"} aria-label={"delete bar"} onClick={()=>deleteBar()}><img src={DeleteBar} /></ToggleButton>
                     </Grid>
                     <Grid item>
                         {createShortcutsDialog()}

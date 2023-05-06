@@ -15,6 +15,10 @@ NB! mui5 jaoks peab olema react 17+:
 
 TODO: -----------------------------------
 
+- nimeta igal pool ümber Musical Dictations -> Melodic Dictations
+- React komponendid  eraldi subreposse, üks ühine NotationView && NotationInput : Notationinput prop useIn=editor|library (vm)
+
+
 Tooltips on Buttons?
 https://mui.com/material-ui/react-tooltip/
 
