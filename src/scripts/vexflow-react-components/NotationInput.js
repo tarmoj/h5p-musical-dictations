@@ -23,18 +23,18 @@ import {
 } from "./notationUtils";
 import {NotationView} from "./NotationView";
 import Image from "mui-image";
-import Tie from '../../images/tie.png';
-import WholeNote from "../../images/whole.png" ; // require() does not work with Preview, do separate imports
-import HalfNote from "../../images/half.png"
-import QuarterNote from "../../images/quarter.png"
-import EightNote from "../../images/eighth.png"
-import SixteenthNote from "../../images/sixteenth.png"
-import Dot from "../../images/dot.png"
-import Rest from "../../images/rest.png"
-import AddBar from "../../images/add-bar.png"
-import NoteUp from "../../images/note-up.png"
-import NoteDown from "../../images/note-down.png"
-import DeleteBar from "../../images/delete-bar.png"
+import Tie from 'images/tie.png';
+import WholeNote from "images/whole.png" ; // require() does not work with Preview, do separate imports
+import HalfNote from "images/half.png"
+import QuarterNote from "images/quarter.png"
+import EightNote from "images/eighth.png"
+import SixteenthNote from "images/sixteenth.png"
+import Dot from "images/dot.png"
+import Rest from "images/rest.png"
+import AddBar from "images/add-bar.png"
+import NoteUp from "images/note-up.png"
+import NoteDown from "images/note-down.png"
+import DeleteBar from "images/delete-bar.png"
 
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';

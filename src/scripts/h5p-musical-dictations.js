@@ -1,7 +1,7 @@
 import React from "react";
 import * as ReactDOM from "react-dom";
-import Main from "./components/Main";
-import {decodeHtml} from "./components/notationUtils";
+import Main from "./Main";
+import {decodeHtml} from "./vexflow-react-components/notationUtils";
 
 const $ = H5P.jQuery;
 

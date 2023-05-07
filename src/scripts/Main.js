@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {NotationView} from "./NotationView"
-import {NotationInput} from "./NotationInput";
-import {defaultNotationInfo, parseLilypondDictation, deepClone, addMeasure} from "./notationUtils";
+import {NotationView} from "./vexflow-react-components/NotationView"
+import {NotationInput} from "./vexflow-react-components/NotationInput";
+import {defaultNotationInfo, parseLilypondDictation, deepClone, addMeasure} from "./vexflow-react-components/notationUtils";
 import {Button} from "@mui/material";
 
 
