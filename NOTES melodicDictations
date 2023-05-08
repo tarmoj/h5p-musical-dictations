@@ -15,6 +15,12 @@ NB! mui5 jaoks peab olema react 17+:
 
 TODO: -----------------------------------
 
+style vexflow-components juurde
++ lisa väike ülemine margin edirotri jaoks vähemalt (võibolla: margins: )
+
+- testi editor... drupalis
+
+
 - nimeta igal pool ümber Musical Dictations -> Melodic Dictations
 - React komponendid  eraldi subreposse, üks ühine NotationView && NotationInput : Notationinput prop useIn=editor|library (vm)
 
