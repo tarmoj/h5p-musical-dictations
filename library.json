@@ -1,9 +1,9 @@
 {
   "title": "Musical Dictations",
   "description": "Library for H5P Musical Dictations",
-  "majorVersion": 0,
-  "minorVersion": 4,
-  "patchVersion": 1,
+  "majorVersion": 1,
+  "minorVersion": 0,
+  "patchVersion": 0,
   "runnable": 1,
   "author": "Tarmo Johannes",
   "license": "MIT",
