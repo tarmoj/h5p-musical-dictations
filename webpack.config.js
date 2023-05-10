@@ -58,7 +58,7 @@ module.exports = {
       },
       {
         test: /\.svg|\.jpg|\.png$/,
-        include: path.join(__dirname, "src/images"),
+        include: path.join(__dirname, "src/scripts/vexflow-react-components/images/"),
         type: "asset/resource",
       },
       {
