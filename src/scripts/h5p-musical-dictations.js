@@ -15,7 +15,7 @@ export default class MusicalDictations extends H5P.ContentType(true) {
      */
     constructor(params, contentId, extras = {}) {
         super();
-        console.log("params: ", params);
+        //console.log("params: ", params);
 
         // Create render root
         this.root = document.createElement("div");
