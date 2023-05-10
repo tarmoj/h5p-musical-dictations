@@ -1,0 +1,3 @@
+[submodule "src/scripts/vexflow-react-components"]
+	path = src/scripts/vexflow-react-components
+	url = https://github.com/tarmoj/vexflow-react-components.git
