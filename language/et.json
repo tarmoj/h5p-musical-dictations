@@ -8,12 +8,12 @@
     },
     {
       "label": "Notatsioon",
-      "default": "\\time 3/4 \\key F \\major f'8 a' c''4 c'' | d''8 b' c'4 c' ",
+      "default": "",
       "description": "Diktaat Lilypond süntaksis (absoluutsed kõrgused, saksa süsteemi noodinimed (g, as, b, h) )"
     },
     {
       "label": "Kuvatav algus",
-      "default": "\\time 3/4 \\key F \\major f'8 ",
+      "default": "",
       "description": "Mida te soovite, et õpilane diktaadi algusest näeks. Tavaliselt helistik, taktimõõt ja esimene takt."
     },
     {

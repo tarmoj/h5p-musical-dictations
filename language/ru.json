@@ -7,12 +7,12 @@
     },
     {
       "label": "Notation",
-      "default": "\\time 3/4 \\key F \\major f'8 a' c''4 c'' | d''8 b' c'4 c' ",
+      "default": "",
       "description": "Define the notation in Lilypond syntax (absolute pitch marking for octaves)"
     },
     {
       "label": "Show from notation",
-      "default": "\\time 3/4 \\key F \\major f'8 ",
+      "default": "",
       "description": "What you want to show to the student. Usually key, time and the first note"
     },
     {
