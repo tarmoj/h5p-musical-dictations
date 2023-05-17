@@ -18,7 +18,9 @@ export default class MusicalDictations extends H5P.ContentType(true) {
         //console.log("params: ", params);
 
         // Create render root
-        this.root = document.createElement("div");
+
+
+        this.libraryPath = "./PULAMULA/"; //H5P.getLibraryPath(this.libraryInfo.versionedNameNoSpaces);
 
 
         this.correctLyDictation = decodeHtml(params.lyNotation) || `
@@ -88,7 +90,11 @@ export default class MusicalDictations extends H5P.ContentType(true) {
             const audioFile = this.audioFile;
             const relativeAudioFilePath = audioFile[0].path;
             const absolutePath = H5P.getPath(relativeAudioFilePath, this.id);
+            this.libraryPath =  H5P.getLibraryPath(this.libraryInfo.versionedNameNoSpaces);
             console.log("Create audio for: ", absolutePath);
+            console.log("Library absolute path:",  H5P.getPath(this.libraryPath, this.id));
+
+
             $wrapper.append( $('<audio>', {
                 id: "audioPlayer",
                 class: "shadow",
@@ -96,6 +102,8 @@ export default class MusicalDictations extends H5P.ContentType(true) {
                 controls: true
             }) );
             $wrapper.append('<br />'); // does not seem to work
+
+            this.root = document.createElement("div");
 
             $wrapper.append(this.root);  // for Rect components
 
@@ -119,7 +127,8 @@ export default class MusicalDictations extends H5P.ContentType(true) {
             // this.root is the container for React content
             ReactDOM.render(
                 <div>
-                    <Main correctDictation={this.correctLyDictation} showFromDictation={ this.showFromDiction} resizeFunction={resize} t={this.l10n}  />
+                    <Main correctDictation={this.correctLyDictation} showFromDictation={ this.showFromDiction}
+                          resizeFunction={resize} t={this.l10n}  iconsPath={this.libraryPath + "/dist/"}/>
                 </div>,
                 this.root
             );
