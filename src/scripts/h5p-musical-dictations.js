@@ -17,9 +17,7 @@ export default class MusicalDictations extends H5P.ContentType(true) {
         super();
         //console.log("params: ", params);
 
-        // Create render root
-
-
+        //console.log("Working version: 1.0.4-7");
         this.libraryPath = "./"; //H5P.getLibraryPath(this.libraryInfo.versionedNameNoSpaces);
 
 
@@ -105,7 +103,6 @@ export default class MusicalDictations extends H5P.ContentType(true) {
             $audio.on("error", (e) => { console.log("Audio error", e.currentTarget.error ); alert("Audio error: " + e.currentTarget.error.message) } );
 
             $wrapper.append($audio);
-            console.log("Working version: 1.0.4-6")
 
             $wrapper.append('<br />'); // does not seem to work
 
