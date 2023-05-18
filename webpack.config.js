@@ -1,6 +1,7 @@
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 const nodeEnv = process.env.NODE_ENV || "development";
 const isProd = nodeEnv === "production";
@@ -24,6 +25,11 @@ module.exports = {
   plugins: [
     new MiniCssExtractPlugin({
       filename: "h5p-musical-dictations.css",
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: "src/scripts/vexflow-react-components/images/", to: "images" },
+      ],
     }),
   ],
   entry: {
@@ -56,11 +62,11 @@ module.exports = {
           },
         ],
       },
-      {
-        test: /\.svg|\.jpg|\.png$/,
-        include: path.join(__dirname, "src/scripts/vexflow-react-components/images/"),
-        type: "asset/resource",
-      },
+      // {
+      //   test: /\.svg|\.jpg|\.png$/,
+      //   include: path.join(__dirname, "src/scripts/vexflow-react-components/images/"),
+      //   type: "asset/resource",
+      // },
       {
         test: /\.woff$/,
         include: path.join(__dirname, "src/fonts"),

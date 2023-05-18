@@ -128,7 +128,7 @@ export default class MusicalDictations extends H5P.ContentType(true) {
             ReactDOM.render(
                 <div>
                     <Main correctDictation={this.correctLyDictation} showFromDictation={ this.showFromDiction}
-                          resizeFunction={resize} t={this.l10n}  iconsPath={this.libraryPath + "/dist/"}/>
+                          resizeFunction={resize} t={this.l10n}  iconsPath={this.libraryPath + "/dist/images/"}/>
                 </div>,
                 this.root
             );
