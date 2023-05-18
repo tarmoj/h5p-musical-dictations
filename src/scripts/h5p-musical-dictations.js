@@ -20,7 +20,7 @@ export default class MusicalDictations extends H5P.ContentType(true) {
         // Create render root
 
 
-        this.libraryPath = "./PULAMULA/"; //H5P.getLibraryPath(this.libraryInfo.versionedNameNoSpaces);
+        this.libraryPath = "./"; //H5P.getLibraryPath(this.libraryInfo.versionedNameNoSpaces);
 
 
         this.correctLyDictation = decodeHtml(params.lyNotation) || `
@@ -92,15 +92,21 @@ export default class MusicalDictations extends H5P.ContentType(true) {
             const absolutePath = H5P.getPath(relativeAudioFilePath, this.id);
             this.libraryPath =  H5P.getLibraryPath(this.libraryInfo.versionedNameNoSpaces);
             console.log("Create audio for: ", absolutePath);
-            console.log("Library absolute path:",  H5P.getPath(this.libraryPath, this.id));
+            console.log("Library  path:",  this.libraryPath);
 
 
-            $wrapper.append( $('<audio>', {
+
+            const $audio = $('<audio>', {
                 id: "audioPlayer",
                 class: "shadow",
                 src: absolutePath,
                 controls: true
-            }) );
+            });
+            $audio.on("error", (e) => { console.log("Audio error", e.currentTarget.error ); alert("Audio error: " + e.currentTarget.error.message) } );
+
+            $wrapper.append($audio);
+            console.log("Working version: 1.0.4-6")
+
             $wrapper.append('<br />'); // does not seem to work
 
             this.root = document.createElement("div");

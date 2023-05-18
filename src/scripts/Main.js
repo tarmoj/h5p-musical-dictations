@@ -57,15 +57,13 @@ export default function Main( {correctDictation=correctLyDictation,
                                   showFromDictation=lyStart,
                                   resizeFunction= () => console.log("empty resize"),
                                   t=translations,
-                                  iconsPath = "./MAIN/"  } ) {
+                                  iconsPath = "./"  } ) {
 
     const [responseNotationInfo, setResponseNotationInfo] =useState(defaultNotationInfo); // lyStart - temporary
     const [correctNotationInfo, setCorrectNotationInfo] = useState(parseLilypondDictation(correctDictation));  // could have used a constant but that gets reevaluated each render tine
     const [showCorrectNotation, setShowCorrectNotation] = useState(false);
     const [feedBack, setFeedBack] = useState("");
     const [ selectedNote, setSelectedNote] = useState({ measure: responseNotationInfo.staves[0].measures.length-1, note:-1, staff:0 } );
-
-    console.log("iconsPath in MAIN", iconsPath);
 
     useEffect( ()=>createResponseDictationStart(), [] ); // set the proper lyStart for response NotationInput
 

@@ -13,6 +13,8 @@ NB! mui5 jaoks peab olema react 17+:
     "react-dom": "^17.0.2",
 
 Packaging:
+
+NB! Problem - MusicalDictations/vexflow components uses absolute path for images, Editor not yet (vexflow not updated yet... ) - this may break things later for NotationInput
     
 
 TODO: -----------------------------------
