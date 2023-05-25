@@ -26,6 +26,9 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "h5p-musical-dictations.css",
     }),
+    new MiniCssExtractPlugin({
+      filename: "joubel-ui.css",
+    }),
     new CopyPlugin({
       patterns: [
         { from: "src/scripts/vexflow-react-components/images/", to: "images" },

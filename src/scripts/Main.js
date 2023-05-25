@@ -144,8 +144,8 @@ export default function Main( {correctDictation=correctLyDictation,
                            iconsPath={iconsPath}
             />
             {/*Those were MUI BUttons before: */}
-            <button className={"joubel-simple-rounded-button"} variant={"text"}  onClick={ () => checkResponse() }>{t.check}</button>
-            <button className={"joubel-simple-rounded-button"} variant={"text"}
+            <button className={"h5p-joubelui-button h5p-question-check-answer"}   onClick={ () => checkResponse() }>{t.check}</button>
+            <button className={"h5p-joubelui-button"}
                 onClick={ () => {
                 setShowCorrectNotation(!showCorrectNotation);
                 resizeFunction();

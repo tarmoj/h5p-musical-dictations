@@ -17,6 +17,13 @@ Packaging:
 NB! Problem - MusicalDictations/vexflow components uses absolute path for images, Editor not yet (vexflow not updated yet... ) - this may break things later for NotationInput
     
 
+H5P.org (joubelui) style of buttons:
+use joubel-ui.css from: https://github.com/h5p/h5p-joubel-ui/blob/master/css/joubel-ui.css
+that might require to include also FontAwesome: (h5p github)
+CLI h5p get FontAwesome does not work....  :(
+
+
+
 TODO: -----------------------------------
 
 style vexflow-components juurde
