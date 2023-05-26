@@ -144,7 +144,7 @@ export default function Main( {correctDictation=correctLyDictation,
                            iconsPath={iconsPath}
             />
             {/*Those were MUI BUttons before: */}
-            {/h5p-question-check-answer - gives *check mark for the "Kontrolli" button, requires FontAwesome*/}
+            {/* h5p-question-check-answer - gives check mark for the "Kontrolli" button, requires FontAwesome*/}
             <button className={"h5p-joubelui-button "}   onClick={ () => checkResponse() }>{t.check}</button>
             <button className={"h5p-joubelui-button"}
                 onClick={ () => {
