@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {NotationView} from "./vexflow-react-components/NotationView"
 import {NotationInput} from "./vexflow-react-components/NotationInput";
 import {defaultNotationInfo, parseLilypondDictation, deepClone, addMeasure} from "./vexflow-react-components/notationUtils";
-import {Button} from "@mui/material";
+//import {Button} from "@mui/material";
 
 
 // temporary -  for testing:
@@ -144,13 +144,14 @@ export default function Main( {correctDictation=correctLyDictation,
                            iconsPath={iconsPath}
             />
             {/*Those were MUI BUttons before: */}
-            <button className={"h5p-joubelui-button h5p-question-check-answer"}   onClick={ () => checkResponse() }>{t.check}</button>
+            {/h5p-question-check-answer - gives *check mark for the "Kontrolli" button, requires FontAwesome*/}
+            <button className={"h5p-joubelui-button "}   onClick={ () => checkResponse() }>{t.check}</button>
             <button className={"h5p-joubelui-button"}
                 onClick={ () => {
                 setShowCorrectNotation(!showCorrectNotation);
                 resizeFunction();
             } }>{t.showHide}</button>
-            <div className={"h5p-degree-dictations"}><b>{feedBack}</b></div>
+            <div className={"h5p-musical-dictations"}><b>{feedBack}</b></div>
 
             { showCorrectNotation &&
             <div>
