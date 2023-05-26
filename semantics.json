@@ -194,7 +194,33 @@
         "name": "disclaimerText",
         "type": "text",
         "default": "NB! This is not an official H5P.org content type. With any problems please turn to the author tarmo.johannes@muba.edu.ee"
+      },
+      {
+        "name": "audioError",
+        "type": "text",
+        "default": "Audio error: "
+      },
+      {
+        "name": "loadingAborted",
+        "type": "text",
+        "default": "loading aborted"
+      },
+      {
+        "name": "networkError",
+        "type": "text",
+        "default": "network error"
+      },
+      {
+        "name": "decodingAudioFailed",
+        "type": "text",
+        "default": "decoding audio failed"
+      },
+      {
+        "name": "sourceNotSupported",
+        "type": "text",
+        "default": "source not supported"
       }
+
     ]
   }
 ]

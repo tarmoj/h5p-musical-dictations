@@ -67,6 +67,13 @@ export default class MusicalDictations extends H5P.ContentType(true) {
             "isNotRecognizedNote" : " is not a recognized note or keyword.",
             "durationNotKnown" : "Duration not known! ",
             "disclaimerText": "NB! This is not an official H5P.org content type. With any problems please turn to the author tarmo.johannes@muba.edu.ee",
+            // new 26.05.23
+            "audioError": "Audio error: ",
+            "loadingAborted": "loading aborted",
+            "networkError": "network error",
+            "decodingAudioFailed": "decoding audio failed",
+            "sourceNotSupported": "source not supported",
+
             ...params.l10n
         };
 
@@ -100,7 +107,19 @@ export default class MusicalDictations extends H5P.ContentType(true) {
                 src: absolutePath,
                 controls: true
             });
-            $audio.on("error", (e) => { console.log("Audio error", e.currentTarget.error ); alert("Audio error: " + e.currentTarget.error.message) } );
+            // audio error codes found from: https://stackoverflow.com/questions/11713114/audio-onerror-arguments
+            $audio.on("error", (e) => { console.log("Audio error", e.currentTarget.error );
+                let errorMessage = this.l10n.audioError;
+
+                switch (e.currentTarget.error.code) {
+                    case 1: errorMessage += this.l10n.loadingAborted; break;
+                    case 2: errorMessage += this.l10n.networkError; break;
+                    case 3: errorMessage += this.l10n.decodingAudioFailed; break;
+                    case 4: errorMessage += this.l10n.sourceNotSupported; break;
+                    default: errorMessage = "";
+                }
+                alert(errorMessage);
+            } );
 
             $wrapper.append($audio);
 

@@ -117,6 +117,21 @@
         },
         {
           "default": "NB! See ei ole ametlik H5P.org sisutüüp. Kõigi probleemide korral pöörduge autori poole: tarmo.johannes@muba.edu.ee"
+        },
+        {
+          "default": "Probleem helifailiga: "
+        },
+        {
+          "default": "laadimine katkestati"
+        },
+        {
+          "default": "probleem võrguühendusega"
+        },
+        {
+          "default": "audio dekodeerimine ebaõnnestus"
+        },
+        {
+          "default": "lähteallika tüüp ei ole toetatud."
         }
       ]
     }
