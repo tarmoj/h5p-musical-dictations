@@ -129,22 +129,22 @@ export default class MusicalDictations extends H5P.ContentType(true) {
 
             $wrapper.append(this.root);  // for Rect components
 
-            const euLogoPath = H5P.getLibraryPath(this.libraryInfo.versionedNameNoSpaces) + "/eu.jpg";
-            console.log("logo path:", euLogoPath);
+            // const euLogoPath = H5P.getLibraryPath(this.libraryInfo.versionedNameNoSpaces) + "/eu.jpg";
+            // console.log("logo path:", euLogoPath);
 
-            const $euDiv = $('<div>', {id:"euDiv"}).html("<br /><p><small>" + this.l10n.euSupportText +  "</small></p>");
-            $euDiv.append(
-                $('<img>', {
-                    id: "euLogo",
-                    alt: this.l10n.euSupportText,
-                    width: "200px",
-                    align: "left",
-                    src: euLogoPath,
-                    load: () => this.trigger("resize")
-                })
-            );
-
-            $wrapper.append($euDiv);
+            // const $euDiv = $('<div>', {id:"euDiv"}).html("<br /><p><small>" + this.l10n.euSupportText +  "</small></p>");
+            // $euDiv.append(
+            //     $('<img>', {
+            //         id: "euLogo",
+            //         alt: this.l10n.euSupportText,
+            //         width: "200px",
+            //         align: "left",
+            //         src: euLogoPath,
+            //         load: () => this.trigger("resize")
+            //     })
+            // );
+            //
+            // $wrapper.append($euDiv);
 
             // this.root is the container for React content
             ReactDOM.render(
