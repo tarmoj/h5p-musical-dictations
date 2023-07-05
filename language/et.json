@@ -14,7 +14,7 @@
     {
       "label": "Kuvatav algus",
       "default": "",
-      "description": "Mida te soovite, et õpilane diktaadi algusest näeks. Tavaliselt helistik, taktimõõt ja esimene takt."
+      "description": "Mida te soovite, et õpilane diktaadi algusest näeks (Lilypond formaadis). Tavaliselt helistik, taktimõõt ja esimene takt."
     },
     {
       "label": "Audiofail"
